@@ -5,7 +5,7 @@
  * @param {String} urlSearch everything after (and including) the '?' of the url
  * @returns {UrlParams}
  */
-export function getJsonFromUrl(urlSearch) {
+export function getJsonFromUrl (urlSearch) {
     const query = urlSearch.substr(1);
     const result = {};
     if (query) {
@@ -22,7 +22,7 @@ export function getJsonFromUrl(urlSearch) {
  * @param {String} parameter name of param to remove
  * @returns {String}
  */
-export function removeURLParameter(url, parameter) {
+export function removeURLParameter (url, parameter) {
     var urlparts = url.split('?');
     var prefix = urlparts[0];
     var query, paramPrefix, params, i;

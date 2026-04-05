@@ -1,8 +1,8 @@
 /**
  * @module lists/ShowcaseItem.js
  */
-import { removeItem } from './ListService'
-import myBooksStore from '../my-books/store'
+import { removeItem } from './ListService';
+import myBooksStore from '../my-books/store';
 
 /**
  * Represents an actionable list showcase item.
@@ -32,64 +32,64 @@ export class ShowcaseItem {
      *
      * @param {HTMLElement} showcaseElem
      */
-    constructor(showcaseElem) {
+    constructor (showcaseElem) {
         /**
          * Reference to the root element of this component.
          * @member {HTMLElement}
          */
-        this.showcaseElem = showcaseElem
+        this.showcaseElem = showcaseElem;
 
         /**
          * `true` if this object represents the active lists showcase.
          * @member {boolean}
          */
-        this.isActiveShowcase = showcaseElem.parentElement.classList.contains('already-lists')
+        this.isActiveShowcase = showcaseElem.parentElement.classList.contains('already-lists');
 
         /**
          * Reference to the affordance which removes an item from this list.
          * @member {HTMLElement}
          */
-        this.removeFromListAffordance = showcaseElem.querySelector('.remove-from-list')
+        this.removeFromListAffordance = showcaseElem.querySelector('.remove-from-list');
 
         /**
          * Unique identifier for the showcased list.
          * @member {string}
          */
-        this.listKey = this.removeFromListAffordance.dataset.listKey
+        this.listKey = this.removeFromListAffordance.dataset.listKey;
 
         /**
          * Unique identifier for the showcased list member.
          * @member {string}
          */
-        this.seedKey = showcaseElem.querySelector('input[name=seed-key]').value
+        this.seedKey = showcaseElem.querySelector('input[name=seed-key]').value;
 
         /**
          * The list item's type.
          * @member {'subject'|'edition'|'work'|'author'}
          */
-        this.type = showcaseElem.querySelector('input[name=seed-type]').value
+        this.type = showcaseElem.querySelector('input[name=seed-type]').value;
 
         /**
          * `true` if this list item is a subject.
          * @member {boolean}
          */
-        this.isSubject = this.type === 'subject'
+        this.isSubject = this.type === 'subject';
 
         /**
          * `true` if this list item is a work
          * @member {boolean}
          */
-        this.isWork = !this.isSubject && this.seedKey.slice(-1) === 'W'
+        this.isWork = !this.isSubject && this.seedKey.slice(-1) === 'W';
 
         /**
          * `POST` request-ready representation of the list's seed key.
          * @member {string|object}
          */
-        this.seed
+        this.seed;
         if (this.isSubject) {
-            this.seed = this.seedKey
+            this.seed = this.seedKey;
         } else {
-            this.seed = { key: this.seedKey }
+            this.seed = { key: this.seedKey };
         }
     }
 
@@ -97,11 +97,11 @@ export class ShowcaseItem {
      * Attaches click listeners to the showcase item's "Remove from list"
      * affordance.
      */
-    initialize() {
+    initialize () {
         this.removeFromListAffordance.addEventListener('click', (event) => {
-            event.preventDefault()
-            this.removeShowcaseItem()
-        })
+            event.preventDefault();
+            this.removeShowcaseItem();
+        });
     }
 
     /**
@@ -110,28 +110,28 @@ export class ShowcaseItem {
      * Removes any affiliated showcase items from the DOM, and updates all
      * dropper list affordances.
      */
-    async removeShowcaseItem() {
+    async removeShowcaseItem () {
         await removeItem(this.listKey, this.seed)
             .then(response => response.json())
             .then(() => {
-                const showcases = myBooksStore.getShowcases()
+                const showcases = myBooksStore.getShowcases();
 
                 // Remove self:
-                this.removeSelf()
+                this.removeSelf();
 
                 // Remove other showcase items that are associated with the list and seed key:
                 for (const showcase of showcases) {
                     if (showcase.isShowcaseForListAndSeed(this.listKey, this.seedKey)) {
-                        showcase.removeSelf()
+                        showcase.removeSelf();
                     }
                 }
 
                 // Update droppers:
-                const droppers = myBooksStore.getDroppers()
+                const droppers = myBooksStore.getDroppers();
                 for (const dropper of droppers) {
-                    dropper.readingLists.updateViewAfterModifyingList(this.listKey, this.isWork, false)
+                    dropper.readingLists.updateViewAfterModifyingList(this.listKey, this.isWork, false);
                 }
-            })
+            });
     }
 
     /**
@@ -140,12 +140,12 @@ export class ShowcaseItem {
      * Removes self from the myBooksStore's showcase array
      * upon success.
      */
-    removeSelf() {
-        const showcases = myBooksStore.getShowcases()
-        const thisIndex = showcases.indexOf(this)
+    removeSelf () {
+        const showcases = myBooksStore.getShowcases();
+        const thisIndex = showcases.indexOf(this);
         if (thisIndex >= 0) {
-            this.showcaseElem.remove()
-            showcases.splice(thisIndex, 1)
+            this.showcaseElem.remove();
+            showcases.splice(thisIndex, 1);
         }
     }
 
@@ -160,19 +160,19 @@ export class ShowcaseItem {
      *
      * @param {boolean} showWorks `true` if only active showcase items related to works should be displayed
      */
-    toggleVisibility(showWorks) {
+    toggleVisibility (showWorks) {
         if (this.isActiveShowcase) {
             if (showWorks) {
                 if (this.isWork) {
-                    this.showcaseElem.classList.remove('hidden')
+                    this.showcaseElem.classList.remove('hidden');
                 } else {
-                    this.showcaseElem.classList.add('hidden')
+                    this.showcaseElem.classList.add('hidden');
                 }
             } else {
                 if (this.isWork) {
-                    this.showcaseElem.classList.add('hidden')
+                    this.showcaseElem.classList.add('hidden');
                 } else {
-                    this.showcaseElem.classList.remove('hidden')
+                    this.showcaseElem.classList.remove('hidden');
                 }
             }
         }
@@ -185,8 +185,8 @@ export class ShowcaseItem {
      * @param {string} seedKey
      * @return {boolean} `true` if the given keys match this item's keys
      */
-    isShowcaseForListAndSeed(listKey, seedKey) {
-        return (this.listKey === listKey) && (this.seedKey === seedKey)
+    isShowcaseForListAndSeed (listKey, seedKey) {
+        return (this.listKey === listKey) && (this.seedKey === seedKey);
     }
 }
 
@@ -195,9 +195,9 @@ export class ShowcaseItem {
  * showcase items.
  * @type {Record<string, string>}
  */
-let i18nStrings
+let i18nStrings;
 
-const DEFAULT_COVER_URL = '/images/icons/avatar_book-sm.png'
+const DEFAULT_COVER_URL = '/images/icons/avatar_book-sm.png';
 
 /**
  * Returns the inferred type of the given seed key.
@@ -205,19 +205,19 @@ const DEFAULT_COVER_URL = '/images/icons/avatar_book-sm.png'
  * @param {string} seed
  * @returns {string} Type of the given seed key.
  */
-function getSeedType(seed) {
+function getSeedType (seed) {
     // XXX : validate input?
     if (seed[0] !== '/') {
-        return 'subject'
+        return 'subject';
     }
     if (seed.endsWith('M')) {
-        return 'edition'
+        return 'edition';
     }
     if (seed.endsWith('W')) {
-        return 'work'
+        return 'work';
     }
     if (seed.endsWith('A')) {
-        return 'author'
+        return 'author';
     }
 }
 
@@ -233,15 +233,15 @@ function getSeedType(seed) {
  * @param {string} [coverUrl]
  * @returns {HTMLLIElement}
  */
-export function createActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
+export function createActiveShowcaseItem (listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
     if (!i18nStrings) {
-        const i18nInput = document.querySelector('input[name=list-i18n-strings]')
-        i18nStrings = JSON.parse(i18nInput.value)
+        const i18nInput = document.querySelector('input[name=list-i18n-strings]');
+        i18nStrings = JSON.parse(i18nInput.value);
     }
 
-    const splitKey = listKey.split('/')
-    const userKey = `/${splitKey[1]}/${splitKey[2]}`
-    const seedType = getSeedType(seedKey)
+    const splitKey = listKey.split('/');
+    const userKey = `/${splitKey[1]}/${splitKey[2]}`;
+    const seedType = getSeedType(seedKey);
 
     const itemMarkUp = `<span class="image">
                 <a href="${listKey}"><img src="${coverUrl}" alt="${i18nStrings['cover_of']}${listTitle}" title="${i18nStrings['cover_of']}${listTitle}"/></a>
@@ -255,14 +255,14 @@ export function createActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl =
                     <a href="${listKey}" class="remove-from-list red smaller arial plain" data-list-key="${listKey}" title="${i18nStrings['remove_from_list']}">[X]</a>
                 </span>
                 <span class="owner">${i18nStrings['from']} <a href="${userKey}">${i18nStrings['you']}</a></span>
-            </span>`
+            </span>`;
 
-    const li = document.createElement('li')
-    li.classList.add('actionable-item')
-    li.dataset.listKey = listKey
-    li.innerHTML = itemMarkUp
+    const li = document.createElement('li');
+    li.classList.add('actionable-item');
+    li.dataset.listKey = listKey;
+    li.innerHTML = itemMarkUp;
 
-    return li
+    return li;
 }
 
 /**
@@ -275,9 +275,9 @@ export function createActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl =
  *
  * @param {boolean} showWorksOnly
  */
-export function toggleActiveShowcaseItems(showWorksOnly) {
+export function toggleActiveShowcaseItems (showWorksOnly) {
     for (const item of myBooksStore.getShowcases()) {
-        item.toggleVisibility(showWorksOnly)
+        item.toggleVisibility(showWorksOnly);
     }
 }
 
@@ -296,16 +296,16 @@ export function toggleActiveShowcaseItems(showWorksOnly) {
  * @param {string} listTitle
  * @param {string} [coverUrl]
  */
-export function attachNewActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
-    const activeListsShowcase = document.querySelector('.already-lists')
+export function attachNewActiveShowcaseItem (listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
+    const activeListsShowcase = document.querySelector('.already-lists');
 
     if (activeListsShowcase) {
-        const li = createActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl)
-        activeListsShowcase.appendChild(li)
+        const li = createActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl);
+        activeListsShowcase.appendChild(li);
 
-        const showcase = new ShowcaseItem(li)
-        showcase.initialize()
+        const showcase = new ShowcaseItem(li);
+        showcase.initialize();
 
-        myBooksStore.getShowcases().push(showcase)
+        myBooksStore.getShowcases().push(showcase);
     }
 }

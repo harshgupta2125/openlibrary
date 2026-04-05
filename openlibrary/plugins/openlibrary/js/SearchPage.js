@@ -9,7 +9,7 @@ export class SearchPage {
      * @param {HTMLFormElement|JQuery} form the .olform search form
      * @param {SearchModeSelector} searchModeSelector
      */
-    constructor(form, searchModeSelector) {
+    constructor (form, searchModeSelector) {
         this.$form = $(form);
         searchMode.sync(this.updateModeInputs.bind(this));
         this.$form.on('submit', this.updateModeInputs.bind(this));
@@ -17,7 +17,7 @@ export class SearchPage {
     }
 
     /** Convenience wrapper of {@link addModeInputsToForm} */
-    updateModeInputs() {
+    updateModeInputs () {
         addModeInputsToForm(this.$form, searchMode.read());
     }
 }

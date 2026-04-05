@@ -1,6 +1,6 @@
-import { FadingToast } from './Toast'
+import { FadingToast } from './Toast';
 
-export function initPrivateButtons(buttons) {
+export function initPrivateButtons (buttons) {
     buttons.forEach(button => {
         button.addEventListener('click', (event) => {
             event.preventDefault();

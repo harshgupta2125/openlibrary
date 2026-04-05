@@ -147,7 +147,7 @@ export class OlPagination extends LitElement {
     /** Right chevron arrow icon */
     static _rightArrowIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
 
-    constructor() {
+    constructor () {
         super();
         this.mode = 'full';
         this.totalPages = 1;
@@ -170,7 +170,7 @@ export class OlPagination extends LitElement {
      * @param {Object} values - Key-value pairs to substitute (e.g., { page: 5 })
      * @returns {String} The interpolated string
      */
-    _interpolateLabel(template, values) {
+    _interpolateLabel (template, values) {
         return template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
     }
 
@@ -181,7 +181,7 @@ export class OlPagination extends LitElement {
      * @param {Number} page - The page number
      * @returns {String|null} The URL for the page
      */
-    _getPageUrl(page) {
+    _getPageUrl (page) {
         try {
             const base = this.baseUrl || window.location.href;
             const url = new URL(base, window.location.origin);
@@ -204,7 +204,7 @@ export class OlPagination extends LitElement {
      * - Near end: 1 ... last-3, last-2, last-1, last (5 total)
      * @returns {Array} Array of page numbers and 'ellipsis' markers
      */
-    _getVisiblePages() {
+    _getVisiblePages () {
         const total = this.totalPages;
         const current = this.currentPage;
 
@@ -219,7 +219,7 @@ export class OlPagination extends LitElement {
      * Get all focusable elements in the pagination
      * @returns {Array} Array of focusable elements (buttons or anchors)
      */
-    _getFocusableElements() {
+    _getFocusableElements () {
         return Array.from(
             this.shadowRoot.querySelectorAll('.pagination-item:not([aria-disabled="true"])')
         );
@@ -229,7 +229,7 @@ export class OlPagination extends LitElement {
      * Handle keyboard navigation within the pagination
      * @param {KeyboardEvent} e
      */
-    _handleKeyDown(e) {
+    _handleKeyDown (e) {
         const focusable = this._getFocusableElements();
         const currentIndex = focusable.indexOf(this.shadowRoot.activeElement);
 
@@ -261,7 +261,7 @@ export class OlPagination extends LitElement {
      * Navigate to a specific page
      * @param {Number} page - The page number to navigate to
      */
-    _goToPage(page) {
+    _goToPage (page) {
         const maxPage = this.mode === 'arrows' ? Infinity : this.totalPages;
         if (page < 1 || page > maxPage || page === this.currentPage) {
             return;
@@ -286,7 +286,7 @@ export class OlPagination extends LitElement {
      * @param {Event} e - Click event
      * @param {Number} page - The page number
      */
-    _handlePageClick(e, page) {
+    _handlePageClick (e, page) {
         const event = new CustomEvent('ol-pagination-change', {
             detail: { page },
             bubbles: true,
@@ -309,7 +309,7 @@ export class OlPagination extends LitElement {
      * @param {TemplateResult} options.content - Content to render inside the item
      * @returns {TemplateResult} Lit template for the button or anchor
      */
-    _renderPaginationItem({ page, label, className = '', content }) {
+    _renderPaginationItem ({ page, label, className = '', content }) {
         const url = this._getPageUrl(page);
         const isCurrent = page === this.currentPage;
         const ariaCurrent = isCurrent ? 'page' : 'false';
@@ -341,7 +341,7 @@ export class OlPagination extends LitElement {
      * @param {Number|String} page - Page number or 'ellipsis-left'/'ellipsis-right'
      * @returns {TemplateResult} Lit template for the button or anchor
      */
-    _renderPageButton(page) {
+    _renderPageButton (page) {
         if (typeof page === 'string' && page.startsWith('ellipsis')) {
             return html`<span class="ellipsis" aria-hidden="true">•••</span>`;
         }
@@ -359,7 +359,7 @@ export class OlPagination extends LitElement {
      * @param {String} direction - 'prev' or 'next'
      * @returns {TemplateResult} Lit template for the arrow
      */
-    _renderNavArrow(direction) {
+    _renderNavArrow (direction) {
         const isPrev = direction === 'prev';
         const isDisabled = isPrev
             ? this.currentPage === 1
@@ -391,7 +391,7 @@ export class OlPagination extends LitElement {
         });
     }
 
-    render() {
+    render () {
         const isArrows = this.mode === 'arrows';
         const visiblePages = isArrows ? [] : this._getVisiblePages();
 

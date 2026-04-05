@@ -2,7 +2,7 @@
  * @param {NodeListOf<Element>} clampers
  *
  */
-export function initClampers(clampers) {
+export function initClampers (clampers) {
     for (const clamper of clampers) {
         if (clamper.clientHeight === clamper.scrollHeight) {
             clamper.classList.remove('clamp');
@@ -18,14 +18,14 @@ export function initClampers(clampers) {
                     return;
                 }
 
-                clamper.style.display = clamper.style.display === '-webkit-box' || clamper.style.display === '' ? 'unset' : '-webkit-box'
+                clamper.style.display = clamper.style.display === '-webkit-box' || clamper.style.display === '' ? 'unset' : '-webkit-box';
 
                 if (clamper.getAttribute('data-before') === '\u25BE ') {
-                    clamper.setAttribute('data-before', '\u25B8 ')
+                    clamper.setAttribute('data-before', '\u25B8 ');
                 } else {
-                    clamper.setAttribute('data-before', '\u25BE ')
+                    clamper.setAttribute('data-before', '\u25BE ');
                 }
-            })
+            });
         }
     }
 }

@@ -28,7 +28,7 @@ import { sortable_lcc_to_short_lcc, short_lcc_to_sortable_lcc } from './LibraryE
 import maxBy from 'lodash/maxBy';
 
 class FilterState {
-    constructor() {
+    constructor () {
         this.filter = '';
         /** @type { '' | 'true' | 'false' } */
         this.has_ebook = 'true';
@@ -38,7 +38,7 @@ class FilterState {
         this.year = '[1985 TO 9998]';
     }
 
-    solrQueryParts() {
+    solrQueryParts () {
         const filters = this.filter ? [this.filter] : [];
         if (this.has_ebook) {
             filters.push(`has_fulltext:${this.has_ebook}`);
@@ -57,7 +57,7 @@ class FilterState {
         return filters;
     }
 
-    solrQuery() {
+    solrQuery () {
         return this.solrQueryParts().join(' AND ');
     }
 }
@@ -67,7 +67,7 @@ export default {
         BookRoom,
         LibraryToolbar,
     },
-    data() {
+    data () {
         /** @type {import('./LibraryExplorer/utils').ClassificationTree[]} */
         const classifications = [
             {
@@ -166,11 +166,11 @@ export default {
     },
 
     computed: {
-        computedFilter() {
+        computedFilter () {
             return this.filterState.solrQuery();
         },
 
-        bookRoomFeatures() {
+        bookRoomFeatures () {
             return {
                 book3d: this.settingsState.styles.book.selected.startsWith('3d'),
                 cover: this.settingsState.styles.cover.selected,
@@ -178,7 +178,7 @@ export default {
             };
         },
 
-        bookRoomClass() {
+        bookRoomClass () {
             return Object.entries(this.settingsState.styles)
                 .map(([key, val]) => `style--${key}--${val.selected}`)
                 .join(' ');

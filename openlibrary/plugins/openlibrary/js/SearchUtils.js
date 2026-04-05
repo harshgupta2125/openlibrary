@@ -7,7 +7,7 @@ import $ from 'jquery';
  * @param {JQuery} form the form we'll modify
  * @param {String} searchMode
  */
-export function addModeInputsToForm($form, searchMode) {
+export function addModeInputsToForm ($form, searchMode) {
     $('input[name=\'has_fulltext\']').remove();
 
     let url = $form.attr('action');
@@ -40,7 +40,7 @@ export class PersistentValue {
      * @param {String} key
      * @param {PersistentValue.Options} options
      */
-    constructor(key, options={}) {
+    constructor (key, options={}) {
         this.key = key;
         this.options = Object.assign({}, PersistentValue.DEFAULT_OPTIONS, options);
         this._listeners = [];
@@ -56,7 +56,7 @@ export class PersistentValue {
      * Read the stored value
      * @return {String}
      */
-    read() {
+    read () {
         return localStorage.getItem(this.key);
     }
 
@@ -64,7 +64,7 @@ export class PersistentValue {
      * Update the stored value
      * @param {String} newValue
      */
-    write(newValue) {
+    write (newValue) {
         const oldValue = this.read();
         let toWrite = newValue;
         if (this.options.writeTransformation) {
@@ -87,7 +87,7 @@ export class PersistentValue {
      * @param {Function} listener
      * @param {Boolean} callAtStart whether to call the listener right now with the current value
      */
-    sync(listener, callAtStart=true) {
+    sync (listener, callAtStart=true) {
         this._listeners.push(listener);
         if (callAtStart) listener(this.read());
     }
@@ -97,7 +97,7 @@ export class PersistentValue {
      * Notify listeners of an update
      * @param {String} newValue
      */
-    _emit(newValue) {
+    _emit (newValue) {
         this._listeners.forEach(listener => listener(newValue));
     }
 }
@@ -116,7 +116,7 @@ const DEFAULT_MODE = 'everything';
 export const mode = new PersistentValue('mode', {
     default: DEFAULT_MODE,
     initValidation: mode => MODES.indexOf(mode) !== -1,
-    writeTransformation(newValue, oldValue) {
+    writeTransformation (newValue, oldValue) {
         const mode = (newValue && newValue.toLowerCase()) || oldValue;
         const isValidMode = MODES.indexOf(mode) !== -1;
         return isValidMode ? mode : DEFAULT_MODE;
@@ -128,7 +128,7 @@ export class SearchModeSelector {
     /**
      * @param {JQuery} radioButtons
      */
-    constructor(radioButtons) {
+    constructor (radioButtons) {
         this.$radioButtons = radioButtons;
         this.change(newMode => mode.write(newMode));
     }
@@ -137,7 +137,7 @@ export class SearchModeSelector {
      * Listen for changes
      * @param {Function} handler
      */
-    change(handler) {
+    change (handler) {
         this.$radioButtons.on('change', event => handler($(event.target).val()));
     }
 }

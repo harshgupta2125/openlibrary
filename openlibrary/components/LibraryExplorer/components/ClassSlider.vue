@@ -51,7 +51,7 @@ export default {
     props: {
         node: Object
     },
-    data() {
+    data () {
         return {
             direction: null,
         };
@@ -59,40 +59,40 @@ export default {
 
     computed: {
         index: {
-            get() {
+            get () {
                 return this.node.position === 'root' ? 0 : this.node.position + 1;
             },
-            set(newVal) {
+            set (newVal) {
                 this.node.position = newVal === 0 ? 'root' : newVal - 1;
             }
         },
-        sections() {
+        sections () {
             return [this.node, ...(this.node.children || [])];
         },
 
-        progressBarSections() {
+        progressBarSections () {
             return this.node.children || [this.node];
         },
 
-        progressBarIndex() {
+        progressBarIndex () {
             return this.sections.length > 1 ? this.index - 1 : this.index;
         },
 
-        activeSection() {
+        activeSection () {
             return this.sections[this.index];
         },
 
-        prevSection() {
+        prevSection () {
             return this.sections[this.index - 1];
         },
 
-        nextSection() {
+        nextSection () {
             return this.sections[this.index + 1];
         }
     },
 
     watch: {
-        async index(newVal, oldVal) {
+        async index (newVal, oldVal) {
             if (typeof oldVal !== 'number') return;
             this.direction = newVal > oldVal ? 'slide-right' : 'slide-left';
             await new Promise(res => setTimeout(res, 200));

@@ -5,13 +5,13 @@ See: https://github.com/internetarchive/openlibrary/pull/9180#issuecomment-21079
 */
 
 // closes active popup
-export function closePopup() {
+export function closePopup () {
     // Note we don't import colorbox here, since it's on the parent
     parent.jQuery.fn.colorbox.close();
 }
 
 // used in templates/admin/imports.html
-export function truncate(text, limit) {
+export function truncate (text, limit) {
     if (text.length > limit) {
         return `${text.substr(0, limit)}...`;
     } else {
@@ -20,7 +20,7 @@ export function truncate(text, limit) {
 }
 
 // used in openlibrary/templates/books/edit/excerpts.html
-export function cond(predicate, true_value, false_value) {
+export function cond (predicate, true_value, false_value) {
     if (predicate) {
         return true_value;
     }
@@ -34,18 +34,18 @@ export function cond(predicate, true_value, false_value) {
  *
  * @param  {...HTMLElement} elements
  */
-export function removeChildren(...elements) {
+export function removeChildren (...elements) {
     for (const elem of elements) {
         if (elem) {
             while (elem.firstChild) {
-                elem.removeChild(elem.firstChild)
+                elem.removeChild(elem.firstChild);
             }
         }
     }
 }
 
 // Function to add or update multiple query parameters
-export function updateURLParameters(params) {
+export function updateURLParameters (params) {
     // Get the current URL
     const url = new URL(window.location.href);
 
@@ -64,16 +64,16 @@ export function updateURLParameters(params) {
  * Remove leading/trailing empty space on field deselect.
  * @param string a value for document.querySelectorAll()
  */
-export function trimInputValues(param) {
+export function trimInputValues (param) {
     const inputs = document.querySelectorAll(param);
     inputs.forEach(input => {
-        input.addEventListener('blur', function() {
+        input.addEventListener('blur', function () {
             this.value = this.value.trim();
         });
     });
 }
 
-export function buildPartialsUrl(component, params = {}) {
+export function buildPartialsUrl (component, params = {}) {
     const curUrl = new URL(window.location.href);
     const url = new URL(`${location.origin}/partials/${component}.json`);
 

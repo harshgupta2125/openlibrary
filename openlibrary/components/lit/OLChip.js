@@ -127,7 +127,7 @@ export class OLChip extends LitElement {
         }
     `;
 
-    constructor() {
+    constructor () {
         super();
         this.selected = false;
         this.size = 'medium';
@@ -136,7 +136,7 @@ export class OLChip extends LitElement {
         this.accessibleLabel = null;
     }
 
-    _handleClick() {
+    _handleClick () {
         this.dispatchEvent(new CustomEvent('ol-chip-select', {
             bubbles: true,
             composed: true,
@@ -144,7 +144,7 @@ export class OLChip extends LitElement {
         }));
     }
 
-    _renderIcons() {
+    _renderIcons () {
         if (!this.selected) return nothing;
 
         return html`
@@ -165,13 +165,13 @@ export class OLChip extends LitElement {
         `;
     }
 
-    _renderCount() {
+    _renderCount () {
         if (this.count === null) return nothing;
 
         return html`<span class="count">${this.count}</span>`;
     }
 
-    render() {
+    render () {
         const content = html`
             ${this._renderIcons()}
             <slot></slot>

@@ -11,7 +11,7 @@ import uniqBy from 'lodash/uniqBy';
  * @param {WorkOLID} old_work
  * @param {WorkOLID} new_work
  */
-export async function move_to_work(edition_ids, old_work, new_work) {
+export async function move_to_work (edition_ids, old_work, new_work) {
     for (const olid of edition_ids) {
         const url = `/books/${olid}.json`;
         const record = await fetch(url).then(r => r.json());
@@ -30,7 +30,7 @@ export async function move_to_work(edition_ids, old_work, new_work) {
  * @param {AuthorOLID} old_author
  * @param {AuthorOLID} new_author
  */
-export async function move_to_author(work_ids, old_author, new_author) {
+export async function move_to_author (work_ids, old_author, new_author) {
     for (const olid of work_ids) {
         const url = `/works/${olid}.json`;
         const record = await fetch(url).then(r => r.json());
@@ -45,7 +45,7 @@ export async function move_to_author(work_ids, old_author, new_author) {
             record._comment = 'move to correct author';
             const r = await fetch(url, { method: 'PUT', body: JSON.stringify(record) });
             // eslint-disable-next-line no-console
-            console.log(`moved ${olid}; ${r.status}`)
+            console.log(`moved ${olid}; ${r.status}`);
         } else {
             // eslint-disable-next-line no-console
             console.warn(`${old_author} not in ${url}!`);

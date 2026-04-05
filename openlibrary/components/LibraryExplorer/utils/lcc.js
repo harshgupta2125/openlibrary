@@ -14,9 +14,9 @@ const LCC_PARTS_RE = new RegExp(
         $`.replace(/\s/g, ''),
     'i');
 
-export function short_lcc_to_sortable_lcc(lcc) {
+export function short_lcc_to_sortable_lcc (lcc) {
     const m = clean_raw_lcc(lcc).match(LCC_PARTS_RE);
-    if (!m) return null
+    if (!m) return null;
 
     const letters = m.groups.letters.toUpperCase().padEnd(3, '-');
     const number = parseFloat(m.groups.number || 0);
@@ -35,14 +35,14 @@ export function short_lcc_to_sortable_lcc(lcc) {
 /**
  * @param {string} lcc
  */
-export function sortable_lcc_to_short_lcc(lcc) {
+export function sortable_lcc_to_short_lcc (lcc) {
     const m = lcc.match(LCC_PARTS_RE);
     const parts = {
         letters: m.groups.letters.replace(/-+/, ''),
         number: parseFloat(m.groups.number),
         cutter1: m.groups.cutter1 ? m.groups.cutter1.trim() : '',
         rest: m.groups.rest ? ` ${m.groups.rest}` : ''
-    }
+    };
     return `${parts.letters}${parts.number}${parts.cutter1}${parts.rest}`;
 }
 
@@ -52,10 +52,10 @@ export function sortable_lcc_to_short_lcc(lcc) {
  * @param {string} raw_lcc
  * @return {string}
  */
-export function clean_raw_lcc(raw_lcc) {
+export function clean_raw_lcc (raw_lcc) {
     let lcc = raw_lcc.replace(/\\/g, ' ').trim();
     if ((lcc.startsWith('[') && lcc.endsWith(']')) || (lcc.startsWith('(') && lcc.endsWith(')'))) {
         lcc = lcc.slice(1, -1);
     }
-    return lcc
+    return lcc;
 }

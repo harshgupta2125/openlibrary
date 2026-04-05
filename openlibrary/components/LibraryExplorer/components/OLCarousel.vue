@@ -88,12 +88,12 @@ import CONFIGS from '../../configs';
 // window.Vibrant = Vibrant;
 
 class CarouselCoordinator {
-    constructor() {
+    constructor () {
         this.maxRenderedOffscreen = Math.ceil(navigator.deviceMemory) || 8;
         this.currentlyRenderedOffscreen = [];
     }
 
-    registerRenderedOffscreenCarousel(carousel) {
+    registerRenderedOffscreenCarousel (carousel) {
         this.currentlyRenderedOffscreen.push(carousel);
         // console.log('CarouselCoordinator', `Now ffscreen -- ${carousel.query}`);
         if (this.currentlyRenderedOffscreen.length > this.maxRenderedOffscreen) {
@@ -103,7 +103,7 @@ class CarouselCoordinator {
         }
     }
 
-    registerOnscreenCarousel(carousel) {
+    registerOnscreenCarousel (carousel) {
         const index = this.currentlyRenderedOffscreen.indexOf(carousel);
         if (index !== -1) {
             // console.log('CarouselCoordinator', `Carousel no longer offscreen -- ${carousel.query}`);
@@ -114,7 +114,7 @@ class CarouselCoordinator {
 
 const carouselCoordinator = new CarouselCoordinator();
 
-async function waitUntil(predicate, sleep = 100, maxSleep = 2000) {
+async function waitUntil (predicate, sleep = 100, maxSleep = 2000) {
     for (let slept = 0; slept < maxSleep; slept += sleep) {
         if (predicate()) return;
         else {
@@ -138,7 +138,7 @@ export default {
             default: screen.width > 450 ? 20 : 8,
         }
     },
-    data() {
+    data () {
         return {
             /** @type {'Start' | 'Loading' | 'Loaded' | 'Errored'} */
             status: 'Start',
@@ -156,7 +156,7 @@ export default {
         };
     },
     computed: {
-        olUrl() {
+        olUrl () {
             return `${CONFIGS.OL_BASE_SEARCH}/search?${new URLSearchParams({
                 q: this.query,
                 offset: this.offset,
@@ -166,8 +166,8 @@ export default {
         },
 
         offset: {
-            get() { return this.node.requests[this.query]?.offset ?? 0; },
-            set(newVal) {
+            get () { return this.node.requests[this.query]?.offset ?? 0; },
+            set (newVal) {
                 if (!this.node.requests[this.query]) {
                     this.node.requests[this.query] = { offset: 0 };
                 }
@@ -176,17 +176,17 @@ export default {
         }
     },
     watch: {
-        query() {
+        query () {
             this.unrender();
             if (this.isVisible) this.debouncedReloadResults();
         },
 
-        sort() {
+        sort () {
             this.unrender();
             if (this.isVisible) this.debouncedReloadResults();
         },
 
-        isVisible(newVal) {
+        isVisible (newVal) {
             if (newVal) {
                 carouselCoordinator.registerOnscreenCarousel(this);
                 this.reloadResults();
@@ -196,14 +196,14 @@ export default {
         }
     },
 
-    created() {
+    created () {
         this.debouncedReloadResults = debounce(this.reloadResults, 1000);
         this.intersectionObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(this.handleIntersectionChange, {
             rootMargin: '100px'
         }) : null;
     },
 
-    async mounted() {
+    async mounted () {
         // HACK to make this method accessible from html
         this.$el._hack_loadPageContainingOffset = this.loadPageContainingOffset.bind(this);
         // We should only start observing once we're connected to the document,
@@ -211,7 +211,7 @@ export default {
         await waitUntil(() => this.$el.isConnected);
         this.intersectionObserver.observe(this.$el);
     },
-    beforeUnmount() {
+    beforeUnmount () {
         this.intersectionObserver.unobserve(this.$el);
     },
 
@@ -219,7 +219,7 @@ export default {
         /**
          * @param {IntersectionObserverEntry[]} entries
          */
-        handleIntersectionChange(entries) {
+        handleIntersectionChange (entries) {
             // Use `intersectionRatio` because of Edge 15's
             // lack of support for `isIntersecting`.
             // See: https://github.com/w3c/IntersectionObserver/issues/211
@@ -228,18 +228,18 @@ export default {
             this.isVisible = isIntersecting;
         },
 
-        unrender() {
+        unrender () {
             this.status = 'Start';
             this.results.splice(0, this.results.length);
             this.numFound = null;
             this.error = null;
         },
 
-        async reloadResults(cache='force-cache') {
+        async reloadResults (cache='force-cache') {
             return await this.loadResults(this.offset, cache);
         },
 
-        async loadResults(offset, cache='force-cache') {
+        async loadResults (offset, cache='force-cache') {
             // Don't re-fetch if already there
             if (offset === this.offset && this.results.length) return;
 
@@ -274,23 +274,23 @@ export default {
             }
         },
 
-        async _loadOffset(newOffset) {
+        async _loadOffset (newOffset) {
             await this.loadResults(newOffset);
             if (this.status === 'Loaded') this.offset = newOffset;
         },
 
-        async loadPageContainingOffset(offset) {
+        async loadPageContainingOffset (offset) {
             const page = Math.floor(offset / this.limit);
             const pageOffset = page * this.limit;
             await this._loadOffset(pageOffset);
             return pageOffset;
         },
 
-        async loadNextPage() {
+        async loadNextPage () {
             await this._loadOffset(this.offset + this.results.length);
         },
 
-        async loadPrevPage() {
+        async loadPrevPage () {
             await this._loadOffset(this.offset - this.limit);
         }
     }

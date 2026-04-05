@@ -41,11 +41,11 @@ export default {
     },
 
     computed: {
-        byline() {
+        byline () {
             return this.book.author_name ? this.book.author_name.join(' ') : '';
         },
 
-        coverMultiresUrl() {
+        coverMultiresUrl () {
             const { cover_i, lending_edition_s } = this.book;
             const fullUrl = lending_edition_s ? this.olCoverUrl(lending_edition_s, 'olid') :
                 cover_i && cover_i !== -1 ? this.olCoverUrl(cover_i) :
@@ -63,7 +63,7 @@ export default {
             }
         },
 
-        hashHue() {
+        hashHue () {
             return hashCode(this.book.key) % 360;
         },
     },
@@ -73,7 +73,7 @@ export default {
          * @param {String} id
          * @param {'id' | 'olid'} idType
          */
-        olCoverUrl(id, idType='id') {
+        olCoverUrl (id, idType='id') {
             return `${CONFIGS.OL_BASE_COVERS}/b/${idType}/${id}.jpg`;
         }
     }

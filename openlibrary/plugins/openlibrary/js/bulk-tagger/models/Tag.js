@@ -8,7 +8,7 @@ const displayTypeMapping = {
     subject_places: 'place',
     subject_times: 'time',
     collections: 'collection',
-}
+};
 
 /**
  * Maps UI-ready subject types to their corresponding
@@ -20,7 +20,7 @@ export const subjectTypeMapping = {
     place: 'subject_places',
     time: 'subject_times',
     collection: 'collections'
-}
+};
 
 /**
  * Compare function for determining the order of two tags.
@@ -33,25 +33,25 @@ export const subjectTypeMapping = {
  * @returns {Number}
  * @see {Array.sort}
  */
-export function compare(tagA, tagB) {
-    const lowerA = createComparableTag(tagA)
-    const lowerB = createComparableTag(tagB)
+export function compare (tagA, tagB) {
+    const lowerA = createComparableTag(tagA);
+    const lowerB = createComparableTag(tagB);
 
     if (lowerA.tagName < lowerB.tagName) {
-        return -1
+        return -1;
     }
     else if (lowerA.tagName > lowerB.tagName) {
-        return 1
+        return 1;
     } else {
         if (lowerA.tagType < lowerB.tagType) {
-            return -1
+            return -1;
         }
         else if (lowerA.tagType > lowerB.tagtype) {
-            return 1
+            return 1;
         }
     }
 
-    return 0
+    return 0;
 }
 
 /**
@@ -64,11 +64,11 @@ export function compare(tagA, tagB) {
  * @returns {Object} Tag-like object that is suitable to use for sorting comparisons.
  * @see {compare}
  */
-function createComparableTag(tag) {
+function createComparableTag (tag) {
     return {
         tagName: tag.tagName.toLowerCase(),
         tagType: tag.tagType.toLowerCase()
-    }
+    };
 }
 
 /**
@@ -90,13 +90,13 @@ export class Tag {
      *
      * @throws Will throw an error if both `tagType` and `displayType` are falsey
      */
-    constructor(tagName, tagType = null, displayType = null) {
+    constructor (tagName, tagType = null, displayType = null) {
         if (!(tagType || displayType)) {
-            throw new Error('Tag must have at least one type')
+            throw new Error('Tag must have at least one type');
         }
-        this.tagName = tagName
-        this.tagType = tagType || this.convertToType(displayType)
-        this.displayType = displayType || this.convertToDisplayType(tagType)
+        this.tagName = tagName;
+        this.tagType = tagType || this.convertToType(displayType);
+        this.displayType = displayType || this.convertToDisplayType(tagType);
     }
 
     /**
@@ -107,12 +107,12 @@ export class Tag {
      * @returns {String} The corresponding technical tag type
      * @throws Will throw an error if the given type is unrecognized.
      */
-    convertToType(displayType) {
-        const result = subjectTypeMapping[displayType]
+    convertToType (displayType) {
+        const result = subjectTypeMapping[displayType];
         if (!result) {
-            throw new Error('Unrecognized `displayType` value')
+            throw new Error('Unrecognized `displayType` value');
         }
-        return result
+        return result;
     }
 
     /**
@@ -123,12 +123,12 @@ export class Tag {
      * @returns {String} A type string that can be displayed in the UI
      * @throws Will throw an error if the given type is unrecognized
      */
-    convertToDisplayType(tagType) {
-        const result = displayTypeMapping[tagType]
+    convertToDisplayType (tagType) {
+        const result = displayTypeMapping[tagType];
         if (!result) {
-            throw new Error('Unrecognized `tagType` value')
+            throw new Error('Unrecognized `tagType` value');
         }
-        return result
+        return result;
     }
 
     /**
@@ -140,10 +140,10 @@ export class Tag {
      * @param {Tag} tag
      * @returns `true` if the given tag is considered equivalent to this tag.
      */
-    equals(tag) {
-        const lowerSelf = createComparableTag(this)
-        const lowerTag = createComparableTag(tag)
+    equals (tag) {
+        const lowerSelf = createComparableTag(this);
+        const lowerTag = createComparableTag(tag);
 
-        return lowerSelf.tagName === lowerTag.tagName && lowerSelf.tagType === lowerTag.tagType
+        return lowerSelf.tagName === lowerTag.tagName && lowerSelf.tagType === lowerTag.tagType;
     }
 }

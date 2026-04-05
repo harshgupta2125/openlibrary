@@ -7,7 +7,7 @@
  * @param {int} cookieDurationDays
  * @param {Function} successCallback
  */
-function setBannerCookie(cookieName, cookieDurationDays, successCallback) {
+function setBannerCookie (cookieName, cookieDurationDays, successCallback) {
     $.ajax({
         type: 'POST',
         url: '/hide_banner',
@@ -15,7 +15,7 @@ function setBannerCookie(cookieName, cookieDurationDays, successCallback) {
         contentType: 'application/json',
         dataType: 'json',
 
-        beforeSend: function(xhr) {
+        beforeSend: function (xhr) {
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.setRequestHeader('Accept', 'application/json');
         },
@@ -28,17 +28,17 @@ function setBannerCookie(cookieName, cookieDurationDays, successCallback) {
  *
  * @param {NodeList<HTMLElement>} banners
  */
-export function initDismissibleBanners(banners) {
+export function initDismissibleBanners (banners) {
     for (const banner of banners) {
-        const cookieName = banner.dataset.cookieName
-        const cookieDurationDays = banner.dataset.cookieDurationDays
+        const cookieName = banner.dataset.cookieName;
+        const cookieDurationDays = banner.dataset.cookieDurationDays;
 
-        const dismissButton = banner.querySelector('.page-banner--dismissable-close')
+        const dismissButton = banner.querySelector('.page-banner--dismissable-close');
         dismissButton.addEventListener('click', () => {
             const successCallback = () => {
-                banner.remove()
-            }
-            setBannerCookie(cookieName, cookieDurationDays, successCallback)
-        })
+                banner.remove();
+            };
+            setBannerCookie(cookieName, cookieDurationDays, successCallback);
+        });
     }
 }

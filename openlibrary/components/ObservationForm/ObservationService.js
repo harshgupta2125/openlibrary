@@ -9,8 +9,8 @@
  *
  * @returns A Promise representing the state of the POST request.
  */
-export function updateObservation(action, type, value, workKey, username) {
-    const data = constructDataObject(type, value, username, action)
+export function updateObservation (action, type, value, workKey, username) {
+    const data = constructDataObject(type, value, username, action);
 
     return fetch(`${workKey}/observations`, {
         method: 'POST',
@@ -21,12 +21,12 @@ export function updateObservation(action, type, value, workKey, username) {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Server response was not ok')
+                throw new Error('Server response was not ok');
             }
         })
         .catch(error => {
-            throw error
-        })
+            throw error;
+        });
 }
 
 /**
@@ -47,12 +47,12 @@ export function updateObservation(action, type, value, workKey, username) {
  * @param {'add' | 'delete'} action 'add' for creating a new observation, or 'delete' for removing an existing one
  * @returns An object that represents the observation update that will be made.
  */
-function constructDataObject(type, value, username, action) {
+function constructDataObject (type, value, username, action) {
     const data = {
         username: username,
         action: action,
         observation: {}
-    }
+    };
 
     data.observation[type] = value;
 

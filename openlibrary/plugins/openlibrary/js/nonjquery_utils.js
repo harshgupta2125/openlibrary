@@ -12,11 +12,11 @@
  * @param {Boolean} [execAsap]
  * @returns {Function}
  */
-export function debounce(func, threshold=100, execAsap=false) {
+export function debounce (func, threshold=100, execAsap=false) {
     let timeout;
-    return function debounced() {
+    return function debounced () {
         const obj = this, args = arguments;
-        function delayed() {
+        function delayed () {
             if (!execAsap)
                 func.apply(obj, args);
             timeout = null;

@@ -8,14 +8,14 @@ import {
     isValidLccn,
 } from '../../../plugins/openlibrary/js/idValidation.js';
 
-export function errorDisplay(message, error_output) {
+export function errorDisplay (message, error_output) {
     let errorSelector;
     if (error_output === '#hiddenAuthorIdentifiers') {
-        errorSelector = document.querySelector('#id-errors-author')
+        errorSelector = document.querySelector('#id-errors-author');
     } else if (error_output === '#hiddenWorkIdentifiers') {
-        errorSelector = document.querySelector('#id-errors-work')
+        errorSelector = document.querySelector('#id-errors-work');
     } else if (error_output === '#hiddenEditionIdentifiers') {
-        errorSelector = document.querySelector('#id-errors-edition')
+        errorSelector = document.querySelector('#id-errors-edition');
     }
     if (message) {
         errorSelector.style.display = '';
@@ -27,7 +27,7 @@ export function errorDisplay(message, error_output) {
 
 }
 
-function validateIsbn10(value) {
+function validateIsbn10 (value) {
     const isbn10_value = parseIsbn(value);
     if (!isFormatValidIsbn10(isbn10_value)) {
         errorDisplay('ID must be exactly 10 characters [0-9] or X.', '#hiddenEditionIdentifiers');
@@ -40,7 +40,7 @@ function validateIsbn10(value) {
     return true;
 }
 
-function validateIsbn13(value) {
+function validateIsbn13 (value) {
     const isbn13_value = parseIsbn(value);
 
     if (!isFormatValidIsbn13(isbn13_value)) {
@@ -54,7 +54,7 @@ function validateIsbn13(value) {
     return true;
 }
 
-function validateLccn(value) {
+function validateLccn (value) {
     const lccn_value = parseLccn(value);
 
     if (!isValidLccn(lccn_value)) {
@@ -64,7 +64,7 @@ function validateLccn(value) {
     return true;
 }
 
-export function validateIdentifiers(name, value, entries, error_output) {
+export function validateIdentifiers (name, value, entries, error_output) {
     let validId = true;
     errorDisplay('', error_output);
     if (name === '' || name === '---') {

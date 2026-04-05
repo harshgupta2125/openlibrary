@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import MatchRow from './MatchRow.vue'
-import { BulkSearchState } from '../utils/classes.js'
+import MatchRow from './MatchRow.vue';
+import { BulkSearchState } from '../utils/classes.js';
 export default {
     components: {
         MatchRow
@@ -54,18 +54,18 @@ export default {
         bulkSearchState: BulkSearchState,
     },
     computed: {
-        columns(){
+        columns (){
             const cols = new Set(
                 this.bulkSearchState.matchedBooks
                     .flatMap(bookMatch => Object.keys(bookMatch.extractedBook)
                         .filter(key => bookMatch.extractedBook[key])
                     )
                     .map(col => col.toLowerCase())
-            )
-            return ['title', 'author', 'isbn'].filter(col => cols.has(col))
+            );
+            return ['title', 'author', 'isbn'].filter(col => cols.has(col));
         }
     }
-}</script>
+};</script>
 
 <style>
 table {

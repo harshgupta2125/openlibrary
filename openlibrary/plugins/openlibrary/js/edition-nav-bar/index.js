@@ -4,17 +4,17 @@ import EdtionNavBar from './EditionNavBar';
  * Holds references to each book page navbar.
  * @type {Array<EditionNavBar>}
  */
-const navbars = []
+const navbars = [];
 
 /**
  * Initializes and stores references to each book page navbar.
  *
  * @param {HTMLCollection<HTMLElement>} navbarWrappers Each navbar found on the book page
  */
-export function initNavbars(navbarWrappers) {
+export function initNavbars (navbarWrappers) {
     for (const wrapper of navbarWrappers) {
-        const navbar = new EdtionNavBar(wrapper)
-        navbars.push(navbar)
+        const navbar = new EdtionNavBar(wrapper);
+        navbars.push(navbar);
     }
 }
 
@@ -26,8 +26,8 @@ export function initNavbars(navbarWrappers) {
  * something other then a scroll event (e.g. when
  * stickied to a new position).
  */
-export function updateSelectedNavItem() {
+export function updateSelectedNavItem () {
     for (const navbar of navbars) {
-        navbar.updateSelected()
+        navbar.updateSelected();
     }
 }

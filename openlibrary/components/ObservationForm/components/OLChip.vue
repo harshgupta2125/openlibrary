@@ -51,7 +51,7 @@ export default {
             default: ''
         }
     },
-    data: function() {
+    data: function () {
         return {
             /**
              * Tracks whether this chip is currently selected.
@@ -59,7 +59,7 @@ export default {
              * @type {boolean}
              */
             isSelected: this.selected
-        }
+        };
     },
     computed: {
         /**
@@ -67,20 +67,20 @@ export default {
          *
          * @returns 'click' if this chip can be selected, otherwise `null`
          */
-        canSelect: function() {
+        canSelect: function () {
             return this.selectable ? 'click' : null;
         }
     },
     watch: {
         selected (newValue) {
-            this.isSelected = newValue
+            this.isSelected = newValue;
         }
     },
     methods: {
         /**
          * Toggles the value of `isSelected` and fires an `update-selected` event.
          */
-        onClick: function() {
+        onClick: function () {
             this.toggleSelected();
             /**
              * Update selected event.
@@ -88,16 +88,16 @@ export default {
              * @property {boolean} isSelected Selected status of this chip.
              * @property {String} text Main text displayed by this chip.
              */
-            this.$emit('update-selected', this.isSelected, this.text)
+            this.$emit('update-selected', this.isSelected, this.text);
         },
         /**
          * Toggles the state of `isSelected`
          */
-        toggleSelected: function() {
+        toggleSelected: function () {
             this.isSelected = !this.isSelected;
         }
     }
-}
+};
 </script>
 
 <style scoped>

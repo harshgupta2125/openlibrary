@@ -53,13 +53,13 @@ export default {
     props: {
         books: Array
     },
-    data() {
+    data () {
         return {
             OL_BASE_BOOKS: CONFIGS.OL_BASE_BOOKS
         };
     },
     methods: {
-        beforeBookLeave(el) {
+        beforeBookLeave (el) {
             const left = el.getBoundingClientRect().left + this.$el.scrollLeft;
             el.style.left = `${left}px`;
         }

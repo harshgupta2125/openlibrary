@@ -5,7 +5,7 @@
  * @param {T} node
  * @param {(node: T) => void} fn
  */
-export function recurForEach(node, fn) {
+export function recurForEach (node, fn) {
     if (!node) return;
     fn(node);
     if (!node.children) return;
@@ -19,7 +19,7 @@ export function recurForEach(node, fn) {
  * Src: https://stackoverflow.com/a/3426956/2317712
  * @param {string} str
  */
-export function hashCode(str) {
+export function hashCode (str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -34,7 +34,7 @@ export function hashCode(str) {
  * @param {(node: T) => boolean} predicate
  * @returns {T[]}
  */
-export function hierarchyFind(node, predicate) {
+export function hierarchyFind (node, predicate) {
     if (!predicate(node)) return [];
     for (const child of (node.children || [])) {
         const childResult = hierarchyFind(child, predicate);
@@ -50,7 +50,7 @@ export function hierarchyFind(node, predicate) {
  * @param {string} pattern
  * @param {string} string
  */
-export function testLuceneSyntax(pattern, string) {
+export function testLuceneSyntax (pattern, string) {
     if (pattern.endsWith('*')) {
         return string.startsWith(pattern.slice(0, -1));
     } else if (pattern.endsWith(']')) {
@@ -66,7 +66,7 @@ export function testLuceneSyntax(pattern, string) {
  * while keeping it solr-query safe.
  * @param {string} string
  */
-export function decrementStringSolr(string, caseSensitive=true, numeric=false) {
+export function decrementStringSolr (string, caseSensitive=true, numeric=false) {
     const lastChar = caseSensitive ? string[string.length - 1] : string[string.length - 1].toUpperCase();
     // Anything < '.' will likely cause query issues, so assume it's
     // the end of the that prefix.
@@ -89,7 +89,7 @@ export function decrementStringSolr(string, caseSensitive=true, numeric=false) {
  * @param {() => T | undefined} fn - The function to poll.
  * @returns {Promise<T | undefined>} - A promise that resolves to the truthy value returned by the function, or undefined if the timeout is reached.
  */
-export async function pollUntilTruthy(fn, { timeout = 1000, step = 100 } = {}) {
+export async function pollUntilTruthy (fn, { timeout = 1000, step = 100 } = {}) {
     const start = Date.now();
     while (Date.now() - start <= timeout) {
         const val = fn();

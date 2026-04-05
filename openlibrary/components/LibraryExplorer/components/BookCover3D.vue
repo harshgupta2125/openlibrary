@@ -60,7 +60,7 @@ export default {
         cover: String,
     },
 
-    data() {
+    data () {
         return {
             finalWidth: this.width,
             finalHeight: this.height,
@@ -69,7 +69,7 @@ export default {
     },
 
     computed: {
-        byline() {
+        byline () {
             return this.book.author_name
                 ? this.book.author_name
                     .map(a => {
@@ -80,12 +80,12 @@ export default {
                 : '';
         },
 
-        hashHue() {
+        hashHue () {
             return hashCode(this.book.key) % 360;
         },
     },
     methods: {
-        updateWithImageMetadata(e) {
+        updateWithImageMetadata (e) {
             this.finalHeight = e.target.height;
         },
     }

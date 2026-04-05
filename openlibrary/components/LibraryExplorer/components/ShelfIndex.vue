@@ -34,12 +34,12 @@ export default {
 
     computed: {
         index: {
-            get() {
+            get () {
                 return typeof this.node.position === 'undefined' || !this.node.children
                     ? 'root'
                     : this.node.position;
             },
-            set(newVal) {
+            set (newVal) {
                 return this.node.position = newVal;
             },
         },

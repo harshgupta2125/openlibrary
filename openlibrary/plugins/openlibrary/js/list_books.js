@@ -3,21 +3,21 @@ export class ListBooks {
      * @param {HTMLElement} listBooks
      * @param {HTMLElement} layoutToolbar
      **/
-    constructor(listBooks, layoutToolbar) {
+    constructor (listBooks, layoutToolbar) {
         this.listBooks = listBooks;
         this.layoutToolbar = layoutToolbar;
 
         this.activeLayout = this.layoutToolbar.querySelector('a.active');
     }
 
-    attach() {
+    attach () {
         $(this.layoutToolbar).on('click', 'a', this.updateLayout.bind(this));
     }
 
     /**
      * @param {MouseEvent} event
      */
-    updateLayout(event) {
+    updateLayout (event) {
         event.preventDefault();
         const layoutAnchor = event.target;
         this.layoutToolbar.querySelector('a.active').classList.remove('active');
@@ -27,7 +27,7 @@ export class ListBooks {
         document.cookie = `LBL=${layout}; path=/; max-age=31536000`;
     }
 
-    static init() {
+    static init () {
         // Assume only one list-books/layout per page
         new ListBooks(
             document.querySelector('.list-books'),

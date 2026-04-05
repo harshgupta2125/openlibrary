@@ -8,7 +8,7 @@ import {
     isFormatValidIsbn13,
     isValidLccn,
     isValidOclc
-} from './idValidation.js'
+} from './idValidation.js';
 import { trimInputValues } from './utils.js';
 
 let invalidChecksum;
@@ -22,12 +22,12 @@ const i18nStrings = JSON.parse(document.querySelector('form[name=edit]').dataset
 const addBookForm = $('form#addbook');
 
 export function initAddBookImport () {
-    $('.list-books a').on('click', function() {
+    $('.list-books a').on('click', function () {
         var li = $(this).parents('li').first();
         $('input#work').val(`/works/${li.attr('id')}`);
         addBookForm.trigger('submit');
     });
-    $('#bookAddCont').on('click', function() {
+    $('#bookAddCont').on('click', function () {
         $('input#work').val('none-of-these');
         addBookForm.trigger('submit');
     });
@@ -39,27 +39,27 @@ export function initAddBookImport () {
     invalidOclc = i18nStrings.invalid_oclc;
     emptyId = i18nStrings.empty_id;
 
-    $('#id_value').on('change',autoCompleteIdName);
+    $('#id_value').on('change', autoCompleteIdName);
     $('#addbook').on('submit', parseAndValidateId);
     $('#id_value').on('input', clearErrors);
     $('#id_name').on('change', clearErrors);
 
     $('#publish_date').on('blur', validatePublishDate);
 
-    trimInputValues('input')
+    trimInputValues('input');
 
     // Prevents submission if the publish date is > 1 year in the future
-    addBookForm.on('submit', function() {
+    addBookForm.on('submit', function () {
         if ($('#publish-date-errors').hasClass('hidden')) {
             return true;
         } else return false;
-    })
+    });
 }
 
 // a flag to make raiseIsbnError perform differently upon subsequent calls
 let addBookWithIsbnErrors = false;
 
-function displayIsbnError(event, errorMessage) {
+function displayIsbnError (event, errorMessage) {
     if (!addBookWithIsbnErrors) {
         addBookWithIsbnErrors = true;
         const errorDiv = document.getElementById('id-errors');
@@ -76,7 +76,7 @@ function displayIsbnError(event, errorMessage) {
     document.getElementById('id_value').value = parseIsbn(document.getElementById('id_value').value);
 }
 
-function displayIdentifierError(event, errorMessage) {
+function displayIdentifierError (event, errorMessage) {
     const errorDiv = document.getElementById('id-errors');
     errorDiv.classList.remove('hidden');
     errorDiv.textContent = errorMessage;
@@ -84,7 +84,7 @@ function displayIdentifierError(event, errorMessage) {
     return;
 }
 
-function clearErrors() {
+function clearErrors () {
     addBookWithIsbnErrors = false;
     const errorDiv = document.getElementById('id-errors');
     errorDiv.classList.add('hidden');
@@ -92,7 +92,7 @@ function clearErrors() {
     confirm.classList.add('hidden');
 }
 
-function parseAndValidateId(event) {
+function parseAndValidateId (event) {
     const fieldName = document.getElementById('id_name').value;
     const idValue = document.getElementById('id_value').value;
 
@@ -113,7 +113,7 @@ function parseAndValidateId(event) {
     }
 }
 
-function isEmptyId(event, idValue) {
+function isEmptyId (event, idValue) {
     if (!idValue.trim()) {
         const errorDiv = document.getElementById('id-errors');
         errorDiv.classList.remove('hidden');
@@ -124,7 +124,7 @@ function isEmptyId(event, idValue) {
     return false;
 }
 
-function parseAndValidateIsbn10(event, idValue) {
+function parseAndValidateIsbn10 (event, idValue) {
     // parsing valid ISBN that passes checks
     idValue = parseIsbn(idValue);
     if (!isFormatValidIsbn10(idValue)) {
@@ -136,7 +136,7 @@ function parseAndValidateIsbn10(event, idValue) {
     document.getElementById('id_value').value = idValue;
 }
 
-function parseAndValidateIsbn13(event, idValue) {
+function parseAndValidateIsbn13 (event, idValue) {
     idValue = parseIsbn(idValue);
     if (!isFormatValidIsbn13(idValue)) {
         return displayIsbnError(event, invalidIsbn13);
@@ -147,7 +147,7 @@ function parseAndValidateIsbn13(event, idValue) {
     document.getElementById('id_value').value = idValue;
 }
 
-function parseAndValidateLccn(event, idValue) {
+function parseAndValidateLccn (event, idValue) {
     idValue = parseLccn(idValue);
     if (!isValidLccn(idValue)) {
         return displayIdentifierError(event, invalidLccn);
@@ -155,7 +155,7 @@ function parseAndValidateLccn(event, idValue) {
     document.getElementById('id_value').value = idValue;
 }
 
-function parseAndValidateOclc(event, idValue) {
+function parseAndValidateOclc (event, idValue) {
     idValue = parseOclc(idValue);
     if (!isValidOclc(idValue)) {
         return displayIdentifierError(event, invalidOclc);
@@ -163,7 +163,7 @@ function parseAndValidateOclc(event, idValue) {
     document.getElementById('id_value').value = idValue;
 }
 
-function autoCompleteIdName(){
+function autoCompleteIdName (){
     const idValue = document.querySelector('input#id_value').value.trim();
     const idValueIsbn = parseIsbn(idValue);
     const currentSelection = document.getElementById('id_name').value;
@@ -185,7 +185,7 @@ function autoCompleteIdName(){
     }
 }
 
-function validatePublishDate() {
+function validatePublishDate () {
     // validate publish-date to make sure the date is not in future
     // used in templates/books/add.html
     const publish_date = this.value;

@@ -122,7 +122,7 @@ import CONFIGS from '../../configs';
  * @param {ClassificationNode} classificationNode
  * @param {string} classification (e.g. 658.91500202854)
  */
-function findClassification(classificationNode, classification) {
+function findClassification (classificationNode, classification) {
     // First we find the closest matching node in the current classification tree
     const path = hierarchyFind(
         classificationNode,
@@ -171,7 +171,7 @@ export default {
             })
         }
     },
-    data() {
+    data () {
         const jumpToData = this.jumpTo && findClassification(this.classification.root, this.jumpTo);
 
         return {
@@ -188,7 +188,7 @@ export default {
     },
 
     computed: {
-        signState() {
+        signState () {
             const cases = this.activeRoom.children;
             const i = this.activeBookcaseIndex;
 
@@ -201,7 +201,7 @@ export default {
         }
     },
     watch: {
-        async classification(newVal) {
+        async classification (newVal) {
             this.activeRoom = newVal.root;
             this.breadcrumbs = [];
             await nextTick();
@@ -210,11 +210,11 @@ export default {
         }
     },
 
-    async created() {
+    async created () {
         this.debouncedUpdateWidths = debounce(this.updateWidths);
         window.addEventListener('resize', this.debouncedUpdateWidths, { passive: true });
     },
-    async mounted() {
+    async mounted () {
         this.updateWidths();
         if (this.jumpToData?.shelf) {
             this.$el.querySelector(`[data-short="${this.jumpToData.shelf.short}"]`).scrollIntoView({
@@ -245,7 +245,7 @@ export default {
             });
         }
     },
-    unmounted() {
+    unmounted () {
         window.removeEventListener('resize', this.debouncedUpdateWidths);
     },
     methods: {
@@ -253,7 +253,7 @@ export default {
          * @param {ClassificationNode} bookshelf something that is currently a bookcase, that will be the new room
          * @param {ClassificationNode} [shelf] the shelf (child of bookshelf)
          */
-        async expandBookshelf(bookshelf, shelf=null) {
+        async expandBookshelf (bookshelf, shelf=null) {
             this.expandingAnimation = true;
             await new Promise(r => setTimeout(r, 200));
             this.expandingAnimation = false;
@@ -266,7 +266,7 @@ export default {
             this.$el.querySelector(`[data-short="${nodeToScrollTo.short}"]`).scrollIntoView();
         },
 
-        async goUpTo(index) {
+        async goUpTo (index) {
             const nodeToScrollTo = this.activeRoom;
             this.activeRoom = this.breadcrumbs[index];
             this.breadcrumbs.splice(index, this.breadcrumbs.length - index);
@@ -274,7 +274,7 @@ export default {
             this.$el.querySelector(`[data-short="${nodeToScrollTo.short}"]`).scrollIntoView();
         },
 
-        updateWidths() {
+        updateWidths () {
             const { max } = Math;
             // Avoid dividing by 0 and whatnot
             this.roomWidth = max(1, this.$el.querySelector('.book-room-shelves').scrollWidth);
@@ -285,14 +285,14 @@ export default {
             }
         },
 
-        updateActiveShelfOnScroll() {
+        updateActiveShelfOnScroll () {
             const scrollCenterX = this.$refs.scrollingElement.scrollLeft + this.viewportWidth / 2;
             const shelves = this.activeRoom.children;
             const shelvesCount = shelves.length;
             this.activeBookcaseIndex =  Math.floor(shelvesCount * (scrollCenterX / this.roomWidth));
         },
 
-        moveToShelf(index) {
+        moveToShelf (index) {
             this.$el.querySelector(`.bookshelf-wrapper:nth-child(${index + 1})`)
                 .scrollIntoView({
                     behavior: 'smooth',

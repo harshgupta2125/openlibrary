@@ -35,16 +35,16 @@ export default {
         },
         classification: Object
     },
-    data() {
+    data () {
         return {};
     },
 
     computed: {
-        activeSection() {
+        activeSection () {
             return this.levels[0].children[this.levels[0].position];
         },
 
-        levels() {
+        levels () {
             const result = [];
             let cur = this.classification.root;
             while (cur.children) {

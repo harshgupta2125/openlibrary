@@ -118,7 +118,7 @@ import IndexIcon from './icons/IndexIcon.vue';
 import maxBy from 'lodash/maxBy';
 
 class FetchCoordinator {
-    constructor() {
+    constructor () {
         this.requestedFetches = [];
         /** @type { 'idle' | 'active' } */
         this.state = 'idle';
@@ -130,7 +130,7 @@ class FetchCoordinator {
         this.groupingTime = 250;
     }
 
-    async fetch({ priority, name }, ...args) {
+    async fetch ({ priority, name }, ...args) {
         return new Promise((resolve, reject) => {
             this.enqueue({
                 priority,
@@ -142,22 +142,22 @@ class FetchCoordinator {
         });
     }
 
-    enqueue(fetchRequest) {
+    enqueue (fetchRequest) {
         // console.log(`Enqueuing request #${this.requestedFetches.length + 1}: ${fetchRequest.name}`);
         this.requestedFetches.push(fetchRequest);
         this.activate();
     }
 
-    activate() {
+    activate () {
         if (this.requestedFetches.length && !this.timeout) {
-            this.state = 'active'
+            this.state = 'active';
             this.timeout = setTimeout(() => this.consume(), this.groupingTime);
         } else {
             this.state = 'idle';
         }
     }
 
-    consume() {
+    consume () {
         this.timeout = null;
         while ((this.maxConcurrent - this.runningRequests > 0) && this.requestedFetches.length) {
             const topRequest = maxBy(this.requestedFetches, f => f.priority());
@@ -206,7 +206,7 @@ export default {
         sort: String,
     },
 
-    data() {
+    data () {
         return {
             showShelfIndex: false,
             fetchCoordinator: fetchCoordinator,

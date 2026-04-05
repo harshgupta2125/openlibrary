@@ -35,19 +35,19 @@ export class OLChipGroup extends LitElement {
         }
     `;
 
-    constructor() {
+    constructor () {
         super();
         this.gap = 'medium';
     }
 
-    connectedCallback() {
+    connectedCallback () {
         super.connectedCallback();
         if (!this.hasAttribute('role')) {
             this.setAttribute('role', 'group');
         }
     }
 
-    render() {
+    render () {
         return html`<slot></slot>`;
     }
 }

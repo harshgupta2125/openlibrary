@@ -113,7 +113,7 @@ export class OLReadMore extends LitElement {
         }
     `;
 
-    constructor() {
+    constructor () {
         super();
         this.maxHeight = '80px';
         this.moreText = 'Read More';
@@ -124,7 +124,7 @@ export class OLReadMore extends LitElement {
         this._unnecessary = false;
     }
 
-    firstUpdated() {
+    firstUpdated () {
         this._checkIfTruncationNeeded();
         this._updateBackgroundColor();
         // Remove styles that were used to prevent layout shift
@@ -134,19 +134,19 @@ export class OLReadMore extends LitElement {
         this.style.overflow = 'visible';
     }
 
-    updated(changedProperties) {
+    updated (changedProperties) {
         if (changedProperties.has('backgroundColor')) {
             this._updateBackgroundColor();
         }
     }
 
-    _updateBackgroundColor() {
+    _updateBackgroundColor () {
         if (this.backgroundColor) {
             this.style.setProperty('--ol-readmore-gradient-color', this.backgroundColor);
         }
     }
 
-    _checkIfTruncationNeeded() {
+    _checkIfTruncationNeeded () {
         const content = this.shadowRoot.querySelector('.content-wrapper');
         if (!content) return;
 
@@ -158,12 +158,12 @@ export class OLReadMore extends LitElement {
         }
     }
 
-    _handleMoreClick() {
+    _handleMoreClick () {
         if (this._unnecessary) return;
         this._expanded = true;
     }
 
-    _handleLessClick() {
+    _handleLessClick () {
         if (this._unnecessary) return;
         this._expanded = false;
 
@@ -177,7 +177,7 @@ export class OLReadMore extends LitElement {
         }
     }
 
-    _getContentStyle() {
+    _getContentStyle () {
         if (this._expanded) {
             return '';
         }
@@ -189,7 +189,7 @@ export class OLReadMore extends LitElement {
         return '';
     }
 
-    render() {
+    render () {
         const showMoreBtn = !this._expanded && !this._unnecessary;
         const showLessBtn = this._expanded && !this._unnecessary;
         const sizeClass = this.labelSize === 'small' ? 'small' : '';

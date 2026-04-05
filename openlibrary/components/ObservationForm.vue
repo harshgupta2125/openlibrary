@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import CategorySelector from './ObservationForm/components/CategorySelector.vue'
-import SavedTags from './ObservationForm/components/SavedTags.vue'
-import ValueCard from './ObservationForm/components/ValueCard.vue'
+import CategorySelector from './ObservationForm/components/CategorySelector.vue';
+import SavedTags from './ObservationForm/components/SavedTags.vue';
+import ValueCard from './ObservationForm/components/ValueCard.vue';
 
-import { decodeAndParseJSON, resizeColorbox } from './ObservationForm/Utils'
+import { decodeAndParseJSON, resizeColorbox } from './ObservationForm/Utils';
 
 export default {
     name: 'ObservationForm',
@@ -84,7 +84,7 @@ export default {
             required: true
         }
     },
-    data: function() {
+    data: function () {
         return {
             /**
              * An object representing the currently selected tag type.
@@ -113,7 +113,7 @@ export default {
              * An array containing all book tag types and values.
              */
             observationsArray: null,
-        }
+        };
     },
     computed: {
         /**
@@ -121,28 +121,28 @@ export default {
          *
          * @returns {Number|null} The ID of the selected observation, if one exists.
          */
-        getSelectedId: function() {
+        getSelectedId: function () {
             if (this.selectedObservation) {
                 return this.selectedObservation.id;
             }
-            return null
+            return null;
         }
     },
-    created: function() {
+    created: function () {
         this.observationsArray = decodeAndParseJSON(this.schema)['observations'];
         this.allSelectedValues = decodeAndParseJSON(this.observations);
         this.selectRandomObservation();
     },
-    mounted: function() {
+    mounted: function () {
         this.observer = new ResizeObserver(() => {
             resizeColorbox();
         });
 
-        this.observer.observe(this.$refs.form)
+        this.observer.observe(this.$refs.form);
     },
-    beforeUnmount: function() {
+    beforeUnmount: function () {
         if (this.observer) {
-            this.observer.disconnect()
+            this.observer.disconnect();
         }
     },
     methods: {
@@ -151,18 +151,18 @@ export default {
          *
          * @param {Object | null} observation The new selected observation, or `null` if no type is selected.
          */
-        updateSelected: function(observation) {
-            this.selectedObservation = observation
+        updateSelected: function (observation) {
+            this.selectedObservation = observation;
         },
         /**
          * Randomly sets a selected observation.
          */
-        selectRandomObservation: function() {
+        selectRandomObservation: function () {
             const randomNumber = Math.floor(Math.random() * 100000);
             this.selectedObservation = this.observationsArray[randomNumber % this.observationsArray.length];
         }
     }
-}
+};
 </script>
 
 <style scoped>

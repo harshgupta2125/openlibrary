@@ -50,47 +50,47 @@ export default {
         thickness: Number
     },
     computed: {
-        cubeStyle() {
+        cubeStyle () {
             return {
                 width: `${this.width}px`,
                 height: `${this.height}px`
             };
         },
-        frontFaceStyle() {
+        frontFaceStyle () {
             return {
                 width: `${this.width}px`,
                 height: `${this.height}px`
             };
         },
-        backFaceStyle() {
+        backFaceStyle () {
             return {
                 width: `${this.width}px`,
                 height: `${this.height}px`,
                 transform: `translate3d(100%, 0, -${this.thickness}px) rotateY(-180deg)`
             };
         },
-        topFaceStyle() {
+        topFaceStyle () {
             return {
                 width: `${this.width}px`,
                 height: `${this.thickness}px`,
                 transform: 'rotateX(90deg) translateY(-100%)'
             };
         },
-        bottomFaceStyle() {
+        bottomFaceStyle () {
             return {
                 width: `${this.width}px`,
                 height: `${this.thickness}px`,
                 transform: `translateY(${this.height}px) rotateX(-90deg)`
             };
         },
-        leftFaceStyle() {
+        leftFaceStyle () {
             return {
                 width: `${this.thickness}px`,
                 height: `${this.height}px`,
                 transform: 'rotateY(-90deg) translateX(-100%)'
             };
         },
-        rightFaceStyle() {
+        rightFaceStyle () {
             return {
                 width: `${this.thickness}px`,
                 height: `${this.height}px`,

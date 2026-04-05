@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import OLChip from './OLChip.vue'
+import OLChip from './OLChip.vue';
 
 export default {
     name: 'CategorySelector',
@@ -74,7 +74,7 @@ export default {
             default: 0
         }
     },
-    data: function() {
+    data: function () {
         return {
             /**
              * The ID of the selected book tag type.
@@ -82,7 +82,7 @@ export default {
              * @type {number | null}
              */
             selectedId: this.initialSelectedId,
-        }
+        };
     },
     methods: {
         /**
@@ -91,20 +91,20 @@ export default {
          * @param {boolean} isSelected Whether or not a chip is currently selected.
          * @param {String} text The text displayed by a chip.
          */
-        updateSelected: function(isSelected, text) {
+        updateSelected: function (isSelected, text) {
             if (isSelected) {
                 // TODO: This for loop shouldn't be necessary
                 for (let i = 0; i < this.observationsArray.length; ++i) {
                     if (this.observationsArray[i].label === text) {
                         this.selectedId = this.observationsArray[i].id;
-                        this.$emit('update-selected', this.observationsArray[i])
+                        this.$emit('update-selected', this.observationsArray[i]);
                     }
                 }
             } else {
                 this.selectedId = null;
 
                 // Set ObservationForm's selected observation to null
-                this.$emit('update-selected', null)
+                this.$emit('update-selected', null);
             }
         },
         /**
@@ -112,8 +112,8 @@ export default {
          *
          * @param {number} id A chip's id.
          */
-        isSelected: function(id) {
-            return this.selectedId === id
+        isSelected: function (id) {
+            return this.selectedId === id;
         },
         /**
          * Returns an HTML code denoting what symbol to display in a book tag type chip.
@@ -123,7 +123,7 @@ export default {
          *
          * @returns {String} An HTML code representing selections of a type.
          */
-        displaySymbol: function(type) {
+        displaySymbol: function (type) {
             if (this.allSelectedValues[type] && this.allSelectedValues[type].length) {
                 // &#10004; - Heavy checkmark
                 return '&#10004;';
@@ -131,7 +131,7 @@ export default {
             return '&bull;';
         }
     }
-}
+};
 </script>
 
 <style scoped>

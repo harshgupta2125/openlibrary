@@ -3,7 +3,7 @@
 import { createWorker, createScheduler } from 'tesseract.js';
 
 export class OCRScanner {
-    constructor() {
+    constructor () {
         this.scheduler = createScheduler();
         /** @type {number | null} */
         this.timerId = null;
@@ -11,20 +11,20 @@ export class OCRScanner {
         this.listeners = {
             /** @type {Array<(isbn: string) => void>} */
             onISBNDetected: []
-        }
+        };
     }
 
     /** @param {(isbn: string) => void} callback */
-    onISBNDetected(callback) {
+    onISBNDetected (callback) {
         this.listeners.onISBNDetected.push(callback);
     }
 
-    async init() {
+    async init () {
         this._initPromise = this._initPromise || this._init();
         await this._initPromise;
     }
 
-    async _init() {
+    async _init () {
         console.log('Initializing Tesseract.js');
         for (let i = 0; i < 1; i++) {
             const worker = await createWorker();
@@ -41,7 +41,7 @@ export class OCRScanner {
     /**
      * @param {HTMLCanvasElement} canvas
      */
-    async doOCR(canvas) {
+    async doOCR (canvas) {
         const { data: { lines } } = await this.scheduler.addJob('recognize', canvas);
         const textLines = lines.map(l => l.text.trim()).filter(line => line);
         console.log(textLines.join('\n'));
@@ -68,7 +68,7 @@ export class ThrottleGrouping {
      * @param {function(Parameters<TFunc>[]): Parameters<TFunc>} param0.reducer
      * @param {number} param0.wait
      */
-    constructor({func, reducer, wait=100}) {
+    constructor ({func, reducer, wait=100}) {
         this.func = func;
         this.reducer = reducer;
         this.wait = wait;
@@ -77,7 +77,7 @@ export class ThrottleGrouping {
         this.timeout = null;
     }
 
-    submitGroup() {
+    submitGroup () {
         this.timeout = null;
         this.func(...this.reducer(this.curGroup));
         this.curGroup = [];
@@ -86,14 +86,14 @@ export class ThrottleGrouping {
     /**
      * @param  {Parameters<TFunc>} args
      */
-    takeNext(...args) {
+    takeNext (...args) {
         this.curGroup.push(args);
         if (!this.timeout) {
             this.timeout = setTimeout(this.submitGroup.bind(this), this.wait);
         }
     }
 
-    asFunction() {
+    asFunction () {
         return this.takeNext.bind(this);
     }
 }

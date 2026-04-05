@@ -2,7 +2,7 @@
  * Functionality for templates/admin
  */
 
-export function initAdmin() {
+export function initAdmin () {
     // admin/people/view
     $('a.tag').on('click', function () {
         var action;
@@ -23,14 +23,14 @@ export function initAdmin() {
     });
 }
 
-export function initAnonymizationButton(button) {
+export function initAnonymizationButton (button) {
     const displayName = button.dataset.displayName;
     const confirmMessage = `Really anonymize ${displayName}'s account? This will delete ${displayName}'s profile page and booknotes, and anonymize ${displayName}'s reading log, reviews, star ratings, and merge request submissions.`;
-    button.addEventListener('click', function(event) {
+    button.addEventListener('click', function (event) {
         if (!confirm(confirmMessage)) {
             event.preventDefault();
         }
-    })
+    });
 }
 
 /**
@@ -39,13 +39,13 @@ export function initAnonymizationButton(button) {
  *
  * @param {NodeList<HTMLButtonElement>} buttons
  */
-export function initConfirmationButtons(buttons) {
-    const confirmMessage = 'Are you sure?'
+export function initConfirmationButtons (buttons) {
+    const confirmMessage = 'Are you sure?';
     for (const button of buttons) {
-        button.addEventListener('click', function(event) {
+        button.addEventListener('click', function (event) {
             if (!confirm(confirmMessage)) {
                 event.preventDefault();
             }
-        })
+        });
     }
 }

@@ -8,14 +8,14 @@ import { more, less } from '../../../openlibrary/plugins/openlibrary/js/search.j
  * @param {Number} minVisibleFacet minimum number of visible facet
  * @return {String} HTML search facets section
  */
-function createSearchFacets(totalFacet = 2, visibleFacet = 2, minVisibleFacet = 2) {
+function createSearchFacets (totalFacet = 2, visibleFacet = 2, minVisibleFacet = 2) {
     const divSearchFacets = document.createElement('DIV');
     divSearchFacets.setAttribute('id', 'searchFacets');
     divSearchFacets.innerHTML = `
         <div class="facet test">
             <h4 class="facetHead">Facet Label</h4>
         </div>
-    `
+    `;
 
     const divTestFacet = divSearchFacets.querySelector('div.test');
     for (let i = 0; i < totalFacet; i++) {
@@ -59,7 +59,7 @@ function createSearchFacets(totalFacet = 2, visibleFacet = 2, minVisibleFacet = 
  * @param {Number} totalFacet           total number of facet
  * @param {Number} expectedVisibleFacet expected number of visible facet
  */
-function checkFacetVisibility(totalFacet, expectedVisibleFacet) {
+function checkFacetVisibility (totalFacet, expectedVisibleFacet) {
     const facetEntryList = document.getElementsByClassName('facetEntry');
 
     test('facetEntry element number', () => {
@@ -85,7 +85,7 @@ function checkFacetVisibility(totalFacet, expectedVisibleFacet) {
  * @param {Number} minVisibleFacet      minimum visible facet number
  * @param {Number} expectedVisibleFacet expected number of visible facet
  */
-function checkFacetMoreLessVisibility(totalFacet, minVisibleFacet, expectedVisibleFacet) {
+function checkFacetMoreLessVisibility (totalFacet, minVisibleFacet, expectedVisibleFacet) {
     if (expectedVisibleFacet <= minVisibleFacet) {
         test('element "test_more"', () => {
             expect(document.getElementById('test_more').style.display).not.toBe('none');
@@ -122,7 +122,7 @@ function checkFacetMoreLessVisibility(totalFacet, minVisibleFacet, expectedVisib
 const _originalGetClientRects = window.Element.prototype.getClientRects;
 
 // Stubbed getClientRects to enable jQuery ':hidden' selector used by 'more' and 'less' functions
-const _stubbedGetClientRects = function() {
+const _stubbedGetClientRects = function () {
     let node = this;
     while (node) {
         if (node === document) {
