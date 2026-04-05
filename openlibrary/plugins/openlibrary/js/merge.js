@@ -1,16 +1,16 @@
 import 'jquery-ui/ui/widgets/dialog';
 import { declineRequest } from './merge-request-table/MergeRequestService';
 
-export function initAuthorMergePage() {
+export function initAuthorMergePage () {
     $('#save').on('click', function () {
         const n = $('#mergeForm input[type=radio]:checked').length;
-        const confirmMergeButton = document.querySelector('#confirmMerge')
+        const confirmMergeButton = document.querySelector('#confirmMerge');
         if (n === 0) {
             $('#noMaster').dialog('open');
         } else if (confirmMergeButton) {
             $('#confirmMerge').dialog('open');
         } else {
-            $('#mergeForm').trigger('submit')
+            $('#mergeForm').trigger('submit');
         }
         return false;
     });
@@ -39,25 +39,25 @@ export function initAuthorMergePage() {
             }
         }
     });
-    initRejectButton()
+    initRejectButton();
 }
 
-function initRejectButton() {
-    const rejectButton = document.querySelector('#reject-author-merge-btn')
+function initRejectButton () {
+    const rejectButton = document.querySelector('#reject-author-merge-btn');
     if (rejectButton) {
-        rejectButton.addEventListener('click', function() {
-            rejectMerge()
-            rejectButton.disabled = true
-            const approveButton = document.querySelector('#save')
-            approveButton.disabled = true
-        })
+        rejectButton.addEventListener('click', function () {
+            rejectMerge();
+            rejectButton.disabled = true;
+            const approveButton = document.querySelector('#save');
+            approveButton.disabled = true;
+        });
     }
 }
 
-function rejectMerge() {
-    const commentInput = document.querySelector('#author-merge-comment')
-    const mridInput = document.querySelector('#mrid-input')
-    declineRequest(Number(mridInput.value), commentInput.value)
+function rejectMerge () {
+    const commentInput = document.querySelector('#author-merge-comment');
+    const mridInput = document.querySelector('#mrid-input');
+    declineRequest(Number(mridInput.value), commentInput.value);
 }
 
 /**
@@ -66,7 +66,7 @@ function rejectMerge() {
  * Show 'preMerge' element and launch author merge of duplicate keys into master key.
  * Assumes presence of element with '#preMerge' id and 'data-keys' attribute.
  */
-export function initAuthorView() {
+export function initAuthorView () {
     const dataKeysJSON = $('#preMerge').data('keys');
 
     $('#preMerge').show();
@@ -78,25 +78,25 @@ export function initAuthorView() {
         olids: dataKeysJSON['olids']
     };
 
-    const mrid = dataKeysJSON['mrid']
-    const comment = dataKeysJSON['comment']
+    const mrid = dataKeysJSON['mrid'];
+    const comment = dataKeysJSON['comment'];
 
     if (mrid) {
-        data['mrid'] = mrid
+        data['mrid'] = mrid;
     }
     if (comment) {
-        data['comment'] = comment
+        data['comment'] = comment;
     }
 
     $.ajax({
         url: '/authors/merge.json',
         type: 'POST',
         data: JSON.stringify(data),
-        error: function() {
+        error: function () {
             $('#preMerge').fadeOut();
             $('#errorMerge').fadeIn();
         },
-        success: function() {
+        success: function () {
             $('#preMerge').fadeOut();
             $('#postMerge').fadeIn();
         }

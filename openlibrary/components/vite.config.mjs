@@ -12,10 +12,10 @@ import { join } from 'path';
 const BUILD_DIR = process.env.BUILD_DIR || 'static/build/components';
 
 const componentNames = getComponentNames();
-componentNames.forEach(generateViteEntryFile)
+componentNames.forEach(generateViteEntryFile);
 
 const buildInput = {};
-componentNames.forEach(name => { buildInput[name] = getTemporaryVueInputPath(name) });
+componentNames.forEach(name => { buildInput[name] = getTemporaryVueInputPath(name); });
 
 export default defineConfig({
     plugins: [
@@ -41,13 +41,13 @@ export default defineConfig({
  *
  * @returns {string[]} An array of component names, e.g., ['BarcodeScanner', 'BulkSearch'].
  */
-function getComponentNames() {
+function getComponentNames () {
     const files = readdirSync('./openlibrary/components');
     return files.filter(name => name.includes('.vue')).map(name => name.replace('.vue', ''));
 }
 
-function getTemporaryVueInputPath(componentName) {
-    return join(BUILD_DIR, `tmp-${componentName}.js`)
+function getTemporaryVueInputPath (componentName) {
+    return join(BUILD_DIR, `tmp-${componentName}.js`);
 }
 
 /**
@@ -55,7 +55,7 @@ function getTemporaryVueInputPath(componentName) {
  * @param {string} componentName - Name of the Vue component to build
  * @throws {Error} If file creation fails
  */
-function generateViteEntryFile(componentName) {
+function generateViteEntryFile (componentName) {
     const componentsPath = '../../../openlibrary/components';
     const template = `
 import { createWebComponentSimple } from '${componentsPath}/rollupInputCore.js';

@@ -3,7 +3,7 @@ import SelectionManager from './utils/SelectionManager/SelectionManager.js';
 import { renderBulkTagger } from '../bulk-tagger/index.js';
 import { BulkTagger } from '../bulk-tagger/BulkTagger.js';
 
-export function init() {
+export function init () {
     const ile = new IntegratedLibrarianEnvironment();
     // @ts-ignore
     window.ILE = ile;
@@ -11,7 +11,7 @@ export function init() {
 }
 
 export class IntegratedLibrarianEnvironment {
-    constructor() {
+    constructor () {
         this.selectionManager = new SelectionManager(this);
         /** This is the main ILE toolbar. Should be moved to a Vue component. */
         this.$toolbar = $(`
@@ -31,21 +31,21 @@ export class IntegratedLibrarianEnvironment {
         this.$statusImages = this.$toolbar.find('.images ul');
         this.$actions = this.$toolbar.find('#ile-drag-actions');
         this.$hiddenForms = this.$toolbar.find('#ile-hidden-forms');
-        this.bulkTagger = null
+        this.bulkTagger = null;
     }
 
-    init() {
+    init () {
         // Add the ILE toolbar to bottom of screen
         $(document.body).append(this.$toolbar.hide());
 
         // Ready bulk tagger:
-        this.createBulkTagger()
+        this.createBulkTagger();
 
         this.selectionManager.init();
     }
 
     /** @param {string} text */
-    setStatusText(text) {
+    setStatusText (text) {
         this.$statusText.text(text);
         this.$toolbar.toggle(text.length > 0);
     }
@@ -53,9 +53,9 @@ export class IntegratedLibrarianEnvironment {
     /**
      * Resets the status bar.
      */
-    reset() {
+    reset () {
         for (const elem of $('.ile-selected')) {
-            elem.classList.remove('ile-selected')
+            elem.classList.remove('ile-selected');
         }
         this.setStatusText('');
         this.$selectionActions.empty();
@@ -68,8 +68,8 @@ export class IntegratedLibrarianEnvironment {
      *
      * This indirectly calls `IntegratedLibrarianEnvironment.reset()`.
      */
-    clearAndReset() {
-        this.selectionManager.clearSelectedItems()
+    clearAndReset () {
+        this.selectionManager.clearSelectedItems();
     }
 
     /**
@@ -77,13 +77,13 @@ export class IntegratedLibrarianEnvironment {
      *
      * Sets the value of `IntegratedLibrarianEnvironment.bulkTagger`
      */
-    createBulkTagger() {
-        const target = this.$hiddenForms[0]
-        target.innerHTML += renderBulkTagger()
-        const bulkTaggerElem = document.querySelector('.bulk-tagging-form')
+    createBulkTagger () {
+        const target = this.$hiddenForms[0];
+        target.innerHTML += renderBulkTagger();
+        const bulkTaggerElem = document.querySelector('.bulk-tagging-form');
         // @ts-ignore
-        this.bulkTagger = new BulkTagger(bulkTaggerElem)
-        this.bulkTagger.initialize()
+        this.bulkTagger = new BulkTagger(bulkTaggerElem);
+        this.bulkTagger.initialize();
     }
 
     /**
@@ -92,11 +92,11 @@ export class IntegratedLibrarianEnvironment {
      * @param {Array<String>} workIds
      * @param {boolean} isBookPageEdit `true` if the bulk tagger is opened on a /books or /works page
      */
-    updateAndShowBulkTagger(workIds, isBookPageEdit = false) {
+    updateAndShowBulkTagger (workIds, isBookPageEdit = false) {
         if (this.bulkTagger) {
-            this.bulkTagger.isBookPageEdit = isBookPageEdit
-            this.bulkTagger.updateWorks(workIds)
-            this.bulkTagger.showTaggingMenu()
+            this.bulkTagger.isBookPageEdit = isBookPageEdit;
+            this.bulkTagger.updateWorks(workIds);
+            this.bulkTagger.showTaggingMenu();
         }
     }
 }

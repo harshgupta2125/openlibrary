@@ -7,7 +7,7 @@ export const createWebComponentSimple = (rootComponent, name) => {
     const elementName = `ol-${kebabCase(name)}`;
 
     const WebComponent = defineCustomElement(rootComponent, {
-        configureApp(app) {
+        configureApp (app) {
             if (elementName === 'ol-merge-ui') {
                 app.use(AsyncComputed);
             }

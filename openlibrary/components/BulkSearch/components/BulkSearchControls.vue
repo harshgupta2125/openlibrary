@@ -154,13 +154,13 @@
 <script>
 import {sampleData} from '../utils/samples.js';
 import { BulkSearchState} from '../utils/classes.js';
-import { buildSearchUrl } from '../utils/searchUtils.js'
+import { buildSearchUrl } from '../utils/searchUtils.js';
 export default {
 
     props: {
         bulkSearchState: BulkSearchState
     },
-    data() {
+    data () {
         return {
             selectedValue: '',
             showPassword: true,
@@ -169,10 +169,10 @@ export default {
             loadingMatchedBooks: false,
             matchBooksDisabled: true,
             createListDisabled: true,
-        }
+        };
     },
     computed: {
-        activeStep() {
+        activeStep () {
             if (!this.createListDisabled) {
                 return 3;
             } else if (!this.matchBooksDisabled) {
@@ -181,65 +181,65 @@ export default {
                 return 1;
             }
         },
-        showApiKey(){
-            if (this.bulkSearchState.activeExtractor) return 'model' in this.bulkSearchState.activeExtractor
-            return false
+        showApiKey (){
+            if (this.bulkSearchState.activeExtractor) return 'model' in this.bulkSearchState.activeExtractor;
+            return false;
         },
-        extractBooksText(){
-            if (this.loadingExtractedBooks) return 'Loading...'
-            return 'Extract Books'
+        extractBooksText (){
+            if (this.loadingExtractedBooks) return 'Loading...';
+            return 'Extract Books';
         },
-        matchBooksText(){
-            if (this.loadingMatchedBooks) return 'Loading...'
-            return 'Match Books'
+        matchBooksText (){
+            if (this.loadingMatchedBooks) return 'Loading...';
+            return 'Match Books';
         },
-        showColumnHint(){
-            if (this.bulkSearchState.activeExtractor) return this.bulkSearchState.activeExtractor.name === 'table_extractor'
-            return false
+        showColumnHint (){
+            if (this.bulkSearchState.activeExtractor) return this.bulkSearchState.activeExtractor.name === 'table_extractor';
+            return false;
         },
     },
     watch: {
-        selectedValue(newValue) {
+        selectedValue (newValue) {
             if (newValue!==''){
                 this.bulkSearchState.inputText = newValue;
             }
         },
-        activeStep(newValue) {
+        activeStep (newValue) {
             this.$nextTick(() => {
                 this.$refs[`step${newValue}`]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             });
         }
     },
     methods: {
-        togglePasswordVisibility(){
-            this.showPassword= !this.showPassword
+        togglePasswordVisibility (){
+            this.showPassword= !this.showPassword;
         },
-        async extractBooks() {
-            this.loadingExtractedBooks = true
-            const extractedData = await this.bulkSearchState.activeExtractor.run(this.bulkSearchState.extractionOptions, this.bulkSearchState.inputText)
-            this.bulkSearchState.matchedBooks = extractedData
-            this.loadingExtractedBooks = false
+        async extractBooks () {
+            this.loadingExtractedBooks = true;
+            const extractedData = await this.bulkSearchState.activeExtractor.run(this.bulkSearchState.extractionOptions, this.bulkSearchState.inputText);
+            this.bulkSearchState.matchedBooks = extractedData;
+            this.loadingExtractedBooks = false;
             this.matchBooksDisabled = false;
             this.createListDisabled = true;
         },
-        async matchBooks() {
+        async matchBooks () {
             const fetchSolrBook = async function (book, matchOptions) {
                 try {
-                    const data = await fetch(buildSearchUrl(book, matchOptions, true))
-                    return await data.json()
+                    const data = await fetch(buildSearchUrl(book, matchOptions, true));
+                    return await data.json();
                 }
                 catch (error) {}
-            }
-            this.loadingMatchedBooks = true
+            };
+            this.loadingMatchedBooks = true;
             for (const bookMatch of this.bulkSearchState.matchedBooks) {
-                bookMatch.solrDocs = await fetchSolrBook(bookMatch.extractedBook, this.bulkSearchState.matchOptions)
+                bookMatch.solrDocs = await fetchSolrBook(bookMatch.extractedBook, this.bulkSearchState.matchOptions);
             }
-            this.loadingMatchedBooks = false
-            this.createListDisabled = false
+            this.loadingMatchedBooks = false;
+            this.createListDisabled = false;
         },
 
     }
-}
+};
 </script>
 
 <style>

@@ -1,6 +1,6 @@
 import Promise from 'promise-polyfill';
 
-export function initGoodreadsImport() {
+export function initGoodreadsImport () {
 
     var count, prevPromise;
 
@@ -31,7 +31,7 @@ export function initGoodreadsImport() {
     });
 
     //updates the progress bar based on the book count
-    function func1(value) {
+    function func1 (value) {
         const l = $('.add-book[checked*="checked"]').length;
         const elem = document.getElementById('myBar');
         elem.style.width = `${value * (100 / l)}%`;
@@ -64,7 +64,7 @@ export function initGoodreadsImport() {
             const fail = function (reason) {
                 if (!hasFailure()) {
                     const element = $(`[isbn=${value['ISBN']}]`);
-                    element.append(`<td class="error-imported">Error</td><td class="error-imported">${reason}</td>'`)
+                    element.append(`<td class="error-imported">Error</td><td class="error-imported">${reason}</td>'`);
                     element.removeClass('selected');
                     element.addClass('import-failure');
                 }
@@ -144,7 +144,7 @@ export function initGoodreadsImport() {
                     }
                 });
                 if (!hasFailure()) {
-                    $(`[isbn=${value['ISBN']}]`).append('<td class="success-imported">Imported</td>')
+                    $(`[isbn=${value['ISBN']}]`).append('<td class="success-imported">Imported</td>');
                     $(`[isbn=${value['ISBN']}]`).removeClass('selected');
                 }
                 func1(++count);
@@ -159,7 +159,7 @@ export function initGoodreadsImport() {
         });
     });
 
-    function getWork(isbn) {
+    function getWork (isbn) {
         return new Promise(function (resolve, reject) {
             var request = new XMLHttpRequest();
 

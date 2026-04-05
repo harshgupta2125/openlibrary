@@ -237,7 +237,7 @@ export class OlPopover extends LitElement {
         }
     `;
 
-    constructor() {
+    constructor () {
         super();
         this.open = false;
         this.placement = 'bottom-center';
@@ -268,7 +268,7 @@ export class OlPopover extends LitElement {
         this._onTouchEnd = this._onTouchEnd.bind(this);
     }
 
-    render() {
+    render () {
         const showPanel = this._animState !== 'closed';
         return html`
             <slot name="trigger"></slot>
@@ -320,12 +320,12 @@ export class OlPopover extends LitElement {
         `;
     }
 
-    firstUpdated() {
+    firstUpdated () {
         const triggerSlot = this.shadowRoot.querySelector('slot[name="trigger"]');
         triggerSlot?.addEventListener('slotchange', () => this._syncTriggerAria());
     }
 
-    updated(changed) {
+    updated (changed) {
         if (changed.has('open')) {
             this._syncTriggerAria();
             if (this.open) {
@@ -338,7 +338,7 @@ export class OlPopover extends LitElement {
 
     // ── Show / Hide ─────────────────────────────────────────────
 
-    _show() {
+    _show () {
         this._prevFocus = document.activeElement;
 
         document.addEventListener('click', this._onOutsideClick, true);
@@ -402,7 +402,7 @@ export class OlPopover extends LitElement {
         });
     }
 
-    _hide() {
+    _hide () {
         if (this._animState === 'closed') return;
 
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -415,7 +415,7 @@ export class OlPopover extends LitElement {
         this._animState = 'exiting';
     }
 
-    _onTransitionEnd(e) {
+    _onTransitionEnd (e) {
         if (e.target !== e.currentTarget) return;
 
         if (this._animState === 'entering') {
@@ -430,13 +430,13 @@ export class OlPopover extends LitElement {
      * Central cleanup called when the popover finishes closing.
      * Removes all global listeners, unlocks scroll, and restores focus.
      */
-    _cleanup() {
+    _cleanup () {
         this._removeListeners();
         this._unlockBodyScroll();
         this._restoreFocus();
     }
 
-    _restoreFocus() {
+    _restoreFocus () {
         if (this._prevFocus && typeof this._prevFocus.focus === 'function') {
             this._prevFocus.focus({ preventScroll: true });
         }
@@ -445,7 +445,7 @@ export class OlPopover extends LitElement {
 
     // ── Trigger ARIA ────────────────────────────────────────────
 
-    _syncTriggerAria() {
+    _syncTriggerAria () {
         const trigger = this._triggerEl;
         if (!trigger) return;
         trigger.setAttribute('aria-haspopup', 'dialog');
@@ -459,7 +459,7 @@ export class OlPopover extends LitElement {
 
     // ── Focus trap ──────────────────────────────────────────────
 
-    _getFocusableElements() {
+    _getFocusableElements () {
         const slot = this.shadowRoot?.querySelector('.panel slot:not([name])');
         if (!slot) return [];
         const elements = [];
@@ -470,7 +470,7 @@ export class OlPopover extends LitElement {
         return elements;
     }
 
-    _onSentinelFocus(e) {
+    _onSentinelFocus (e) {
         const edge = e.target.dataset.edge;
         const focusable = this._getFocusableElements();
         if (focusable.length === 0) {
@@ -491,7 +491,7 @@ export class OlPopover extends LitElement {
      * Compute the final position of the popover panel, flipping and shifting
      * as needed to keep it within the viewport.
      */
-    _computePosition(panelW, panelH) {
+    _computePosition (panelW, panelH) {
         const trigger = this._triggerEl;
         if (!trigger) return;
 
@@ -568,26 +568,26 @@ export class OlPopover extends LitElement {
         this._transformOrigin = `${originX} ${originY}`;
     }
 
-    _parsePlacement(placement) {
+    _parsePlacement (placement) {
         const parts = (placement || 'bottom-center').split('-');
         const side = parts[0] === 'top' ? 'top' : 'bottom';
         const align = ['start', 'center', 'end'].includes(parts[1]) ? parts[1] : 'center';
         return [side, align];
     }
 
-    get _triggerEl() {
+    get _triggerEl () {
         const slot = this.shadowRoot?.querySelector('slot[name="trigger"]');
         return slot?.assignedElements()[0] ?? null;
     }
 
     // ── Scroll / resize repositioning ───────────────────────────
 
-    _addScrollResizeListeners() {
+    _addScrollResizeListeners () {
         window.addEventListener('scroll', this._onScrollResize, { capture: true, passive: true });
         window.addEventListener('resize', this._onScrollResize, { passive: true });
     }
 
-    _removeScrollResizeListeners() {
+    _removeScrollResizeListeners () {
         window.removeEventListener('scroll', this._onScrollResize, { capture: true });
         window.removeEventListener('resize', this._onScrollResize);
         if (this._rafId) {
@@ -596,7 +596,7 @@ export class OlPopover extends LitElement {
         }
     }
 
-    _onScrollResize() {
+    _onScrollResize () {
         if (this._rafId) return;
         this._rafId = requestAnimationFrame(() => {
             this._rafId = null;
@@ -611,7 +611,7 @@ export class OlPopover extends LitElement {
 
     // ── Outside click / keyboard ────────────────────────────────
 
-    _onOutsideClick(e) {
+    _onOutsideClick (e) {
         if (!this.autoClose) return;
         if (this._animState === 'closed' || this._animState === 'exiting') return;
         const path = e.composedPath();
@@ -620,20 +620,20 @@ export class OlPopover extends LitElement {
         }
     }
 
-    _onBackdropClick() {
+    _onBackdropClick () {
         if (this.autoClose) {
             this._requestClose('outside-click');
         }
     }
 
-    _onKeydownGlobal(e) {
+    _onKeydownGlobal (e) {
         if (e.key === 'Escape' && this.open) {
             e.preventDefault();
             this._requestClose('escape');
         }
     }
 
-    _requestClose(reason) {
+    _requestClose (reason) {
         this.dispatchEvent(new CustomEvent('ol-popover-close', {
             bubbles: true, composed: true,
             detail: { reason },
@@ -642,7 +642,7 @@ export class OlPopover extends LitElement {
 
     // ── Mobile touch / swipe-to-dismiss ─────────────────────────
 
-    _onTouchStart(e) {
+    _onTouchStart (e) {
         const handle = this.shadowRoot.querySelector('.tray-handle');
         const panel = this.shadowRoot.querySelector('.panel');
         const touch = e.touches[0];
@@ -655,7 +655,7 @@ export class OlPopover extends LitElement {
         this._touchScrollTop = panel?.scrollTop ?? 0;
     }
 
-    _onTouchMove(e) {
+    _onTouchMove (e) {
         const touch = e.touches[0];
         const deltaY = touch.clientY - this._touchStartY;
 
@@ -686,7 +686,7 @@ export class OlPopover extends LitElement {
         }
     }
 
-    _onTouchEnd() {
+    _onTouchEnd () {
         if (!this._isDragging) return;
 
         const dragY = this._lastDragY;
@@ -751,7 +751,7 @@ export class OlPopover extends LitElement {
         }
     }
 
-    _clearDragStyles() {
+    _clearDragStyles () {
         const panel = this.shadowRoot?.querySelector('.panel');
         const backdrop = this.shadowRoot?.querySelector('.backdrop');
         if (panel) {
@@ -766,12 +766,12 @@ export class OlPopover extends LitElement {
 
     // ── Body scroll lock ────────────────────────────────────────
 
-    _lockBodyScroll() {
+    _lockBodyScroll () {
         this._savedOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
     }
 
-    _unlockBodyScroll() {
+    _unlockBodyScroll () {
         if (this._savedOverflow !== null) {
             document.body.style.overflow = this._savedOverflow;
             this._savedOverflow = null;
@@ -780,7 +780,7 @@ export class OlPopover extends LitElement {
 
     // ── Listener management ─────────────────────────────────────
 
-    _removeListeners() {
+    _removeListeners () {
         document.removeEventListener('click', this._onOutsideClick, true);
         document.removeEventListener('keydown', this._onKeydownGlobal);
         this._removeScrollResizeListeners();
@@ -794,7 +794,7 @@ export class OlPopover extends LitElement {
         }
     }
 
-    disconnectedCallback() {
+    disconnectedCallback () {
         super.disconnectedCallback();
         this._removeListeners();
         this._unlockBodyScroll();

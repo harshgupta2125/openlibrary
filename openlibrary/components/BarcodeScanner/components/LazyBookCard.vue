@@ -28,7 +28,7 @@ export default {
             default: null,
         },
     },
-    data() {
+    data () {
         return {
             link: null,
             coverSrc: this.tentativeCover,
@@ -37,13 +37,13 @@ export default {
             identifier: null,
             errored: false,
             loading: true,
-        }
+        };
     },
-    mounted() {
+    mounted () {
         this.fromISBN(this.isbn);
     },
     methods: {
-        async fromISBN(isbn) {
+        async fromISBN (isbn) {
             fetch(`https://${CONFIGS.OL_BASE_PUBLIC}/isbn/${isbn}.json`).then(r => r.json())
                 .then(editionRecord => {
                     this.title = editionRecord.title;
@@ -56,7 +56,7 @@ export default {
                             this.coverSrc = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
                         }
                     }
-                    return fetch(`https://${CONFIGS.OL_BASE_PUBLIC}${editionRecord.works[0].key}.json`).then(r => r.json())
+                    return fetch(`https://${CONFIGS.OL_BASE_PUBLIC}${editionRecord.works[0].key}.json`).then(r => r.json());
                 }).then(workRecord => {
                     return Promise.all(
                         workRecord.authors
@@ -73,7 +73,7 @@ export default {
                 });
         },
     },
-}
+};
 </script>
 
 <style>

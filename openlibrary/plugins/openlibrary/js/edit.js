@@ -23,13 +23,13 @@ import { trimInputValues } from './utils.js';
 /* global render_subject_autocomplete_item */
 /* Globals are provided by the edit about template */
 
-function error(errordiv, input, message) {
+function error (errordiv, input, message) {
     $(errordiv).show().html(message);
     $(input).trigger('focus');
     return false;
 }
 
-function update_len() {
+function update_len () {
     var len = $('#excerpts-excerpt').val().length;
     var color;
     if (len > 2000) {
@@ -47,7 +47,7 @@ function update_len() {
  * @param {Number} limit   character number limit
  * @return {boolean} is character number below or equal to limit
  */
-function limitChars(textid, limit) {
+function limitChars (textid, limit) {
     var text = $(`#${textid}`).val();
     var textlength = text.length;
     if (textlength > limit) {
@@ -63,16 +63,16 @@ function limitChars(textid, limit) {
  * @param selector - css selector used by jQuery
  * @returns {*[]} - array of jQuery elements
  */
-function getJqueryElements(selector){
+function getJqueryElements (selector){
     const queryResult = $(selector);
     const jQueryElementArray = [];
     for (let i = 0; i < queryResult.length; i++){
-        jQueryElementArray.push(queryResult.eq(i))
+        jQueryElementArray.push(queryResult.eq(i));
     }
     return jQueryElementArray;
 }
 
-export function initRoleValidation() {
+export function initRoleValidation () {
     initJqueryRepeat();
     const dataConfig = JSON.parse(document.querySelector('#roles').dataset.config);
     $('#roles').repeat({
@@ -97,26 +97,26 @@ export function initRoleValidation() {
  * @param {Object} data  data from the input form, gathered via js/jquery.repeat.js
  * @param {String} isbnConfirmString  a const with the HTML to create the confirmation message/buttons
  */
-export function isbnConfirmAdd(data) {
+export function isbnConfirmAdd (data) {
     const isbnConfirmString = `ISBN ${data.value} may be invalid. Add it anyway? <button class="repeat-add" id="yes-add-isbn" type="button">Yes</button>&nbsp;<button id="do-not-add-isbn" type="button">No</button>`;
     // Display the error and option to add the ISBN anyway.
     $('#id-errors').show().html(isbnConfirmString);
 
-    const yesButtonSelector = '#yes-add-isbn'
-    const noButtonSelector = '#do-not-add-isbn'
+    const yesButtonSelector = '#yes-add-isbn';
+    const noButtonSelector = '#do-not-add-isbn';
     const onYes = () => {
         $('#id-errors').hide();
     };
     const onNo = () => {
         $('#id-errors').hide();
         isbnOverride.clear();
-    }
+    };
     $(document).on('click', yesButtonSelector, onYes);
     $(document).on('click', noButtonSelector, onNo);
 
     // Save the data to isbnOverride so it can be picked up via onAdd in
     // js/jquery.repeat.js when the user confirms adding the invalid ISBN.
-    isbnOverride.set(data)
+    isbnOverride.set(data);
     return false;
 }
 
@@ -128,7 +128,7 @@ export function isbnConfirmAdd(data) {
  * @param {String} label  formatted value of the identifier type name (ISBN 10)
  * @returns {boolean}  true if ISBN passes validation, else returns false and displays appropriate error
  */
-function validateIsbn10(data, dataConfig, label) {
+function validateIsbn10 (data, dataConfig, label) {
     data.value = parseIsbn(data.value);
 
     if (!isFormatValidIsbn10(data.value)) {
@@ -138,8 +138,8 @@ function validateIsbn10(data, dataConfig, label) {
     // the ISBN, as books sometimes issue with invalid ISBNs and we want to be able to add them.
     // See https://en-academic.com/dic.nsf/enwiki/8948#cite_ref-18 for more.
     else if (isFormatValidIsbn10(data.value) === true && isChecksumValidIsbn10(data.value) === false) {
-        isbnConfirmAdd(data)
-        return false
+        isbnConfirmAdd(data);
+        return false;
     }
     return true;
 }
@@ -152,7 +152,7 @@ function validateIsbn10(data, dataConfig, label) {
  * @param {String} label  formatted value of the identifier type name (ISBN 13)
  * @returns {boolean}  true if ISBN passes validation, else returns false and displays appropriate error
  */
-function validateIsbn13(data, dataConfig, label) {
+function validateIsbn13 (data, dataConfig, label) {
     data.value = parseIsbn(data.value);
 
     if (isFormatValidIsbn13(data.value) === false) {
@@ -162,8 +162,8 @@ function validateIsbn13(data, dataConfig, label) {
     // the ISBN, as books sometimes issue with invalid ISBNs and we want to be able to add them.
     // See https://en-academic.com/dic.nsf/enwiki/8948#cite_ref-18 for more.
     else if (isFormatValidIsbn13(data.value) === true && isChecksumValidIsbn13(data.value) === false) {
-        isbnConfirmAdd(data)
-        return false
+        isbnConfirmAdd(data);
+        return false;
     }
     return true;
 }
@@ -176,7 +176,7 @@ function validateIsbn13(data, dataConfig, label) {
  * @param {String} label  formatted value of the identifier type name (LCCN)
  * @returns {boolean}  true if LCCN passes validation, else returns false and displays appropriate error
  */
-function validateLccn(data, dataConfig, label) {
+function validateLccn (data, dataConfig, label) {
     data.value = parseLccn(data.value);
 
     if (isValidLccn(data.value) === false) {
@@ -193,12 +193,12 @@ function validateLccn(data, dataConfig, label) {
  * @param {Object} data  data from the input form
  * @returns {boolean}  true if identifier passes validation
  */
-export function validateIdentifiers(data) {
+export function validateIdentifiers (data) {
     const dataConfig = JSON.parse(document.querySelector('#identifiers').dataset.config);
 
     if (data.name === '' || data.name === '---') {
         $('#id-value').val(data.value);
-        return error('#id-errors', '#select-id', dataConfig['Please select an identifier.'])
+        return error('#id-errors', '#select-id', dataConfig['Please select an identifier.']);
     }
     const label = $('#select-id').find(`option[value='${data.name}']`).html();
     if (data.value === '') {
@@ -224,7 +224,7 @@ export function validateIdentifiers(data) {
     const entries = document.querySelectorAll(`.${data.name}`);
     if (isIdDupe(entries, data.value) === true) {
         // isbnOverride being set will override the dupe checker, so clear isbnOverride if there's a dupe.
-        if (isbnOverride.get()) {isbnOverride.clear()}
+        if (isbnOverride.get()) {isbnOverride.clear();}
         return error('#id-errors', '#id-value', dataConfig['That ID already exists for this edition.'].replace(/ID/, label));
     }
 
@@ -233,12 +233,12 @@ export function validateIdentifiers(data) {
     return true;
 }
 
-export function initClassificationValidation() {
+export function initClassificationValidation () {
     initJqueryRepeat();
     const dataConfig = JSON.parse(document.querySelector('#classifications').dataset.config);
 
     // Prevent form submission on Enter for classification fields
-    $('#classification-value').on('keydown', function(e) {
+    $('#classification-value').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             $('#classifications .repeat-add').trigger('click');
@@ -263,9 +263,9 @@ export function initClassificationValidation() {
     });
 }
 
-export function initLanguageMultiInputAutocomplete() {
+export function initLanguageMultiInputAutocomplete () {
     initAutocomplete();
-    $(function() {
+    $(function () {
         getJqueryElements('.multi-input-autocomplete--language').forEach(jqueryElement => {
             jqueryElement.setup_multi_input_autocomplete(
                 render_language_field,
@@ -278,13 +278,13 @@ export function initLanguageMultiInputAutocomplete() {
                     formatItem: render_language_autocomplete_item
                 }
             );
-        })
+        });
     });
 }
 
-export function initWorksMultiInputAutocomplete() {
+export function initWorksMultiInputAutocomplete () {
     initAutocomplete();
-    $(function() {
+    $(function () {
         getJqueryElements('.multi-input-autocomplete--works').forEach(jqueryElement => {
             /* Values in the html passed from Python code */
             const dataConfig = JSON.parse(jqueryElement[0].dataset.config || '{}');
@@ -307,14 +307,14 @@ export function initWorksMultiInputAutocomplete() {
     });
 
     // Show the new work options checkboxes only if "New work" selected
-    $('input[name="works--0"]').on('autocompleteselect', function(_event, ui) {
+    $('input[name="works--0"]').on('autocompleteselect', function (_event, ui) {
         $('.new-work-options').toggle(ui.item.key === '__new__');
     });
 }
 
-export function initSeedsMultiInputAutocomplete() {
+export function initSeedsMultiInputAutocomplete () {
     initAutocomplete();
-    $(function() {
+    $(function () {
         getJqueryElements('.multi-input-autocomplete--seeds').forEach(jqueryElement => {
             /* Values in the html passed from Python code */
             jqueryElement.setup_multi_input_autocomplete(
@@ -336,7 +336,7 @@ export function initSeedsMultiInputAutocomplete() {
     });
 }
 
-export function initAuthorMultiInputAutocomplete() {
+export function initAuthorMultiInputAutocomplete () {
     initAutocomplete();
     getJqueryElements('.multi-input-autocomplete--author').forEach(jqueryElement => {
         /* Values in the html passed from Python code */
@@ -359,7 +359,7 @@ export function initAuthorMultiInputAutocomplete() {
     });
 }
 
-export function initSeriesMultiInputAutocomplete() {
+export function initSeriesMultiInputAutocomplete () {
     initAutocomplete();
     getJqueryElements('.multi-input-autocomplete--series').forEach(jqueryElement => {
         /* Values in the html passed from Python code */
@@ -382,7 +382,7 @@ export function initSeriesMultiInputAutocomplete() {
     });
 }
 
-export function initSubjectsAutocomplete() {
+export function initSubjectsAutocomplete () {
     initAutocomplete();
     getJqueryElements('.csv-autocomplete--subjects').forEach(jqueryElement => {
         const dataConfig = JSON.parse(jqueryElement[0].dataset.config);
@@ -405,7 +405,7 @@ export function initSubjectsAutocomplete() {
     });
 }
 
-export function initEditRow(){
+export function initEditRow (){
     document.querySelector('#add_row_button').addEventListener('click', ()=>add_row('website'));
 }
 
@@ -413,7 +413,7 @@ export function initEditRow(){
  * Adds another input box below the last when adding multiple websites to user profile.
  * @param string name - when prefixed with clone_ should match an element identifier in the page. e.g. if name would refer to clone_website
  */
-function add_row(name) {
+function add_row (name) {
     const inputBoxes = document.querySelectorAll(`#clone_${name} input`);
     const inputBox = document.createElement('input');
     inputBox.name = `${name}#${inputBoxes.length}`;
@@ -421,7 +421,7 @@ function add_row(name) {
     inputBoxes[inputBoxes.length-1].after(inputBox);
 }
 
-function show_hide_title() {
+function show_hide_title () {
     if ($('#excerpts-display .repeat-item').length > 1) {
         $('#excerpts-so-far').show();
     } else {
@@ -429,13 +429,13 @@ function show_hide_title() {
     }
 }
 
-export function initEditExcerpts() {
+export function initEditExcerpts () {
     initJqueryRepeat();
     $('#excerpts').repeat({
         vars: {
             prefix: 'work--excerpts',
         },
-        validate: function(data) {
+        validate: function (data) {
             const i18nStrings = JSON.parse(document.querySelector('#excerpts-errors').dataset.i18n);
 
             if (!data.excerpt) {
@@ -451,7 +451,7 @@ export function initEditExcerpts() {
     });
 
     // update length on every keystroke
-    $('#excerpts-excerpt').on('keyup', function() {
+    $('#excerpts-excerpt').on('keyup', function () {
         limitChars('excerpts-excerpt', 2000);
         update_len();
     });
@@ -476,13 +476,13 @@ export function initEditExcerpts() {
  *    - '#link-url'
  *    - '#link-errors'
  */
-export function initEditLinks() {
+export function initEditLinks () {
     initJqueryRepeat();
     $('#links').repeat({
         vars: {
             prefix: $('#links').data('prefix')
         },
-        validate: function(data) {
+        validate: function (data) {
             const i18nStrings = JSON.parse(document.querySelector('#link-errors').dataset.i18n);
             const url = data.url.trim();
 
@@ -519,7 +519,7 @@ export function initEditLinks() {
  *    - '#tabsAddbook'
  *    - '#contentHead'
  */
-export function initEdit() {
+export function initEdit () {
     var hash = document.location.hash || '#edition';
     var tab = hash.split('/')[0];
     var link = `#link_${tab.substring(1)}`;
@@ -532,7 +532,7 @@ export function initEdit() {
     // input field is enabled only after the tab is selected and that takes some time after clicking the link.
     // wait for 1 sec after clicking the link and focus the input field
     if ($(fieldname).length !== 0) {
-        setTimeout(function() {
+        setTimeout(function () {
         // scroll such that top of the content is visible
             $(fieldname).trigger('focus');
             $(window).scrollTop($('#contentHead').offset().top);
@@ -544,7 +544,7 @@ export function initEdit() {
  * Assesses URL validity using built-in URL object.
  * @param string url
  */
-function isValidURL(url) {
+function isValidURL (url) {
     try {
         new URL(url);
         return true;

@@ -25,7 +25,7 @@ export class Carousel {
     /**
      * @param {jQuery} $container
      */
-    constructor($container) {
+    constructor ($container) {
         /** @type {CarouselConfig} */
         this.config = Object.assign(
             {
@@ -52,17 +52,17 @@ export class Carousel {
         this.$container = $container;
 
         //This loads in i18n strings from a hidden input element, generated in the books/custom_carousel.html template.
-        const i18nInput = document.querySelector('input[name="carousel-i18n-strings"]')
+        const i18nInput = document.querySelector('input[name="carousel-i18n-strings"]');
         if (i18nInput) {
             this.i18n = JSON.parse(i18nInput.value);
         }
     }
 
-    get slick() {
+    get slick () {
         return this.$container.slick('getSlick');
     }
 
-    init() {
+    init () {
         this.$container.slick({
             infinite: false,
             speed: 300,
@@ -142,8 +142,8 @@ export class Carousel {
         }
     }
 
-    fetchPartials() {
-        const loadMore = this.loadMore
+    fetchPartials () {
+        const loadMore = this.loadMore;
         const url = buildPartialsUrl('CarouselLoadMore', {
             queryType: loadMore.queryType,
             q: loadMore.q,
@@ -161,25 +161,25 @@ export class Carousel {
         $.ajax({url: url, type: 'GET'})
             .then((results) => {
                 this.removeLoadingSlide();
-                const cards = results.partials || []
-                cards.forEach(card => this.slick.addSlide(card))
+                const cards = results.partials || [];
+                cards.forEach(card => this.slick.addSlide(card));
 
                 if (!cards.length) {
                     loadMore.allDone = true;
                 }
                 loadMore.locked = false;
-            })
+            });
     }
 
-    clearCarousel() {
+    clearCarousel () {
         this.slick.removeSlide(this.slick.$slides.length, true, true);
     }
 
-    appendLoadingSlide() {
+    appendLoadingSlide () {
         this.slick.addSlide(`<div class="carousel__item carousel__loading-end">${this.i18n['loading']}</div>`);
     }
 
-    removeLoadingSlide() {
+    removeLoadingSlide () {
         this.slick.removeSlide(this.slick.$slides.length - 1);
     }
 }

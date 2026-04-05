@@ -17,7 +17,7 @@ export default class SelectionManager {
     /**
      * @param {import('../../index.js').IntegratedLibrarianEnvironment} ile
      */
-    constructor(ile, curpath=location.pathname) {
+    constructor (ile, curpath=location.pathname) {
         this.ile = ile;
         this.curpath = curpath;
         this.inited = false;
@@ -36,7 +36,7 @@ export default class SelectionManager {
         this.collator = new Intl.Collator('en-US', {numeric: true});
     }
 
-    init() {
+    init () {
         this.inited = true;
         this.getSelectedItems();
 
@@ -83,7 +83,7 @@ export default class SelectionManager {
     /**
      * @param {MouseEvent & { currentTarget: HTMLElement }} clickEvent
      */
-    processClick(clickEvent) {
+    processClick (clickEvent) {
         // If there is text selection or the click is on a link that isn't a select handle, don't do anything
         if ((!clickEvent.shiftKey && window.getSelection()?.toString() !== '') ||
             ($(clickEvent.target).closest('a, button, details').length > 0 &&
@@ -125,7 +125,7 @@ export default class SelectionManager {
      * @param {HTMLElement} clicked
      * @return {JQuery<HTMLElement>}
      */
-    getSelectableRange(clicked) {
+    getSelectableRange (clicked) {
         let commonParent = undefined;
         const curEls = { clicked, lastClicked: this.lastClicked };
         // Only check up to 3 levels up in the tree
@@ -153,7 +153,7 @@ export default class SelectionManager {
      * If included, turns the toggle into a one way-only operation. If set to false, elements will only
      * be deselected, not selected. If set to true, elements will only be selected, but not deselected.
      */
-    toggleSelected(el, forceSelected) {
+    toggleSelected (el, forceSelected) {
         const isCurSelected = el.classList.contains('ile-selected');
         const provider = this.getProvider(el);
         const olid = provider.data(el);
@@ -172,7 +172,7 @@ export default class SelectionManager {
 
     }
 
-    setElementSelectionAttributes(el, selected) {
+    setElementSelectionAttributes (el, selected) {
         el.classList.toggle('ile-selected', selected);
         el.draggable = selected;
         if (selected) {
@@ -184,11 +184,11 @@ export default class SelectionManager {
         }
     }
 
-    updateToolbar() {
+    updateToolbar () {
         const statusParts = [];
         this.ile.$actions.empty();
         this.ile.$selectionActions.empty();
-        this.ile.bulkTagger.hideTaggingMenu()
+        this.ile.bulkTagger.hideTaggingMenu();
         SelectionManager.TYPES.forEach(type => {
             const count = this.selectedItems[type.singular].length;
             if (count) statusParts.push(`${count} ${count === 1 ? type.singular : type.plural}`);
@@ -215,12 +215,12 @@ export default class SelectionManager {
         }
     }
 
-    addSelectedItem(item) {
+    addSelectedItem (item) {
         this.selectedItems[this.getType(item).singular].push(item);
         sessionStorage.setItem('ile-items', JSON.stringify(this.selectedItems));
     }
 
-    removeSelectedItem(item) {
+    removeSelectedItem (item) {
         const type = this.getType(item);
         const index = this.selectedItems[type.singular].indexOf(item);
         if (index > -1) {
@@ -229,12 +229,12 @@ export default class SelectionManager {
         }
     }
 
-    getSelectedItems() {
+    getSelectedItems () {
         if (Object.keys(this.selectedItems).length === 0) {
             if (sessionStorage.getItem('ile-items')) {
                 this.selectedItems = JSON.parse(sessionStorage.getItem('ile-items'));
             } else {
-                SelectionManager.TYPES.forEach(type => {this.selectedItems[type.singular] = []});
+                SelectionManager.TYPES.forEach(type => {this.selectedItems[type.singular] = [];});
             }
         }
 
@@ -243,7 +243,7 @@ export default class SelectionManager {
         return items;
     }
 
-    clearSelectedItems() {
+    clearSelectedItems () {
         for (const type in this.selectedItems) this.selectedItems[type] = [];
         sessionStorage.setItem('ile-items', JSON.stringify(this.selectedItems));
         this.ile.reset();
@@ -252,7 +252,7 @@ export default class SelectionManager {
     /**
      * @param {DragEvent} ev
      */
-    dragStart(ev) {
+    dragStart (ev) {
         const items = this.getSelectedItems();
         const from = this.curpath.match(/OL\d+[AWM]/);
         if (items.length > 1) {
@@ -267,14 +267,14 @@ export default class SelectionManager {
         ev.dataTransfer.setData('application/x.ile+json', JSON.stringify(data));
     }
 
-    dragEnd() {
+    dragEnd () {
         $('#ile-drag-status .images').removeClass('drag-image');
     }
 
     /**
      * @param {DragEvent} ev
      */
-    onDrop(ev) {
+    onDrop (ev) {
         ev.preventDefault();
         const handler = this.getHandler();
         const data = JSON.parse(ev.dataTransfer.getData('application/x.ile+json'));
@@ -285,7 +285,7 @@ export default class SelectionManager {
     /**
      * @param {DragEvent} ev
      */
-    allowDrop(ev) {
+    allowDrop (ev) {
         if (!ev.dataTransfer?.types.includes('application/x.ile+json') || $('.ile-selected').length) return;
         const handler = this.getHandler();
         if (!handler) return;
@@ -295,27 +295,27 @@ export default class SelectionManager {
         document.getElementById('test-body-mobile').classList.add('ile-drag-over');
     }
 
-    getType(olid) {
+    getType (olid) {
         return SelectionManager.TYPES.find(t => t.regex.test(olid));
     }
 
-    getHandler() {
+    getHandler () {
         return SelectionManager.DROP_HANDLERS.find(h => h.path.test(this.curpath));
     }
 
-    getPossibleProviders() {
+    getPossibleProviders () {
         return SelectionManager.SELECTION_PROVIDERS.filter(p => p.path.test(this.curpath));
     }
 
     /**
      * @param {HTMLElement} el
      */
-    getProvider(el) {
+    getProvider (el) {
         return SelectionManager.SELECTION_PROVIDERS
             .find(p => p.path.test(this.curpath) && el.matches(p.selector));
     }
 
-    getOlidsFromSelectionList(list) {
+    getOlidsFromSelectionList (list) {
         return list.map(item => item.split(':')[0]);
     }
 }
@@ -323,7 +323,7 @@ export default class SelectionManager {
 /**
  * Cross-browser approach to clear any text selections.
  */
-function clearTextSelection() {
+function clearTextSelection () {
     const selection = window.getSelection ? window.getSelection() : document.selection ? document.selection : null;
     if (!!selection) selection.empty ? selection.empty() : selection.removeAllRanges();
 }
@@ -338,7 +338,7 @@ SelectionManager.DROP_HANDLERS = [
     {
         path: /\/authors\/OL\d+A.*/,
         message: 'Move to this author',
-        async ondrop(data) {
+        async ondrop (data) {
             // eslint-disable-next-line no-console
             console.log('move', data);
             window.ILE.setStatusText('Working...');
@@ -355,7 +355,7 @@ SelectionManager.DROP_HANDLERS = [
     {
         path: /(\/works\/OL\d+W.*|\/books\/OL\d+M.*)/,
         message: 'Move to this work',
-        async ondrop(data) {
+        async ondrop (data) {
             // eslint-disable-next-line no-console
             console.log('move', data);
             window.ILE.setStatusText('Working...');
@@ -383,9 +383,9 @@ SelectionManager.TYPES = [
         image: olid => {
             const imgOlid = olid.split(':').pop();
             if (imgOlid.slice(-1) === 'M')
-                return `https://covers.openlibrary.org/b/olid/${imgOlid}-M.jpg?default=https://openlibrary.org/images/icons/avatar_book-lg.png`
+                return `https://covers.openlibrary.org/b/olid/${imgOlid}-M.jpg?default=https://openlibrary.org/images/icons/avatar_book-lg.png`;
             else
-                return `https://covers.openlibrary.org/w/olid/${imgOlid}-M.jpg?default=https://openlibrary.org/images/icons/avatar_book-lg.png`
+                return `https://covers.openlibrary.org/w/olid/${imgOlid}-M.jpg?default=https://openlibrary.org/images/icons/avatar_book-lg.png`;
         },
     },
     {
@@ -400,7 +400,7 @@ SelectionManager.TYPES = [
         regex: /OL\d+A/,
         image: olid => `https://covers.openlibrary.org/a/olid/${olid}-M.jpg?default=https://openlibrary.org/images/icons/avatar_author-lg.png`,
     }
-]
+];
 
 /**
  * Selection Providers define what is selectable on a page. E.g. the path regex
@@ -413,7 +413,7 @@ SelectionManager.SELECTION_PROVIDERS = [
     {
         path: /(\/authors\/OL\d+A.*|\/search)$/,
         selector: '.searchResultItem',
-        type: ['work','edition'],
+        type: ['work', 'edition'],
         /**
          * @param {HTMLElement} el
          * @return {import('../ol.js').WorkOLID}
@@ -480,7 +480,7 @@ SelectionManager.SELECTION_PROVIDERS = [
  */
 SelectionManager.ACTIONS = [
     {
-        applies_to_type: ['work','edition'],
+        applies_to_type: ['work', 'edition'],
         requires_type: ['work'],
         multiple_only: false,
         name: 'Tag Works',
@@ -494,7 +494,7 @@ SelectionManager.ACTIONS = [
         href: olids => `/account/lists/add?seeds=${olids.join(',')}`,
     },
     {
-        applies_to_type: ['work','edition'],
+        applies_to_type: ['work', 'edition'],
         requires_type: ['work'],
         multiple_only: true,
         name: 'Merge Works...',

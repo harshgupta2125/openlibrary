@@ -77,7 +77,7 @@ import { merge, get_editions, get_lists, get_bookshelves, get_ratings, get_autho
 import CONFIGS from '../configs.js';
 
 
-function olidToKey(olid) {
+function olidToKey (olid) {
     const type = {
         W: 'works',
         M: 'books',
@@ -86,7 +86,7 @@ function olidToKey(olid) {
     return `/${type}/${olid}`;
 }
 
-async function fetchRecords(olids) {
+async function fetchRecords (olids) {
     if (olids.length > 1000) {
         throw new Error('Cannot fetch more than 1000 records at a time');
     }
@@ -98,7 +98,7 @@ async function fetchRecords(olids) {
     };
     const params = new URLSearchParams({query: JSON.stringify(query)});
 
-    return (await fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}/query.json?${params}`)).json()
+    return (await fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}/query.json?${params}`)).json();
 }
 
 export default {
@@ -111,7 +111,7 @@ export default {
         show_diffs: Boolean,
         primary: String
     },
-    data() {
+    data () {
         return {
             master_key: null,
             /** @type {{[key: string]: Boolean}} */
@@ -119,7 +119,7 @@ export default {
         };
     },
     asyncComputed: {
-        async records() {
+        async records () {
             const records = _.orderBy(
                 await fetchRecords(this.olids),
                 [
@@ -131,20 +131,20 @@ export default {
                 ['desc', 'asc'],
             );
 
-            let masterIndex = 0
+            let masterIndex = 0;
             if (this.primary) {
-                const primaryKey = `/works/${this.primary}`
-                masterIndex = records.findIndex(elem => elem.key === primaryKey)
+                const primaryKey = `/works/${this.primary}`;
+                masterIndex = records.findIndex(elem => elem.key === primaryKey);
             }
 
-            this.master_key = records[masterIndex].key
+            this.master_key = records[masterIndex].key;
             this.selected = _.fromPairs(records.map(record => [record.key, record.type.key.includes('work')]));
 
             return records;
         },
 
         /** The records, with extra helpful metadata attached for display. Should NOT be saved to Open Library */
-        async enhancedRecords(){
+        async enhancedRecords (){
             if (!this.records) return null;
 
             let author_names;
@@ -155,7 +155,7 @@ export default {
                 console.error('Error creating enhancedRecords:', error);
             }
 
-            const enhanced_records = _.cloneDeep(this.records)
+            const enhanced_records = _.cloneDeep(this.records);
 
             for (const record of enhanced_records) {
                 for (const entry of (record.authors || [])) {
@@ -165,10 +165,10 @@ export default {
                     entry.name = author_names[authorKey.slice('/authors/'.length)];
                 }
             }
-            return enhanced_records
+            return enhanced_records;
         },
 
-        async editions() {
+        async editions () {
             if (!this.records) return null;
 
             const editionPromises = await Promise.all(
@@ -187,7 +187,7 @@ export default {
             return editionsMap;
         },
 
-        async lists() {
+        async lists () {
             if (!this.records) return null;
 
             // We only need the count, so set limit=0 (waaaay faster!)
@@ -199,7 +199,7 @@ export default {
                 this.records.map((work, i) => [work.key, responses[i]])
             );
         },
-        async bookshelves() {
+        async bookshelves () {
             if (!this.records) return null;
 
             const promises = await Promise.all(
@@ -211,7 +211,7 @@ export default {
             );
         },
 
-        async ratings() {
+        async ratings () {
             if (!this.records) return null;
 
             const promises = await Promise.all(
@@ -224,7 +224,7 @@ export default {
         },
     },
     computed: {
-        fields() {
+        fields () {
             const at_start = ['covers'];
             const together = ['key', 'title', 'subtitle', 'authors', 'error'];
             const subjects = [
@@ -279,24 +279,24 @@ export default {
                 ...otherFields
             ];
         },
-        merge() {
+        merge () {
             if (!this.records || !this.editions || !this.master_key) return undefined;
             return this.build_merge(this.records);
         },
-        enhancedMergeRecord() {
+        enhancedMergeRecord () {
             if (!this.enhancedRecords || !this.editions || !this.master_key) return undefined;
             return this.build_merge(this.enhancedRecords);
         }
     },
     methods: {
-        isCellUsed(record, field) {
+        isCellUsed (record, field) {
             if (!this.merge) return false;
             return field in this.merge.sources
                 ? this.merge.sources[field].includes(record.key)
                 : record.key === this.master_key;
         },
 
-        build_merge(records) {
+        build_merge (records) {
             const master = records.find(r => r.key === this.master_key);
             const all_dupes = records
                 .filter(r => this.selected[r.key])

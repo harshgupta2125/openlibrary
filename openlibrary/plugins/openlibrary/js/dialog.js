@@ -7,24 +7,24 @@ import 'jquery-colorbox';
  * In future this will be generalised.
  * @return {Function} for creating a confirm dialog
  */
-function initConfirmationDialogs() {
+function initConfirmationDialogs () {
     const CONFIRMATION_PROMPT_DEFAULTS = { autoOpen: false, modal: true };
     $('#noMaster').dialog(CONFIRMATION_PROMPT_DEFAULTS);
 
-    const $confirmMerge = $('#confirmMerge')
+    const $confirmMerge = $('#confirmMerge');
     if ($confirmMerge.length) {
         $confirmMerge.dialog(
             $.extend({}, CONFIRMATION_PROMPT_DEFAULTS, {
                 buttons: {
-                    'Yes, Merge': function() {
-                        const commentInput = document.querySelector('#author-merge-comment')
+                    'Yes, Merge': function () {
+                        const commentInput = document.querySelector('#author-merge-comment');
                         if (commentInput.value) {
-                            document.querySelector('#hidden-comment-input').value = commentInput.value
+                            document.querySelector('#hidden-comment-input').value = commentInput.value;
                         }
                         $('#mergeForm').trigger('submit');
-                        $(this).parents().find('button').attr('disabled','disabled');
+                        $(this).parents().find('button').attr('disabled', 'disabled');
                     },
-                    'No, Cancel': function() {
+                    'No, Cancel': function () {
                         $(this).dialog('close');
                     }
                 }
@@ -36,11 +36,11 @@ function initConfirmationDialogs() {
             width: 450,
             resizable: false,
             buttons: {
-                'Yes, I\'m sure': function() {
+                'Yes, I\'m sure': function () {
                     $(this).dialog('close');
                     $(this).data('origin').closest('td').find('form').trigger('submit');
                 },
-                'No, cancel': function() {
+                'No, cancel': function () {
                     $(this).dialog('close');
                 }
             }
@@ -49,7 +49,7 @@ function initConfirmationDialogs() {
 }
 
 
-export function initPreviewDialogs() {
+export function initPreviewDialogs () {
     // Delegated click handler for Book Preview buttons.
     // Uses event delegation so dynamically-added buttons (e.g. from
     // lazy-loaded carousels) work without re-initialization.
@@ -62,14 +62,14 @@ export function initPreviewDialogs() {
             inline: true,
             opacity: '0.5',
             href: '#bookPreview',
-            onOpen() {
+            onOpen () {
                 const $iframe = $('#bookPreview iframe');
                 $iframe.prop('src', $button.data('iframe-src'));
 
                 const $link = $('#bookPreview .learn-more a');
                 $link[0].href = $button.data('iframe-link');
             },
-            onCleanup() {
+            onCleanup () {
                 $('#bookPreview iframe').prop('src', '');
             },
         });
@@ -82,7 +82,7 @@ export function initPreviewDialogs() {
  * opening of a dialog. The `aria-controls` attribute on that same element
  * communicates where the HTML of that dialog lives.
  */
-export function initDialogs() {
+export function initDialogs () {
     $('.dialog--open').on('click', function () {
         const $link = $(this),
             href = `#${$link.attr('aria-controls')}`;
@@ -105,8 +105,8 @@ export function initDialogs() {
  *
  * @param {NodeList<Element>} closers
  */
-export function initDialogClosers(closers) {
+export function initDialogClosers (closers) {
     closers.forEach(closer => {
-        $(closer).on('click', () => $.fn.colorbox.close())
-    })
+        $(closer).on('click', () => $.fn.colorbox.close());
+    });
 }

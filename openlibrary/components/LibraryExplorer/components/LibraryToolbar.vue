@@ -411,7 +411,7 @@ export default {
         sortState: Object,
     },
 
-    data() {
+    data () {
         return {
             googleForms: {
                 url: 'https://docs.google.com/forms/d/e/1FAIpQLSe3ZypSJXr9omueQrEDI4mGc2M_v6iDNpDtPp9jrHaGn6wgpA/viewform?usp=sf_link',
@@ -433,52 +433,52 @@ export default {
 
             openTabs: [],
             maxTabs: screen.width > 600 ? 5 : 1,
-        }
+        };
     },
 
     computed: {
-        twitterUrl() {
+        twitterUrl () {
             return `https://twitter.com/intent/tweet?${new URLSearchParams(this.tweet)}`;
         },
-        activeFiltersCount() {
+        activeFiltersCount () {
             return Object.values(this.filterState).filter(v => v?.length).length;
         },
 
-        computedFilters() {
+        computedFilters () {
             const parts = this.filterState.solrQueryParts();
             const computedParts = parts[0] === this.filterState.filter ? parts.slice(1) : parts;
             return computedParts.length ? ` AND ${computedParts.join(' AND ')}` : '';
         },
 
-        top3Languages() {
+        top3Languages () {
             return this.topLanguages.slice(0, 3);
         },
 
-        parsedFilter() {
+        parsedFilter () {
             return lucenerQueryParser.parse(this.filterState.filter);
         },
 
-        inDebugMode() {
+        inDebugMode () {
             return new URLSearchParams(location.search).get('debug') === 'true';
         },
 
-        styles() {
+        styles () {
             return this.inDebugMode ? this.settingsState.styles : Object.fromEntries(Object.entries(this.settingsState.styles).filter(([, val]) => !val.debugModeOnly));
         }
     },
 
     watch: {
-        quickLanguageSelect(newVal) {
+        quickLanguageSelect (newVal) {
             if (newVal === '') this.filterState.languages = [];
             else if (newVal === 'custom') this.filterState.languages = this.fullLanguageSelect;
             else this.filterState.languages = [newVal];
         },
 
-        fullLanguageSelect(newVal) {
+        fullLanguageSelect (newVal) {
             this.filterState.languages = newVal;
         },
 
-        ['sortState.order'](newVal) {
+        ['sortState.order'] (newVal) {
             const desiredLabel = {
                 editions: 'edition_count',
                 new: 'first_publish_year',
@@ -492,14 +492,14 @@ export default {
         }
     },
 
-    async created() {
+    async created () {
         const params = CONFIGS.LANG ? `?lang=${CONFIGS.LANG}` : '';
         this.topLanguages = await fetch(`${CONFIGS.OL_BASE_LANGS}/languages.json${params}`).then(r => r.json());
         this.langOpts = this.topLanguages;
     },
 
     methods: {
-        async findLanguage(query) {
+        async findLanguage (query) {
             this.langLoading = true;
 
             if (!query) {
@@ -518,7 +518,7 @@ export default {
             this.langLoading = false;
         },
 
-        toggleTab(tabName) {
+        toggleTab (tabName) {
             const index = this.openTabs.indexOf(tabName);
             if (index === -1) {
                 this.openTabs.push(tabName);
@@ -530,7 +530,7 @@ export default {
             }
         }
     }
-}
+};
 </script>
 
 

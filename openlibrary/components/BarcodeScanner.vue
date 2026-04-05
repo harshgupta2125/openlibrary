@@ -48,7 +48,7 @@ import { OCRScanner, ThrottleGrouping } from './BarcodeScanner/utils/classes.js'
 
 export default {
     components: { LazyBookCard, SettingsIcon },
-    data() {
+    data () {
         let returnTo = new URLSearchParams(location.search).get('returnTo');
         // Only allow absolute URLs or root-relative URLs to prevent XSS
         if (!/^(https?:\/\/|\/)/.test(returnTo)) {
@@ -82,14 +82,14 @@ export default {
             }).asFunction(),
             quaggaVideo: null,
             ocrScanner: null,
-        }
+        };
     },
-    async mounted() {
+    async mounted () {
         await this.start();
         this.canvasInactive = false;
     },
     methods: {
-        start() {
+        start () {
             return new Promise((res, rej) => {
                 Quagga.init({
                     locator: {
@@ -142,7 +142,7 @@ export default {
             });
         },
 
-        async handleISBNDetected() {
+        async handleISBNDetected () {
             const canvas = document.createElement('canvas');
             canvas.width = this.quaggaVideo.videoWidth;
             canvas.height = this.quaggaVideo.videoHeight;
@@ -156,7 +156,7 @@ export default {
             this.disableISBNTextButton = false;
         },
 
-        async cameraFlash(el) {
+        async cameraFlash (el) {
             el.style.animation = 'camera-flash 0.2s';
             await Promise.race([
                 new Promise((res) => setTimeout(res, 2000)),
@@ -165,7 +165,7 @@ export default {
             el.style.animation = '';
         },
 
-        handleQuaggaProcessed(result) {
+        handleQuaggaProcessed (result) {
             if (!result) return;
 
             const drawingCtx = Quagga.canvas.ctx.overlay;
@@ -191,12 +191,12 @@ export default {
             }
         },
 
-        clearLater() {
+        clearLater () {
             if (this.clearTimeout) clearTimeout(this.clearTimeout);
             this.clearTimeout = setTimeout(this.clearOverlays, 500);
         },
 
-        clearOverlays() {
+        clearOverlays () {
             if (this.clearTimeout) clearTimeout(this.clearTimeout);
             const drawingCtx = Quagga.canvas.ctx.overlay;
             const drawingCanvas = Quagga.canvas.dom.overlay;
@@ -205,14 +205,14 @@ export default {
             drawingCtx.clearRect(0, 0, canvasWidth, canvasHeight);
         },
 
-        handleQuaggaDetected(result) {
+        handleQuaggaDetected (result) {
             const code = result.codeResult.code;
             if (!this.isBarcodeISBN(code)) return;
 
             this.submitISBNThrottled(code, Quagga.canvas.dom.image.toDataURL());
         },
 
-        submitISBN(isbn, tentativeCoverUrl) {
+        submitISBN (isbn, tentativeCoverUrl) {
             if (isbn === this.lastISBN) return;
             if (this.seenISBN.has(isbn)) return;
 
@@ -228,12 +228,12 @@ export default {
             this.seenISBN.add(isbn);
         },
 
-        isBarcodeISBN(code) {
+        isBarcodeISBN (code) {
             return code.startsWith('97');
         },
 
     }
-}
+};
 </script>
 
 <style>

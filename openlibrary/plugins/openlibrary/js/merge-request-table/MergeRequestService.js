@@ -2,20 +2,20 @@
 export const REQUEST_TYPES = {
     WORK_MERGE: 1,
     AUTHOR_MERGE: 2
-}
+};
 
-export async function createRequest(olids, action, type, comment = null, primary = null) {
+export async function createRequest (olids, action, type, comment = null, primary = null) {
     const data = {
         rtype: 'create-request',
         action: action,
         mr_type: type,
         olids: olids
-    }
+    };
     if (comment) {
-        data['comment'] = comment
+        data['comment'] = comment;
     }
     if (primary) {
-        data['primary'] = primary
+        data['primary'] = primary;
     }
 
     return fetch('/merges', {
@@ -25,7 +25,7 @@ export async function createRequest(olids, action, type, comment = null, primary
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    })
+    });
 }
 
 /**
@@ -36,14 +36,14 @@ export async function createRequest(olids, action, type, comment = null, primary
  * @param {string} comment Optional comment about the update
  * @returns {Promise<Response>}
  */
-async function updateRequest(action, mrid, comment = null) {
+async function updateRequest (action, mrid, comment = null) {
     const data = {
         rtype: 'update-request',
         action: action,
         mrid: mrid
-    }
+    };
     if (comment) {
-        data['comment'] = comment
+        data['comment'] = comment;
     }
 
     return fetch('/merges', {
@@ -53,7 +53,7 @@ async function updateRequest(action, mrid, comment = null) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    })
+    });
 }
 
 /**
@@ -63,8 +63,8 @@ async function updateRequest(action, mrid, comment = null) {
  * @param {string} comment The new comment
  * @returns {Promise<Response>} The results of the update POST request
  */
-export async function commentOnRequest(mrid, comment) {
-    return updateRequest('comment', mrid, comment)
+export async function commentOnRequest (mrid, comment) {
+    return updateRequest('comment', mrid, comment);
 }
 
 /**
@@ -72,18 +72,18 @@ export async function commentOnRequest(mrid, comment) {
  *
  * @param {Number} mrid Unique identifier for the request being claimed
  */
-export async function claimRequest(mrid) {
-    return updateRequest('claim', mrid)
+export async function claimRequest (mrid) {
+    return updateRequest('claim', mrid);
 }
 
-export async function unassignRequest(mrid) {
-    return updateRequest('unassign', mrid)
+export async function unassignRequest (mrid) {
+    return updateRequest('unassign', mrid);
 }
 
-export async function declineRequest(mrid, comment) {
-    return updateRequest('decline', mrid, comment)
+export async function declineRequest (mrid, comment) {
+    return updateRequest('decline', mrid, comment);
 }
 
-export async function approveRequest(mrid, comment) {
-    return updateRequest('approve', mrid, comment)
+export async function approveRequest (mrid, comment) {
+    return updateRequest('approve', mrid, comment);
 }

@@ -1,17 +1,17 @@
 /* eslint no-console: 0 */
 import _ from 'lodash';
-import { approveRequest, declineRequest, createRequest, REQUEST_TYPES } from '../../plugins/openlibrary/js/merge-request-table/MergeRequestService'
+import { approveRequest, declineRequest, createRequest, REQUEST_TYPES } from '../../plugins/openlibrary/js/merge-request-table/MergeRequestService';
 import CONFIGS from '../configs.js';
 
-const collator = new Intl.Collator('en-US', {numeric: true})
-export const DEFAULT_EDITION_LIMIT = 200
+const collator = new Intl.Collator('en-US', {numeric: true});
+export const DEFAULT_EDITION_LIMIT = 200;
 
 /**
  * @param {string | URL | Request} input
  * @param {RequestInit?} init
  * @returns {Promise<Response>}
  */
-export async function fetchWithRetry(input, init = {}, maxRetries = 5, initialDelay = 2000) {
+export async function fetchWithRetry (input, init = {}, maxRetries = 5, initialDelay = 2000) {
     let lastError = null;
     for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
@@ -44,7 +44,7 @@ export async function fetchWithRetry(input, init = {}, maxRetries = 5, initialDe
  * @param {*} value
  * @return {string}
  */
-function hash_subel(field, value) {
+function hash_subel (field, value) {
     switch (field) {
     case 'authors':
         // Handle the two possible formats for authors in works and editions
@@ -66,7 +66,7 @@ function hash_subel(field, value) {
  * @param {Object} master
  * @param {Object} dupes
  */
-export function merge(master, dupes) {
+export function merge (master, dupes) {
     const result = _.cloneDeep(master);
     result.latest_revision++;
     result.revision = result.latest_revision;
@@ -92,7 +92,7 @@ export function merge(master, dupes) {
                 result[field] = dupe[field];
                 sources[field] = [dupe.key];
             } else if (result[field] instanceof Array) {
-                result[field] = result[field].concat(dupe[field])
+                result[field] = result[field].concat(dupe[field]);
                 sources[field].push(dupe.key);
             }
         }
@@ -125,7 +125,7 @@ export function merge(master, dupes) {
     return [result, sources];
 }
 
-export async function do_merge(merged_record, dupes, editions, mrid) {
+export async function do_merge (merged_record, dupes, editions, mrid) {
     editions.forEach(ed => ed.works = [{key: merged_record.key}]);
     const edits = [
         merged_record,
@@ -133,9 +133,9 @@ export async function do_merge(merged_record, dupes, editions, mrid) {
         ...editions
     ];
 
-    let comment = 'Merge works'
+    let comment = 'Merge works';
     if (mrid) {
-        comment += ` (MRID: ${mrid})`
+        comment += ` (MRID: ${mrid})`;
     }
 
     return await save_many(
@@ -150,7 +150,7 @@ export async function do_merge(merged_record, dupes, editions, mrid) {
     );
 }
 
-export function make_redirect(master_key, dupe) {
+export function make_redirect (master_key, dupe) {
     return {
         location: master_key,
         key: dupe.key,
@@ -158,7 +158,7 @@ export function make_redirect(master_key, dupe) {
     };
 }
 
-export function get_editions(work_key) {
+export function get_editions (work_key) {
     const endpoint = `${work_key}/editions.json`;
     let base = '';
     if (CONFIGS.OL_BASE_BOOKS) {
@@ -173,21 +173,21 @@ export function get_editions(work_key) {
     });
 }
 
-export function get_lists(key, limit=10) {
+export function get_lists (key, limit=10) {
     return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/lists.json?${new URLSearchParams({ limit })}`).then(r => {
         if (r.ok) return r.json();
         return {error: true};
     });
 }
 
-export function get_bookshelves(key) {
+export function get_bookshelves (key) {
     return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/bookshelves.json`).then(r => {
         if (r.ok) return r.json();
         return {error: true};
     });
 }
 
-export function get_ratings(key) {
+export function get_ratings (key) {
     return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/ratings.json`).then(r => {
         if (r.ok) return r.json();
         return {error: true};
@@ -203,12 +203,12 @@ export function get_ratings(key) {
  *
  * @returns {Promise<Response>} A response to the request
  */
-export function update_merge_request(mrid, action, comment) {
+export function update_merge_request (mrid, action, comment) {
     if (action === 'approve') {
-        return approveRequest(mrid, comment)
+        return approveRequest(mrid, comment);
     }
     else if (action === 'decline') {
-        return declineRequest(mrid, comment)
+        return declineRequest(mrid, comment);
     }
 }
 
@@ -222,9 +222,9 @@ export function update_merge_request(mrid, action, comment) {
  *
  * @returns {Promise<Response>}
  */
-export function createMergeRequest(workIds, primaryRecord, action = 'create-merged', comment = null) {
-    const normalizedIds = prepareIds(workIds).join(',')
-    return createRequest(normalizedIds, action, REQUEST_TYPES['WORK_MERGE'], comment, primaryRecord)
+export function createMergeRequest (workIds, primaryRecord, action = 'create-merged', comment = null) {
+    const normalizedIds = prepareIds(workIds).join(',');
+    return createRequest(normalizedIds, action, REQUEST_TYPES['WORK_MERGE'], comment, primaryRecord);
 }
 
 /**
@@ -235,11 +235,11 @@ export function createMergeRequest(workIds, primaryRecord, action = 'create-merg
  * @param {Array<string>} workIds Un-normalized work OLIDs
  * @returns {Array<string>} Noralized and sorted array of OLIDs
  */
-function prepareIds(workIds) {
+function prepareIds (workIds) {
     return Array.from(workIds, id => {
-        const splitArr = id.split('/')
-        return splitArr[splitArr.length - 1]
-    }).sort(collator.compare)
+        const splitArr = id.split('/');
+        return splitArr[splitArr.length - 1];
+    }).sort(collator.compare);
 }
 
 /**
@@ -249,7 +249,7 @@ function prepareIds(workIds) {
  * @param {String} action
  * @param {Object} data
  */
-function save_many(items, comment, action, data) {
+function save_many (items, comment, action, data) {
     const headers = {
         Opt: '"http://openlibrary.org/dev/docs/api"; ns=42',
         '42-comment': comment,
@@ -269,11 +269,11 @@ function save_many(items, comment, action, data) {
  * @param {Object[]} works
  * @returns {Promise<Record<string,object>} A response to the request
  */
-export async function get_author_names(works) {
+export async function get_author_names (works) {
     const authorIds = _.uniq(works).flatMap(record =>
         (record.authors || [])
             .map(authorEntry => authorEntry.author?.key ?? authorEntry.key)
-    )
+    );
 
     if (!authorIds.length) return {};
 
@@ -281,21 +281,21 @@ export async function get_author_names(works) {
         q: `key:(${authorIds.join(' OR ')})`,
         mode: 'everything',
         fields: 'key,name',
-    })
+    });
 
-    const response = await fetchWithRetry(`${CONFIGS.OL_BASE_SEARCH}/search/authors.json?${queryParams}`)
+    const response = await fetchWithRetry(`${CONFIGS.OL_BASE_SEARCH}/search/authors.json?${queryParams}`);
 
     if (!response.ok) {
         throw new Error('Failed to fetch author data');
     }
 
-    const results = await response.json()
+    const results = await response.json();
 
-    const authorDirectory = {}
+    const authorDirectory = {};
 
     for (const doc of results.docs) {
         authorDirectory[doc.key] = doc.name;
     }
 
-    return authorDirectory
+    return authorDirectory;
 }
