@@ -48,7 +48,7 @@
   },
   "overrides": [
     {
-      "files": ["*.js", "*.mjs", "*.cjs"],
+      "files": ["**/*.js", "**/*.mjs", "**/*.cjs"],
       "rules": {
         "semi": "off",
         "quotes": "off",

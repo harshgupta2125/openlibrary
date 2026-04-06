@@ -7,7 +7,7 @@ export function initialzeCarousels(elems) {
     elemSlides.forEach((slide) => {
       const $slide = $(slide);
       if ($slide.attr('aria-describedby') !== undefined) {
-        $slide.attr('id', $(this).attr('aria-describedby'));
+        $slide.attr('id', $slide.attr('aria-describedby'));
       }
     });
   });

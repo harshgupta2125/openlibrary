@@ -44,7 +44,7 @@ export function compare(tagA, tagB) {
   } else {
     if (lowerA.tagType < lowerB.tagType) {
       return -1;
-    } else if (lowerA.tagType > lowerB.tagtype) {
+    } else if (lowerA.tagType > lowerB.tagType) {
       return 1;
     }
   }

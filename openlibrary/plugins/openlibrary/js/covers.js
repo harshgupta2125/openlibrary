@@ -175,7 +175,9 @@ async function pasteImage() {
       return formData;
     }
     alert('No image found in clipboard');
-  } catch (error) {}
+  } catch {
+    return null;
+  }
 }
 
 export function initPasteForm(coverForm) {

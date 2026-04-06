@@ -105,8 +105,11 @@ export function initDialogs() {
 
   // This will close the dialog in the current page.
   $('.dialog--close')
-    .attr('href', 'javascript:;')
-    .on('click', () => $.fn.colorbox.close());
+    .attr('href', '#')
+    .on('click', (e) => {
+      e.preventDefault();
+      $.fn.colorbox.close();
+    });
   // This will close the colorbox from the parent.
   $('.dialog--close-parent').on('click', () => parent.$.fn.colorbox.close());
 }

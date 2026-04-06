@@ -3,7 +3,6 @@ export default function initServiceWorker() {
     window.addEventListener('load', () => {
       navigator.serviceWorker
         .register('/sw.js')
-        .then(() => {})
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.error(`Service worker registration failed: ${error}`);
