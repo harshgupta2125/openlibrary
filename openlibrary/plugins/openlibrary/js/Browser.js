@@ -32,7 +32,7 @@ export function removeURLParameter(url, parameter) {
     params = query.split(/[&;]/g);
 
     //reverse iteration as may be destructive
-    for (i = params.length; i-- > 0; ) {
+    for (i = params.length; i-- > 0;) {
       //idiom for string.startsWith
       if (params[i].lastIndexOf(paramPrefix, 0) !== -1) {
         params.splice(i, 1);
