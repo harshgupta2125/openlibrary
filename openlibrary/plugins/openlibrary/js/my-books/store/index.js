@@ -15,7 +15,7 @@ class MyBooksStore {
     this._store = {
       droppers: [],
       showcases: [],
-      userkey: '',
+      userKey: '',
       openDropper: null,
     };
   }

@@ -102,5 +102,5 @@ async function getPartials(data, affiliateLinksSections) {
  * @returns {string} HTML for a retry link.
  */
 function renderRetryLink() {
-  return '<span class="affiliate-links-section__retry">Failed to fetch affiliate links. <a href="javascript:;">Retry?</a></span>';
+  return '<span class="affiliate-links-section__retry">Failed to fetch affiliate links. <button type="button" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;">Retry?</button></span>';
 }

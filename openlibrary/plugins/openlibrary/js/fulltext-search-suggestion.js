@@ -69,5 +69,5 @@ async function getPartials(fulltextSearchSuggestion, query) {
  * @returns {string} HTML for a retry link.
  */
 function renderRetryLink() {
-  return '<span class="fulltext-suggestions__retry">Failed to fetch fulltext search suggestions. <a href="javascript:;">Retry?</a></span>';
+  return '<span class="fulltext-suggestions__retry">Failed to fetch fulltext search suggestions. <button type="button" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;">Retry?</button></span>';
 }

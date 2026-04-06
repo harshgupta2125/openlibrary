@@ -5,7 +5,7 @@ export function initPrivateButtons(buttons) {
     button.addEventListener('click', (event) => {
       event.preventDefault();
       const toast = new FadingToast(
-        'This patron has not enabled following',
+        window.$_('This patron has not enabled following'),
         null,
         3000,
       );
