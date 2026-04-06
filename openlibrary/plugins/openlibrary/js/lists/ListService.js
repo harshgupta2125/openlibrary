@@ -13,14 +13,14 @@ import { buildPartialsUrl } from '../utils';
  * @returns {Promise<Response>} The results of the POST request
  */
 export async function createList(userKey, data) {
-    return await fetch(`${userKey}/lists.json`, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
+  return await fetch(`${userKey}/lists.json`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 }
 
 /**
@@ -31,15 +31,15 @@ export async function createList(userKey, data) {
  * @returns {Promise<Response>} The result of the POST request
  */
 export async function addItem(listKey, seed) {
-    const body = { add: [seed] };
-    return await fetch(`${listKey}/seeds.json`, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-        body: JSON.stringify(body),
-    });
+  const body = { add: [seed] };
+  return await fetch(`${listKey}/seeds.json`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
 }
 
 /**
@@ -50,24 +50,23 @@ export async function addItem(listKey, seed) {
  * @returns {Promise<Response>} The POST response
  */
 export async function removeItem(listKey, seed) {
-    const body = { remove: [seed] };
-    return await fetch(`${listKey}/seeds.json`, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-        body: JSON.stringify(body),
-    });
+  const body = { remove: [seed] };
+  return await fetch(`${listKey}/seeds.json`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
 }
 
 // XXX : jsdoc
 export async function getListPartials() {
-    return await fetch(buildPartialsUrl('MyBooksDropperLists'), {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-    });
+  return await fetch(buildPartialsUrl('MyBooksDropperLists'), {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  });
 }
-

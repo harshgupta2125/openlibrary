@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from 'lit';
 
 /**
  * OLChipGroup - A flex-wrap container for ol-chip components
@@ -15,11 +15,11 @@ import { LitElement, html, css } from 'lit';
  * </ol-chip-group>
  */
 export class OLChipGroup extends LitElement {
-    static properties = {
-        gap: { type: String, reflect: true },
-    };
+  static properties = {
+    gap: { type: String, reflect: true },
+  };
 
-    static styles = css`
+  static styles = css`
         :host {
             display: flex;
             flex-wrap: wrap;
@@ -35,21 +35,21 @@ export class OLChipGroup extends LitElement {
         }
     `;
 
-    constructor() {
-        super();
-        this.gap = 'medium';
-    }
+  constructor() {
+    super();
+    this.gap = 'medium';
+  }
 
-    connectedCallback() {
-        super.connectedCallback();
-        if (!this.hasAttribute('role')) {
-            this.setAttribute('role', 'group');
-        }
+  connectedCallback() {
+    super.connectedCallback();
+    if (!this.hasAttribute('role')) {
+      this.setAttribute('role', 'group');
     }
+  }
 
-    render() {
-        return html`<slot></slot>`;
-    }
+  render() {
+    return html`<slot></slot>`;
+  }
 }
 
 customElements.define('ol-chip-group', OLChipGroup);

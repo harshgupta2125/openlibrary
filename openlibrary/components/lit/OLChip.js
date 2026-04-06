@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 
 /**
  * OLChip - A pill-shaped interactive chip web component
@@ -24,15 +24,15 @@ import { LitElement, html, css, nothing } from 'lit';
  * <ol-chip size="small" count="76" href="/subjects/fiction">Fiction</ol-chip>
  */
 export class OLChip extends LitElement {
-    static properties = {
-        selected: { type: Boolean, reflect: true },
-        size: { type: String, reflect: true },
-        href: { type: String },
-        count: { type: String },
-        accessibleLabel: { type: String, attribute: 'accessible-label' },
-    };
+  static properties = {
+    selected: { type: Boolean, reflect: true },
+    size: { type: String, reflect: true },
+    href: { type: String },
+    count: { type: String },
+    accessibleLabel: { type: String, attribute: 'accessible-label' },
+  };
 
-    static styles = css`
+  static styles = css`
         :host {
             --chip-padding-block: 6px;
             --chip-padding-inline: 12px;
@@ -127,27 +127,29 @@ export class OLChip extends LitElement {
         }
     `;
 
-    constructor() {
-        super();
-        this.selected = false;
-        this.size = 'medium';
-        this.href = null;
-        this.count = null;
-        this.accessibleLabel = null;
-    }
+  constructor() {
+    super();
+    this.selected = false;
+    this.size = 'medium';
+    this.href = null;
+    this.count = null;
+    this.accessibleLabel = null;
+  }
 
-    _handleClick() {
-        this.dispatchEvent(new CustomEvent('ol-chip-select', {
-            bubbles: true,
-            composed: true,
-            detail: { selected: !this.selected },
-        }));
-    }
+  _handleClick() {
+    this.dispatchEvent(
+      new CustomEvent('ol-chip-select', {
+        bubbles: true,
+        composed: true,
+        detail: { selected: !this.selected },
+      }),
+    );
+  }
 
-    _renderIcons() {
-        if (!this.selected) return nothing;
+  _renderIcons() {
+    if (!this.selected) return nothing;
 
-        return html`
+    return html`
             <span class="icon-slot">
                 <svg
                     class="icon"
@@ -163,32 +165,32 @@ export class OLChip extends LitElement {
                 </svg>
             </span>
         `;
-    }
+  }
 
-    _renderCount() {
-        if (this.count === null) return nothing;
+  _renderCount() {
+    if (this.count === null) return nothing;
 
-        return html`<span class="count">${this.count}</span>`;
-    }
+    return html`<span class="count">${this.count}</span>`;
+  }
 
-    render() {
-        const content = html`
+  render() {
+    const content = html`
             ${this._renderIcons()}
             <slot></slot>
             ${this._renderCount()}
         `;
 
-        if (this.href) {
-            return html`
+    if (this.href) {
+      return html`
                 <a class="chip" href=${this.href}
                     aria-label=${this.accessibleLabel || nothing}
                     @click=${this._handleClick}>
                     ${content}
                 </a>
             `;
-        }
+    }
 
-        return html`
+    return html`
             <button class="chip" type="button"
                 aria-label=${this.accessibleLabel || nothing}
                 aria-pressed=${this.selected}
@@ -196,7 +198,7 @@ export class OLChip extends LitElement {
                 ${content}
             </button>
         `;
-    }
+  }
 }
 
 customElements.define('ol-chip', OLChip);

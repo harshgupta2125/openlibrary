@@ -1,41 +1,51 @@
 /* eslint no-console: 0 */
 import _ from 'lodash';
-import { approveRequest, declineRequest, createRequest, REQUEST_TYPES } from '../../plugins/openlibrary/js/merge-request-table/MergeRequestService'
+import {
+  approveRequest,
+  createRequest,
+  declineRequest,
+  REQUEST_TYPES,
+} from '../../plugins/openlibrary/js/merge-request-table/MergeRequestService';
 import CONFIGS from '../configs.js';
 
-const collator = new Intl.Collator('en-US', {numeric: true})
-export const DEFAULT_EDITION_LIMIT = 200
+const collator = new Intl.Collator('en-US', { numeric: true });
+export const DEFAULT_EDITION_LIMIT = 200;
 
 /**
  * @param {string | URL | Request} input
  * @param {RequestInit?} init
  * @returns {Promise<Response>}
  */
-export async function fetchWithRetry(input, init = {}, maxRetries = 5, initialDelay = 2000) {
-    let lastError = null;
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-        try {
-            const response = await fetch(input, init);
-            if (response.status !== 429) {
-                return response;
-            }
-        } catch (error) {
-            // This block catches network errors (e.g., DNS, connection refused) and the server errors we threw above.
-            // 429s come here if there is a cors issue (like on localhost)
-            lastError = error;
-        }
-
-        const backoff = Math.pow(2, attempt) * initialDelay;
-        const jitter = Math.random() * 2000;
-        const delay = backoff + jitter;
-        await new Promise(resolve => setTimeout(resolve, delay));
+export async function fetchWithRetry(
+  input,
+  init = {},
+  maxRetries = 5,
+  initialDelay = 2000,
+) {
+  let lastError = null;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await fetch(input, init);
+      if (response.status !== 429) {
+        return response;
+      }
+    } catch (error) {
+      // This block catches network errors (e.g., DNS, connection refused) and the server errors we threw above.
+      // 429s come here if there is a cors issue (like on localhost)
+      lastError = error;
     }
 
-    if (lastError) {
-        throw lastError;
-    } else {
-        throw new Error('Max retries exceeded for request');
-    }
+    const backoff = 2 ** attempt * initialDelay;
+    const jitter = Math.random() * 2000;
+    const delay = backoff + jitter;
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  if (lastError) {
+    throw lastError;
+  } else {
+    throw new Error('Max retries exceeded for request');
+  }
 }
 
 /**
@@ -45,11 +55,12 @@ export async function fetchWithRetry(input, init = {}, maxRetries = 5, initialDe
  * @return {string}
  */
 function hash_subel(field, value) {
-    switch (field) {
-    case 'authors':
-        // Handle the two possible formats for authors in works and editions
-        const authorKey = value.author ? value.author.key : value.key;
-        return (value.type.key || value.type) + authorKey;
+  switch (field) {
+    case 'authors': {
+      // Handle the two possible formats for authors in works and editions
+      const authorKey = value.author ? value.author.key : value.key;
+      return (value.type.key || value.type) + authorKey;
+    }
     case 'covers':
     case 'subjects':
     case 'subject_people':
@@ -57,8 +68,8 @@ function hash_subel(field, value) {
     case 'subject_times':
     case 'excerpts':
     default:
-        return JSON.stringify(value);
-    }
+      return JSON.stringify(value);
+  }
 }
 
 /**
@@ -67,131 +78,141 @@ function hash_subel(field, value) {
  * @param {Object} dupes
  */
 export function merge(master, dupes) {
-    const result = _.cloneDeep(master);
-    result.latest_revision++;
-    result.revision = result.latest_revision;
-    result.last_modified.value = (new Date()).toISOString().slice(0, -1);
-    /** @type {{[field: string]: String}} field -> key where it came from */
-    const sources = {};
-    const subsources = {}; // for array elements
+  const result = _.cloneDeep(master);
+  result.latest_revision++;
+  result.revision = result.latest_revision;
+  result.last_modified.value = new Date().toISOString().slice(0, -1);
+  /** @type {{[field: string]: String}} field -> key where it came from */
+  const sources = {};
+  const subsources = {}; // for array elements
 
-    for (const field in result) {
-        sources[field] = [master.key];
-        if (result[field] instanceof Array) {
-            for (const el of result[field]) {
-                subsources[field] = {
-                    [hash_subel(field, el)]: [master.key]
-                };
-            }
-        }
+  for (const field in result) {
+    sources[field] = [master.key];
+    if (result[field] instanceof Array) {
+      for (const el of result[field]) {
+        subsources[field] = {
+          [hash_subel(field, el)]: [master.key],
+        };
+      }
     }
+  }
 
-    for (const dupe of dupes) {
-        for (const field in dupe) {
-            if (!(field in result) && field !== 'subtitle') {
-                result[field] = dupe[field];
-                sources[field] = [dupe.key];
-            } else if (result[field] instanceof Array) {
-                result[field] = result[field].concat(dupe[field])
-                sources[field].push(dupe.key);
-            }
-        }
+  for (const dupe of dupes) {
+    for (const field in dupe) {
+      if (!(field in result) && field !== 'subtitle') {
+        result[field] = dupe[field];
+        sources[field] = [dupe.key];
+      } else if (result[field] instanceof Array) {
+        result[field] = result[field].concat(dupe[field]);
+        sources[field].push(dupe.key);
+      }
     }
+  }
 
-    // dedup
-    for (const key in result) {
-        if (!(result[key] instanceof Array))
-            continue;
-        switch (key) {
-        case 'authors':
-            const authors = _.cloneDeep(result.authors);
-            authors
-                .filter(a => typeof a.type === 'string')
-                .forEach(a => a.type = { key: a.type });
-            result.authors = _.uniqWith(authors, _.isEqual);
-            break;
-        case 'covers':
-        case 'subjects':
-        case 'subject_people':
-        case 'subject_places':
-        case 'subject_times':
-        case 'excerpts':
-        default:
-            result[key] = _.uniqWith(result[key], _.isEqual);
-            break;
-        }
+  // dedup
+  for (const key in result) {
+    if (!(result[key] instanceof Array)) continue;
+    switch (key) {
+      case 'authors': {
+        const authors = _.cloneDeep(result.authors);
+        authors
+          .filter((a) => typeof a.type === 'string')
+          .forEach((a) => (a.type = { key: a.type }));
+        result.authors = _.uniqWith(authors, _.isEqual);
+        break;
+      }
+      case 'covers':
+      case 'subjects':
+      case 'subject_people':
+      case 'subject_places':
+      case 'subject_times':
+      case 'excerpts':
+      default:
+        result[key] = _.uniqWith(result[key], _.isEqual);
+        break;
     }
+  }
 
-    return [result, sources];
+  return [result, sources];
 }
 
 export async function do_merge(merged_record, dupes, editions, mrid) {
-    editions.forEach(ed => ed.works = [{key: merged_record.key}]);
-    const edits = [
-        merged_record,
-        ...dupes.map(dupe => make_redirect(merged_record.key, dupe)),
-        ...editions
-    ];
+  editions.forEach((ed) => (ed.works = [{ key: merged_record.key }]));
+  const edits = [
+    merged_record,
+    ...dupes.map((dupe) => make_redirect(merged_record.key, dupe)),
+    ...editions,
+  ];
 
-    let comment = 'Merge works'
-    if (mrid) {
-        comment += ` (MRID: ${mrid})`
-    }
+  let comment = 'Merge works';
+  if (mrid) {
+    comment += ` (MRID: ${mrid})`;
+  }
 
-    return await save_many(
-        edits,
-        comment,
-        'merge-works',
-        {
-            master: merged_record.key,
-            duplicates: dupes.map(dupe => dupe.key),
-            mrid: mrid,
-        },
-    );
+  return await save_many(edits, comment, 'merge-works', {
+    master: merged_record.key,
+    duplicates: dupes.map((dupe) => dupe.key),
+    mrid: mrid,
+  });
 }
 
 export function make_redirect(master_key, dupe) {
-    return {
-        location: master_key,
-        key: dupe.key,
-        type: { key: '/type/redirect' }
-    };
+  return {
+    location: master_key,
+    key: dupe.key,
+    type: { key: '/type/redirect' },
+  };
 }
 
 export function get_editions(work_key) {
-    const endpoint = `${work_key}/editions.json`;
-    let base = '';
-    if (CONFIGS.OL_BASE_BOOKS) {
-        base = CONFIGS.OL_BASE_BOOKS;
-    } else {
-        // FIXME Fetch from prod openlibrary.org, otherwise it's outdated
-        base = location.host.endsWith('.openlibrary.org') ? 'https://openlibrary.org' : '';
-    }
-    return fetchWithRetry(`${base}${endpoint}?${new URLSearchParams({limit: DEFAULT_EDITION_LIMIT})}`).then(r => {
-        if (r.ok) return r.json();
-        if (confirm(`Network error; failed to load editions for ${work_key}. Click OK to reload.`)) location.reload();
-    });
+  const endpoint = `${work_key}/editions.json`;
+  let base = '';
+  if (CONFIGS.OL_BASE_BOOKS) {
+    base = CONFIGS.OL_BASE_BOOKS;
+  } else {
+    // FIXME Fetch from prod openlibrary.org, otherwise it's outdated
+    base = location.host.endsWith('.openlibrary.org')
+      ? 'https://openlibrary.org'
+      : '';
+  }
+  return fetchWithRetry(
+    `${base}${endpoint}?${new URLSearchParams({ limit: DEFAULT_EDITION_LIMIT })}`,
+  ).then((r) => {
+    if (r.ok) return r.json();
+    if (
+      confirm(
+        `Network error; failed to load editions for ${work_key}. Click OK to reload.`,
+      )
+    )
+      location.reload();
+  });
 }
 
-export function get_lists(key, limit=10) {
-    return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/lists.json?${new URLSearchParams({ limit })}`).then(r => {
-        if (r.ok) return r.json();
-        return {error: true};
-    });
+export function get_lists(key, limit = 10) {
+  return fetchWithRetry(
+    `${CONFIGS.OL_BASE_BOOKS}${key}/lists.json?${new URLSearchParams({ limit })}`,
+  ).then((r) => {
+    if (r.ok) return r.json();
+    return { error: true };
+  });
 }
 
 export function get_bookshelves(key) {
-    return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/bookshelves.json`).then(r => {
-        if (r.ok) return r.json();
-        return {error: true};
-    });
+  return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/bookshelves.json`).then(
+    (r) => {
+      if (r.ok) return r.json();
+      return { error: true };
+    },
+  );
 }
 
 export function get_ratings(key) {
-    return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/ratings.json`).then(r => {
-        if (r.ok) return r.json();
-        return {error: true};
-    });
+  return fetchWithRetry(`${CONFIGS.OL_BASE_BOOKS}${key}/ratings.json`).then(
+    (r) => {
+      if (r.ok) return r.json();
+      return { error: true };
+    },
+  );
 }
 
 /**
@@ -204,12 +225,11 @@ export function get_ratings(key) {
  * @returns {Promise<Response>} A response to the request
  */
 export function update_merge_request(mrid, action, comment) {
-    if (action === 'approve') {
-        return approveRequest(mrid, comment)
-    }
-    else if (action === 'decline') {
-        return declineRequest(mrid, comment)
-    }
+  if (action === 'approve') {
+    return approveRequest(mrid, comment);
+  } else if (action === 'decline') {
+    return declineRequest(mrid, comment);
+  }
 }
 
 /**
@@ -222,9 +242,20 @@ export function update_merge_request(mrid, action, comment) {
  *
  * @returns {Promise<Response>}
  */
-export function createMergeRequest(workIds, primaryRecord, action = 'create-merged', comment = null) {
-    const normalizedIds = prepareIds(workIds).join(',')
-    return createRequest(normalizedIds, action, REQUEST_TYPES['WORK_MERGE'], comment, primaryRecord)
+export function createMergeRequest(
+  workIds,
+  primaryRecord,
+  action = 'create-merged',
+  comment = null,
+) {
+  const normalizedIds = prepareIds(workIds).join(',');
+  return createRequest(
+    normalizedIds,
+    action,
+    REQUEST_TYPES['WORK_MERGE'],
+    comment,
+    primaryRecord,
+  );
 }
 
 /**
@@ -236,10 +267,10 @@ export function createMergeRequest(workIds, primaryRecord, action = 'create-merg
  * @returns {Array<string>} Noralized and sorted array of OLIDs
  */
 function prepareIds(workIds) {
-    return Array.from(workIds, id => {
-        const splitArr = id.split('/')
-        return splitArr[splitArr.length - 1]
-    }).sort(collator.compare)
+  return Array.from(workIds, (id) => {
+    const splitArr = id.split('/');
+    return splitArr[splitArr.length - 1];
+  }).sort(collator.compare);
 }
 
 /**
@@ -250,18 +281,18 @@ function prepareIds(workIds) {
  * @param {Object} data
  */
 function save_many(items, comment, action, data) {
-    const headers = {
-        Opt: '"http://openlibrary.org/dev/docs/api"; ns=42',
-        '42-comment': comment,
-        '42-action': action,
-        '42-data': JSON.stringify(data),
-    };
+  const headers = {
+    Opt: '"http://openlibrary.org/dev/docs/api"; ns=42',
+    '42-comment': comment,
+    '42-action': action,
+    '42-data': JSON.stringify(data),
+  };
 
-    return fetchWithRetry(`${CONFIGS.OL_BASE_SAVES}/api/save_many`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(items)
-    });
+  return fetchWithRetry(`${CONFIGS.OL_BASE_SAVES}/api/save_many`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(items),
+  });
 }
 
 /**
@@ -270,32 +301,35 @@ function save_many(items, comment, action, data) {
  * @returns {Promise<Record<string,object>} A response to the request
  */
 export async function get_author_names(works) {
-    const authorIds = _.uniq(works).flatMap(record =>
-        (record.authors || [])
-            .map(authorEntry => authorEntry.author?.key ?? authorEntry.key)
-    )
+  const authorIds = _.uniq(works).flatMap((record) =>
+    (record.authors || []).map(
+      (authorEntry) => authorEntry.author?.key ?? authorEntry.key,
+    ),
+  );
 
-    if (!authorIds.length) return {};
+  if (!authorIds.length) return {};
 
-    const queryParams = new URLSearchParams({
-        q: `key:(${authorIds.join(' OR ')})`,
-        mode: 'everything',
-        fields: 'key,name',
-    })
+  const queryParams = new URLSearchParams({
+    q: `key:(${authorIds.join(' OR ')})`,
+    mode: 'everything',
+    fields: 'key,name',
+  });
 
-    const response = await fetchWithRetry(`${CONFIGS.OL_BASE_SEARCH}/search/authors.json?${queryParams}`)
+  const response = await fetchWithRetry(
+    `${CONFIGS.OL_BASE_SEARCH}/search/authors.json?${queryParams}`,
+  );
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch author data');
-    }
+  if (!response.ok) {
+    throw new Error('Failed to fetch author data');
+  }
 
-    const results = await response.json()
+  const results = await response.json();
 
-    const authorDirectory = {}
+  const authorDirectory = {};
 
-    for (const doc of results.docs) {
-        authorDirectory[doc.key] = doc.name;
-    }
+  for (const doc of results.docs) {
+    authorDirectory[doc.key] = doc.name;
+  }
 
-    return authorDirectory
+  return authorDirectory;
 }

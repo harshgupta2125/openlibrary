@@ -11,7 +11,7 @@ import { createApp } from 'vue'
 import HelloWorld from '../HelloWorld.vue'
 
 createApp(HelloWorld).mount('#app')
-`
+`;
 
 const result = data.replace(/HelloWorld/g, componentName);
 fs.writeFileSync('openlibrary/components/dev/_dev.js', result);

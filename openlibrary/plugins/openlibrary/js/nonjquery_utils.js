@@ -12,21 +12,21 @@
  * @param {Boolean} [execAsap]
  * @returns {Function}
  */
-export function debounce(func, threshold=100, execAsap=false) {
-    let timeout;
-    return function debounced() {
-        const obj = this, args = arguments;
-        function delayed() {
-            if (!execAsap)
-                func.apply(obj, args);
-            timeout = null;
-        }
+export function debounce(func, threshold = 100, execAsap = false) {
+  let timeout;
+  return function debounced() {
+    const obj = this,
+      args = arguments;
+    function delayed() {
+      if (!execAsap) func.apply(obj, args);
+      timeout = null;
+    }
 
-        if (timeout) {
-            clearTimeout(timeout);
-        } else if (execAsap) {
-            func.apply(obj, args);
-        }
-        timeout = setTimeout(delayed, threshold);
-    };
+    if (timeout) {
+      clearTimeout(timeout);
+    } else if (execAsap) {
+      func.apply(obj, args);
+    }
+    timeout = setTimeout(delayed, threshold);
+  };
 }

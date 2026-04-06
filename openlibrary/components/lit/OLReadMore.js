@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from 'lit';
 
 /**
  * OLReadMore - A web component for expandable/collapsible content
@@ -25,18 +25,18 @@ import { LitElement, html, css } from 'lit';
  * </ol-read-more>
  */
 export class OLReadMore extends LitElement {
-    static properties = {
-        maxHeight: { type: String, attribute: 'max-height' },
-        moreText: { type: String, attribute: 'more-text' },
-        lessText: { type: String, attribute: 'less-text' },
-        backgroundColor: { type: String, attribute: 'background-color' },
-        labelSize: { type: String, attribute: 'label-size' },
-        // Internal state
-        _expanded: { type: Boolean, state: true },
-        _unnecessary: { type: Boolean, state: true },
-    };
+  static properties = {
+    maxHeight: { type: String, attribute: 'max-height' },
+    moreText: { type: String, attribute: 'more-text' },
+    lessText: { type: String, attribute: 'less-text' },
+    backgroundColor: { type: String, attribute: 'background-color' },
+    labelSize: { type: String, attribute: 'label-size' },
+    // Internal state
+    _expanded: { type: Boolean, state: true },
+    _unnecessary: { type: Boolean, state: true },
+  };
 
-    static styles = css`
+  static styles = css`
         :host {
             display: block;
             position: relative;
@@ -113,88 +113,91 @@ export class OLReadMore extends LitElement {
         }
     `;
 
-    constructor() {
-        super();
-        this.maxHeight = '80px';
-        this.moreText = 'Read More';
-        this.lessText = 'Read Less';
-        this.backgroundColor = null;
-        this.labelSize = 'medium';
-        this._expanded = false;
-        this._unnecessary = false;
+  constructor() {
+    super();
+    this.maxHeight = '80px';
+    this.moreText = 'Read More';
+    this.lessText = 'Read Less';
+    this.backgroundColor = null;
+    this.labelSize = 'medium';
+    this._expanded = false;
+    this._unnecessary = false;
+  }
+
+  firstUpdated() {
+    this._checkIfTruncationNeeded();
+    this._updateBackgroundColor();
+    // Remove styles that were used to prevent layout shift
+    // Now that the component has rendered, it can size naturally
+    this.style.minHeight = 'auto';
+    this.style.visibility = 'visible';
+    this.style.overflow = 'visible';
+  }
+
+  updated(changedProperties) {
+    if (changedProperties.has('backgroundColor')) {
+      this._updateBackgroundColor();
+    }
+  }
+
+  _updateBackgroundColor() {
+    if (this.backgroundColor) {
+      this.style.setProperty(
+        '--ol-readmore-gradient-color',
+        this.backgroundColor,
+      );
+    }
+  }
+
+  _checkIfTruncationNeeded() {
+    const content = this.shadowRoot.querySelector('.content-wrapper');
+    if (!content) return;
+
+    const isOverflowing = content.scrollHeight > content.clientHeight;
+    this._unnecessary = !isOverflowing;
+
+    if (this._unnecessary) {
+      this._expanded = true;
+    }
+  }
+
+  _handleMoreClick() {
+    if (this._unnecessary) return;
+    this._expanded = true;
+  }
+
+  _handleLessClick() {
+    if (this._unnecessary) return;
+    this._expanded = false;
+
+    // Scroll back to top when collapsing if component is off-screen
+    const rect = this.getBoundingClientRect();
+    if (rect.top < 0) {
+      this.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }
+
+  _getContentStyle() {
+    if (this._expanded) {
+      return '';
     }
 
-    firstUpdated() {
-        this._checkIfTruncationNeeded();
-        this._updateBackgroundColor();
-        // Remove styles that were used to prevent layout shift
-        // Now that the component has rendered, it can size naturally
-        this.style.minHeight = 'auto';
-        this.style.visibility = 'visible';
-        this.style.overflow = 'visible';
+    if (this.maxHeight) {
+      return `max-height: ${this.maxHeight}`;
     }
 
-    updated(changedProperties) {
-        if (changedProperties.has('backgroundColor')) {
-            this._updateBackgroundColor();
-        }
-    }
+    return '';
+  }
 
-    _updateBackgroundColor() {
-        if (this.backgroundColor) {
-            this.style.setProperty('--ol-readmore-gradient-color', this.backgroundColor);
-        }
-    }
+  render() {
+    const showMoreBtn = !this._expanded && !this._unnecessary;
+    const showLessBtn = this._expanded && !this._unnecessary;
+    const sizeClass = this.labelSize === 'small' ? 'small' : '';
 
-    _checkIfTruncationNeeded() {
-        const content = this.shadowRoot.querySelector('.content-wrapper');
-        if (!content) return;
-
-        const isOverflowing = content.scrollHeight > content.clientHeight;
-        this._unnecessary = !isOverflowing;
-
-        if (this._unnecessary) {
-            this._expanded = true;
-        }
-    }
-
-    _handleMoreClick() {
-        if (this._unnecessary) return;
-        this._expanded = true;
-    }
-
-    _handleLessClick() {
-        if (this._unnecessary) return;
-        this._expanded = false;
-
-        // Scroll back to top when collapsing if component is off-screen
-        const rect = this.getBoundingClientRect();
-        if (rect.top < 0) {
-            this.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-        }
-    }
-
-    _getContentStyle() {
-        if (this._expanded) {
-            return '';
-        }
-
-        if (this.maxHeight) {
-            return `max-height: ${this.maxHeight}`;
-        }
-
-        return '';
-    }
-
-    render() {
-        const showMoreBtn = !this._expanded && !this._unnecessary;
-        const showLessBtn = this._expanded && !this._unnecessary;
-        const sizeClass = this.labelSize === 'small' ? 'small' : '';
-
-        return html`
+    return html`
             <div
                 class="content-wrapper ${this._expanded ? 'expanded' : ''}"
                 style="${this._getContentStyle()}"
@@ -220,7 +223,7 @@ export class OLReadMore extends LitElement {
                 <svg class="chevron up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </button>
         `;
-    }
+  }
 }
 
 customElements.define('ol-read-more', OLReadMore);

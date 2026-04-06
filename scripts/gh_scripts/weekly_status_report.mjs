@@ -1,11 +1,11 @@
-import fs from 'node:fs'
-import { Octokit } from "@octokit/action";
+import fs from 'node:fs';
+import { Octokit } from '@octokit/action';
 
-const octokit = new Octokit()
+const octokit = new Octokit();
 
-console.log('Starting script...')
-await main()
-console.log('Finishing script...')
+console.log('Starting script...');
+await main();
+console.log('Finishing script...');
 
 /**
  * Runs the weekly status report job.
@@ -16,34 +16,40 @@ console.log('Finishing script...')
  * 3. Publishes the assembled message to Slack
  */
 async function main() {
-    const config = getConfig()
+  const config = getConfig();
 
-    // Each line of the Slack message will be accumulated here:
-    const lines = ['Project Management Helper']
+  // Each line of the Slack message will be accumulated here:
+  const lines = ['Project Management Helper'];
 
-    await prepareRecentComments(config.leads)
-        .then((results) => lines.push(...results))
+  await prepareRecentComments(config.leads).then((results) =>
+    lines.push(...results),
+  );
 
-    await prepareReviewAssigneeIssues(config.leads)
-        .then((results) => lines.push(...results))
+  await prepareReviewAssigneeIssues(config.leads).then((results) =>
+    lines.push(...results),
+  );
 
-    const openPullRequests = await fetchOpenPullRequests()
-    const nonDraftPullRequests = openPullRequests.filter((pull) => !pull.draft)
+  const openPullRequests = await fetchOpenPullRequests();
+  const nonDraftPullRequests = openPullRequests.filter((pull) => !pull.draft);
 
-    if (config.publishFullDigest) {
-        await prepareUnassignedItems(nonDraftPullRequests)
-            .then((results) => lines.push(...results))
-        await prepareUntriagedIssues(config.leads)
-            .then((results) => lines.push(...results))
-    }
-    lines.push(...prepareAssignedPullRequests(nonDraftPullRequests, config.leads))
-    if (config.publishFullDigest) {
-        lines.push(...prepareStaffPullRequests(nonDraftPullRequests, config.leads))
-    }
-    lines.push(...prepareSubmitterInput(nonDraftPullRequests, config.leads))
+  if (config.publishFullDigest) {
+    await prepareUnassignedItems(nonDraftPullRequests).then((results) =>
+      lines.push(...results),
+    );
+    await prepareUntriagedIssues(config.leads).then((results) =>
+      lines.push(...results),
+    );
+  }
+  lines.push(
+    ...prepareAssignedPullRequests(nonDraftPullRequests, config.leads),
+  );
+  if (config.publishFullDigest) {
+    lines.push(...prepareStaffPullRequests(nonDraftPullRequests, config.leads));
+  }
+  lines.push(...prepareSubmitterInput(nonDraftPullRequests, config.leads));
 
-    // Publish message
-    await publishToSlack(lines, config.slackChannel)
+  // Publish message
+  await publishToSlack(lines, config.slackChannel);
 }
 
 /**
@@ -70,15 +76,15 @@ async function main() {
  * @returns {Config}
  */
 function getConfig() {
-    if (process.argv.length < 3) {
-      throw new Error("Unexpected amount of arguments")
-    }
-    const configPath = process.argv[2]
-    try {
-        return JSON.parse(fs.readFileSync(configPath, 'utf8'))
-    } catch (err) {
-        throw err
-    }
+  if (process.argv.length < 3) {
+    throw new Error('Unexpected amount of arguments');
+  }
+  const configPath = process.argv[2];
+  try {
+    return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  } catch (err) {
+    throw err;
+  }
 }
 
 /**
@@ -89,15 +95,15 @@ function getConfig() {
  * @returns {string} The lead's Slack ID, or "UNKNOWN"
  */
 function findSlackId(githubUsername, leads) {
-    for (const lead of leads) {
-        if (githubUsername === lead.githubUsername) {
-            return lead.slackId
-        }
+  for (const lead of leads) {
+    if (githubUsername === lead.githubUsername) {
+      return lead.slackId;
     }
+  }
 
-    // If we see "UNKNOWN" in the digest, our configurations
-    // should be updated
-    return 'UNKNOWN'
+  // If we see "UNKNOWN" in the digest, our configurations
+  // should be updated
+  return 'UNKNOWN';
 }
 
 /**
@@ -106,14 +112,14 @@ function findSlackId(githubUsername, leads) {
  * @returns {Promise<Array<Record>>}
  */
 async function fetchOpenPullRequests() {
-    return octokit.paginate('GET /repos/{owner}/{repo}/pulls', {
-        owner: 'internetarchive',
-        repo: 'openlibrary',
-        per_page: 100,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
-        }
-      })
+  return octokit.paginate('GET /repos/{owner}/{repo}/pulls', {
+    owner: 'internetarchive',
+    repo: 'openlibrary',
+    per_page: 100,
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
 }
 
 /**
@@ -123,41 +129,47 @@ async function fetchOpenPullRequests() {
  * @returns {Promise<Array<string>>} The recent comments, in order, line by line
  */
 async function prepareRecentComments(leads) {
-    const output = ['*Recent Comments*']
-    const issuesAwaitingComments = await octokit.paginate('GET /repos/{owner}/{repo}/issues', {
-        owner: 'internetarchive',
-        repo: 'openlibrary',
-        labels: `Needs: Response`,
-        per_page: 100,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
+  const output = ['*Recent Comments*'];
+  const issuesAwaitingComments = await octokit.paginate(
+    'GET /repos/{owner}/{repo}/issues',
+    {
+      owner: 'internetarchive',
+      repo: 'openlibrary',
+      labels: `Needs: Response`,
+      per_page: 100,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+  let isUpToDate = true;
+
+  for (const lead of leads) {
+    const leadIssuesAwaitingComments = issuesAwaitingComments.filter(
+      (issue) => {
+        for (const label of issue.labels) {
+          if (label.name === lead.leadLabel) {
+            return true;
+          }
         }
-      })
-    let isUpToDate = true
-
-    for (const lead of leads) {
-        const leadIssuesAwaitingComments = issuesAwaitingComments.filter((issue) => {
-            for (const label of issue.labels) {
-                if (label.name === lead.leadLabel) {
-                    return true
-                }
-            }
-            return false
-        })
-        const searchResultsUrl = `https://github.com/internetarchive/openlibrary/issues?q=is%3Aopen+label%3A%22Needs%3A+Response%22+label%3A${encodeURIComponent('"' + lead.leadLabel + '"')}`
-        if (leadIssuesAwaitingComments.length > 0) {
-            output.push(`  • <${searchResultsUrl}|${leadIssuesAwaitingComments.length} issue(s)> need response from ${lead.slackId}`)
-            isUpToDate = false
-        }
+        return false;
+      },
+    );
+    const searchResultsUrl = `https://github.com/internetarchive/openlibrary/issues?q=is%3Aopen+label%3A%22Needs%3A+Response%22+label%3A${encodeURIComponent('"' + lead.leadLabel + '"')}`;
+    if (leadIssuesAwaitingComments.length > 0) {
+      output.push(
+        `  • <${searchResultsUrl}|${leadIssuesAwaitingComments.length} issue(s)> need response from ${lead.slackId}`,
+      );
+      isUpToDate = false;
     }
+  }
 
-    if (isUpToDate) {
-        output.push('  _No issues awaiting comments from leads_')
-    }
+  if (isUpToDate) {
+    output.push('  _No issues awaiting comments from leads_');
+  }
 
-    return output
+  return output;
 }
-
 
 /**
  * Prepares a message containing links to unassigned issues and pull requests.
@@ -165,28 +177,36 @@ async function prepareRecentComments(leads) {
  * @param {Array<Record>} pullRequests Non-draft pull request records
  * @returns {Promise<Array<string>>} Messages with links to our unassigned PRs
  */
- async function prepareUnassignedItems(pullRequests) {
-    const output = ['*Needs: Lead/Assignees*']
+async function prepareUnassignedItems(pullRequests) {
+  const output = ['*Needs: Lead/Assignees*'];
 
-    const issuesNeedingLeads = await octokit.paginate('GET /repos/{owner}/{repo}/issues', {
-        owner: 'internetarchive',
-        repo: 'openlibrary',
-        labels: `Needs: Lead`,
-        per_page: 100,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
-        }
-      })
-    output.push(`  • <https://github.com/internetarchive/openlibrary/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs%3A+Lead%22|${issuesNeedingLeads.length} issue(s)> need leads assigned by team`)
+  const issuesNeedingLeads = await octokit.paginate(
+    'GET /repos/{owner}/{repo}/issues',
+    {
+      owner: 'internetarchive',
+      repo: 'openlibrary',
+      labels: `Needs: Lead`,
+      per_page: 100,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+  output.push(
+    `  • <https://github.com/internetarchive/openlibrary/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs%3A+Lead%22|${issuesNeedingLeads.length} issue(s)> need leads assigned by team`,
+  );
 
-    const unassignedPrs = pullRequests.filter((pull) => !pull.assignee)
-    const renovatebotPullCount = unassignedPrs.filter((pull) => pull.user.login === 'renovate[bot]').length
-    const unassignedCount = unassignedPrs.length - renovatebotPullCount
-    output.push(`  • <https://github.com/internetarchive/openlibrary/pulls?q=is%3Apr+is%3Aopen+no%3Aassignee+-is%3Adraft+-author:app/renovate|${unassignedCount} unassigned PRs> + <https://github.com/internetarchive/openlibrary/pulls/app%2Frenovate|${renovatebotPullCount} renovatebot>`)
+  const unassignedPrs = pullRequests.filter((pull) => !pull.assignee);
+  const renovatebotPullCount = unassignedPrs.filter(
+    (pull) => pull.user.login === 'renovate[bot]',
+  ).length;
+  const unassignedCount = unassignedPrs.length - renovatebotPullCount;
+  output.push(
+    `  • <https://github.com/internetarchive/openlibrary/pulls?q=is%3Apr+is%3Aopen+no%3Aassignee+-is%3Adraft+-author:app/renovate|${unassignedCount} unassigned PRs> + <https://github.com/internetarchive/openlibrary/pulls/app%2Frenovate|${renovatebotPullCount} renovatebot>`,
+  );
 
-    return output
+  return output;
 }
-
 
 /**
  * Finds all issues with the "Needs: Triage" label, prepares a message containing a
@@ -199,44 +219,51 @@ async function prepareRecentComments(leads) {
  * @returns {Promise<Array<string>>} Messages about untriaged issues
  */
 async function prepareUntriagedIssues(leads) {
-    const output = ['*Untriaged Issues*']
+  const output = ['*Untriaged Issues*'];
 
-    const untriagedIssues = await octokit.paginate('GET /repos/{owner}/{repo}/issues', {
-        owner: 'internetarchive',
-        repo: 'openlibrary',
-        labels: `Needs: Triage`,
-        per_page: 100,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
+  const untriagedIssues = await octokit.paginate(
+    'GET /repos/{owner}/{repo}/issues',
+    {
+      owner: 'internetarchive',
+      repo: 'openlibrary',
+      labels: `Needs: Triage`,
+      per_page: 100,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+
+  let allIssuesTriaged = true;
+  for (const lead of leads) {
+    const searchResultsUrl = `https://github.com/internetarchive/openlibrary/issues?${new URLSearchParams(
+      {
+        q: `is:issue is:open label:"Needs: Triage" label:"${lead.leadLabel}"`,
+      },
+    )}`;
+    let issueCount = 0;
+
+    for (const issue of untriagedIssues) {
+      for (const label of issue.labels) {
+        if (label.name === lead.leadLabel) {
+          allIssuesTriaged = false;
+          ++issueCount;
         }
-      })
-
-    let allIssuesTriaged = true
-    for (const lead of leads) {
-        const searchResultsUrl = `https://github.com/internetarchive/openlibrary/issues?${new URLSearchParams({
-            q: `is:issue is:open label:"Needs: Triage" label:"${lead.leadLabel}"`
-        })}`
-        let issueCount = 0
-
-        for (const issue of untriagedIssues) {
-            for (const label of issue.labels) {
-                if (label.name === lead.leadLabel) {
-                    allIssuesTriaged = false
-                    ++issueCount
-                }
-            }
-        }
-
-        if (issueCount > 0) {
-            output.push(`  • <${searchResultsUrl}|${issueCount} issue(s)> need triage by ${lead.slackId}`)
-        }
+      }
     }
 
-    if (allIssuesTriaged) {
-        output.push('  _No untriaged issues found_')
+    if (issueCount > 0) {
+      output.push(
+        `  • <${searchResultsUrl}|${issueCount} issue(s)> need triage by ${lead.slackId}`,
+      );
     }
+  }
 
-    return output
+  if (allIssuesTriaged) {
+    output.push('  _No untriaged issues found_');
+  }
+
+  return output;
 }
 
 /**
@@ -247,39 +274,46 @@ async function prepareUntriagedIssues(leads) {
  * @returns {Promise<Array<string>>}
  */
 async function prepareReviewAssigneeIssues(leads) {
-    const output = ['*Issues needing attention (_Assignee may have abandoned or may need help_)*:']
+  const output = [
+    '*Issues needing attention (_Assignee may have abandoned or may need help_)*:',
+  ];
 
-    const staleIssues = await octokit.paginate('GET /repos/{owner}/{repo}/issues', {
-        owner: 'internetarchive',
-        repo: 'openlibrary',
-        labels: 'Needs: Review Assignee',
-        per_page: 100,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
+  const staleIssues = await octokit.paginate(
+    'GET /repos/{owner}/{repo}/issues',
+    {
+      owner: 'internetarchive',
+      repo: 'openlibrary',
+      labels: 'Needs: Review Assignee',
+      per_page: 100,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+
+  let noStaleIssuesFound = true;
+  for (const lead of leads) {
+    const issuesForLead = staleIssues.filter((issue) => {
+      for (const label of issue.labels) {
+        if (label.name === lead.leadLabel) {
+          return true;
         }
-      })
-
-    let noStaleIssuesFound = true
-    for (const lead of leads) {
-        const issuesForLead = staleIssues.filter((issue) => {
-            for (const label of issue.labels) {
-                if (label.name === lead.leadLabel) {
-                    return true
-                }
-            }
-            return false
-        })
-        const searchResultsUrl = `https://github.com/internetarchive/openlibrary/issues?q=is%3Aopen+is%3Aissue+label%3A%22Needs%3A+Review+Assignee%22+label%3A${encodeURIComponent('"' + lead.leadLabel + '"')}`
-        if (issuesForLead.length > 0) {
-            output.push(`  • <${searchResultsUrl}|${issuesForLead.length} issue(s)> need follow-up from ${lead.slackId}`)
-            noStaleIssuesFound = false
-        }
+      }
+      return false;
+    });
+    const searchResultsUrl = `https://github.com/internetarchive/openlibrary/issues?q=is%3Aopen+is%3Aissue+label%3A%22Needs%3A+Review+Assignee%22+label%3A${encodeURIComponent('"' + lead.leadLabel + '"')}`;
+    if (issuesForLead.length > 0) {
+      output.push(
+        `  • <${searchResultsUrl}|${issuesForLead.length} issue(s)> need follow-up from ${lead.slackId}`,
+      );
+      noStaleIssuesFound = false;
     }
+  }
 
-    if (noStaleIssuesFound) {
-        output.push('  _No assigned issues found that need attention from leads_')
-    }
-    return output
+  if (noStaleIssuesFound) {
+    output.push('  _No assigned issues found that need attention from leads_');
+  }
+  return output;
 }
 
 /**
@@ -291,68 +325,68 @@ async function prepareReviewAssigneeIssues(leads) {
  * @returns {Array<string>} Messages with links to each lead's PRs
  */
 function prepareAssignedPullRequests(pullRequests, leads) {
-    const output = ['*Assigned PRs*']
+  const output = ['*Assigned PRs*'];
 
-    let noAssignedPullsFound = true
-    for (const lead of leads) {
-        const searchResultsUrl = `https://github.com/internetarchive/openlibrary/pulls?q=is%3Aopen+is%3Apr+-is%3Adraft+assignee%3A${lead.githubUsername}`
-        const assignedPulls = pullRequests.filter((pull) => {
-            for (const assignee of pull.assignees || []) {
-                if (assignee.login === lead.githubUsername) {
-                    return true
-                }
-            }
-            return false
-        })
-
-        if (assignedPulls.length) {
-            noAssignedPullsFound = false
+  let noAssignedPullsFound = true;
+  for (const lead of leads) {
+    const searchResultsUrl = `https://github.com/internetarchive/openlibrary/pulls?q=is%3Aopen+is%3Apr+-is%3Adraft+assignee%3A${lead.githubUsername}`;
+    const assignedPulls = pullRequests.filter((pull) => {
+      for (const assignee of pull.assignees || []) {
+        if (assignee.login === lead.githubUsername) {
+          return true;
         }
+      }
+      return false;
+    });
 
-        let p0Count = 0,
-            p1Count = 0,
-            p2Count = 0
-        assignedPulls.forEach((pull) => {
-            for (const label of pull.labels) {
-                switch(label.name) {
-                    case 'Priority: 0':
-                        ++p0Count;
-                        break
-                    case 'Priority: 1':
-                        ++p1Count
-                        break
-                    case 'Priority: 2':
-                        ++p2Count
-                        break;
-                }
-            }
-        })
-        let statusText = `  • *${lead.githubUsername}* <${searchResultsUrl}|${assignedPulls.length} PR(s)>`
-
-        if (p0Count || p1Count || p2Count) {
-            statusText += ' ['
-            if (p0Count) {
-                statusText += `<${searchResultsUrl + '+label%3A"Priority%3A+0"'}|P0:${p0Count}>, `
-            }
-            if (p1Count) {
-                statusText += `<${searchResultsUrl + '+label%3A"Priority%3A+1"'}|P1:${p1Count}>, `
-            }
-            if (p2Count) {
-                statusText += `<${searchResultsUrl + '+label%3A"Priority%3A+2"'}|P2:${p2Count}>`
-            } else {
-                // Remove the trailing `, ` characters:
-                statusText = statusText.substring(0, statusText.length - 3)
-            }
-            statusText += ']'
-        }
-        output.push(statusText)
+    if (assignedPulls.length) {
+      noAssignedPullsFound = false;
     }
 
-    if (noAssignedPullsFound) {
-        output.push('  _No assigned pull requests found._')
-    }
+    let p0Count = 0,
+      p1Count = 0,
+      p2Count = 0;
+    assignedPulls.forEach((pull) => {
+      for (const label of pull.labels) {
+        switch (label.name) {
+          case 'Priority: 0':
+            ++p0Count;
+            break;
+          case 'Priority: 1':
+            ++p1Count;
+            break;
+          case 'Priority: 2':
+            ++p2Count;
+            break;
+        }
+      }
+    });
+    let statusText = `  • *${lead.githubUsername}* <${searchResultsUrl}|${assignedPulls.length} PR(s)>`;
 
-    return output
+    if (p0Count || p1Count || p2Count) {
+      statusText += ' [';
+      if (p0Count) {
+        statusText += `<${searchResultsUrl + '+label%3A"Priority%3A+0"'}|P0:${p0Count}>, `;
+      }
+      if (p1Count) {
+        statusText += `<${searchResultsUrl + '+label%3A"Priority%3A+1"'}|P1:${p1Count}>, `;
+      }
+      if (p2Count) {
+        statusText += `<${searchResultsUrl + '+label%3A"Priority%3A+2"'}|P2:${p2Count}>`;
+      } else {
+        // Remove the trailing `, ` characters:
+        statusText = statusText.substring(0, statusText.length - 3);
+      }
+      statusText += ']';
+    }
+    output.push(statusText);
+  }
+
+  if (noAssignedPullsFound) {
+    output.push('  _No assigned pull requests found._');
+  }
+
+  return output;
 }
 
 /**
@@ -366,53 +400,56 @@ function prepareAssignedPullRequests(pullRequests, leads) {
  * @returns {Array<string>} Messages with the current status of each staff PR
  */
 function prepareStaffPullRequests(pullRequests, leads) {
-    // Include PRs with authors that are in the `leads` configuration:
-    const includeAuthors = []
-    leads.forEach((lead) => includeAuthors.push(lead.githubUsername))
+  // Include PRs with authors that are in the `leads` configuration:
+  const includeAuthors = [];
+  leads.forEach((lead) => includeAuthors.push(lead.githubUsername));
 
-    // Exclude PRs that have these labels:
-    const excludeLabels = ['Needs: Submitter Input', 'State: Blocked']
+  // Exclude PRs that have these labels:
+  const excludeLabels = ['Needs: Submitter Input', 'State: Blocked'];
 
-    const output = ['*Staff PRs*']
-    for (const pull of pullRequests) {
-        const authorName = pull.user?.login
-        let highPriorityEmoji = ''
-        if (!includeAuthors.includes(authorName)) {
-            continue
-        }
-        let skipItem = false
-        for (const label of pull.labels) {
-            if (excludeLabels.includes(label.name)) {
-                skipItem = true
-                break
-            }
-            if (label.name === 'Priority: 0') {
-                highPriorityEmoji = '| 🚨 '
-            }
-            if (label.name === 'Priority: 1' && !highPriorityEmoji) {  // Don't clobber higher priority emoji
-                highPriorityEmoji = '| ❗️ '
-            }
-        }
-        if (skipItem) {
-            continue
-        }
-
-        const assigneeName = pull.assignee?.login
-        // Issue title and link:
-        let summaryMessage = `  • <${pull.html_url}|*#${pull.number}* | ${pull.title}>`
-
-        // Creator, assignee, and priority:
-        const now = Date.now()
-        const openedAt = Date.parse(pull.created_at)
-        const elapsedTime = now - openedAt  // Time in milliseconds
-        const daysPassed = Math.floor(elapsedTime / (24 * 60 * 60 * 1000))
-
-        const assigneeSlackId = assigneeName ? findSlackId(assigneeName, leads) : '⚠️ None'
-        summaryMessage += ` by ${pull.user.login} ${daysPassed} days ago | Assigned: ${assigneeSlackId} ${highPriorityEmoji}`
-        output.push(summaryMessage)
+  const output = ['*Staff PRs*'];
+  for (const pull of pullRequests) {
+    const authorName = pull.user?.login;
+    let highPriorityEmoji = '';
+    if (!includeAuthors.includes(authorName)) {
+      continue;
+    }
+    let skipItem = false;
+    for (const label of pull.labels) {
+      if (excludeLabels.includes(label.name)) {
+        skipItem = true;
+        break;
+      }
+      if (label.name === 'Priority: 0') {
+        highPriorityEmoji = '| 🚨 ';
+      }
+      if (label.name === 'Priority: 1' && !highPriorityEmoji) {
+        // Don't clobber higher priority emoji
+        highPriorityEmoji = '| ❗️ ';
+      }
+    }
+    if (skipItem) {
+      continue;
     }
 
-    return output
+    const assigneeName = pull.assignee?.login;
+    // Issue title and link:
+    let summaryMessage = `  • <${pull.html_url}|*#${pull.number}* | ${pull.title}>`;
+
+    // Creator, assignee, and priority:
+    const now = Date.now();
+    const openedAt = Date.parse(pull.created_at);
+    const elapsedTime = now - openedAt; // Time in milliseconds
+    const daysPassed = Math.floor(elapsedTime / (24 * 60 * 60 * 1000));
+
+    const assigneeSlackId = assigneeName
+      ? findSlackId(assigneeName, leads)
+      : '⚠️ None';
+    summaryMessage += ` by ${pull.user.login} ${daysPassed} days ago | Assigned: ${assigneeSlackId} ${highPriorityEmoji}`;
+    output.push(summaryMessage);
+  }
+
+  return output;
 }
 
 /**
@@ -427,32 +464,36 @@ function prepareStaffPullRequests(pullRequests, leads) {
  * @returns {Array<string>} Messages about PRs that require submitter input before being reviewed
  */
 function prepareSubmitterInput(pullRequests, leads) {
-    const output = ['*Submitter Input for our PRs*']
+  const output = ['*Submitter Input for our PRs*'];
 
-    let noPullRequestsAwaitingInput = true
-    for (const lead of leads) {
-        const searchResultsUrl = `https://github.com/internetarchive/openlibrary/pulls?q=is%3Aopen+is%3Apr+-is%3Adraft+assignee%3A${lead.githubUsername}+label%3A"Needs%3A+Submitter+Input"`
-        const assignedPulls = pullRequests.filter((pull) => pull.assignee?.login === lead.githubUsername)
-        let awaitingResponseCount = 0
-        assignedPulls.forEach((pull) => {
-            for (const label of pull.labels) {
-                if (label.name === 'Needs: Response') {
-                    ++awaitingResponseCount
-                    break
-                }
-            }
-        })
-
-        if (awaitingResponseCount > 0) {
-            output.push(`  • ${lead.slackId} <${searchResultsUrl}|${awaitingResponseCount} PR(s)>`)
-            noPullRequestsAwaitingInput = false
+  let noPullRequestsAwaitingInput = true;
+  for (const lead of leads) {
+    const searchResultsUrl = `https://github.com/internetarchive/openlibrary/pulls?q=is%3Aopen+is%3Apr+-is%3Adraft+assignee%3A${lead.githubUsername}+label%3A"Needs%3A+Submitter+Input"`;
+    const assignedPulls = pullRequests.filter(
+      (pull) => pull.assignee?.login === lead.githubUsername,
+    );
+    let awaitingResponseCount = 0;
+    assignedPulls.forEach((pull) => {
+      for (const label of pull.labels) {
+        if (label.name === 'Needs: Response') {
+          ++awaitingResponseCount;
+          break;
         }
-    }
+      }
+    });
 
-    if (noPullRequestsAwaitingInput) {
-        output.push('  _No leads are awaiting submitter input for their PRs_')
+    if (awaitingResponseCount > 0) {
+      output.push(
+        `  • ${lead.slackId} <${searchResultsUrl}|${awaitingResponseCount} PR(s)>`,
+      );
+      noPullRequestsAwaitingInput = false;
     }
-    return output
+  }
+
+  if (noPullRequestsAwaitingInput) {
+    output.push('  _No leads are awaiting submitter input for their PRs_');
+  }
+  return output;
 }
 
 /**
@@ -467,17 +508,17 @@ function prepareSubmitterInput(pullRequests, leads) {
  * @returns {Promise<Response>}
  */
 async function publishToSlack(lines, slackChannel) {
-    const message = lines.join('\n')
-    const bearerToken = process.env.SLACK_TOKEN
-    return fetch('https://slack.com/api/chat.postMessage', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;  charset=utf-8',
-            Authorization: `Bearer ${bearerToken}`
-        },
-        body: JSON.stringify({
-            channel: slackChannel,
-            text: message
-        })
-    })
+  const message = lines.join('\n');
+  const bearerToken = process.env.SLACK_TOKEN;
+  return fetch('https://slack.com/api/chat.postMessage', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;  charset=utf-8',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    body: JSON.stringify({
+      channel: slackChannel,
+      text: message,
+    }),
+  });
 }

@@ -45,5 +45,20 @@
     "vue/multi-word-component-names": ["error", {
       "ignores": ["Bookshelf", "Shelf"]
     }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.js", "*.mjs", "*.cjs"],
+      "rules": {
+        "semi": "off",
+        "quotes": "off",
+        "indent": "off",
+        "no-extra-semi": "off",
+        "no-mixed-spaces-and-tabs": "off",
+        "no-trailing-spaces": "off",
+        "keyword-spacing": "off",
+        "key-spacing": "off"
+      }
+    }
+  ]
 }
