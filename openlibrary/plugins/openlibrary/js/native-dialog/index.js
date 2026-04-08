@@ -7,26 +7,26 @@
  * @param {HTMLCollection<HTMLDialogElement>} elems
  */
 export function initDialogs(elems) {
-  for (const elem of elems) {
-    elem.addEventListener('click', (event) => {
-      // Event target exclusions needed for FireFox, which sets mouse positions to zero on
-      // <select> and <option> clicks
-      if (
-        isOutOfBounds(event, elem) &&
+    for (const elem of elems) {
+        elem.addEventListener('click', (event) => {
+            // Event target exclusions needed for FireFox, which sets mouse positions to zero on
+            // <select> and <option> clicks
+            if (
+                isOutOfBounds(event, elem) &&
         event.target.nodeName !== 'SELECT' &&
         event.target.nodeName !== 'OPTION'
-      ) {
-        elem.close();
-      }
-    });
-    elem.addEventListener('close-dialog', () => {
-      elem.close();
-    });
-    const closeIcon = elem.querySelector('.native-dialog--close');
-    closeIcon.addEventListener('click', () => {
-      elem.close();
-    });
-  }
+            ) {
+                elem.close();
+            }
+        });
+        elem.addEventListener('close-dialog', () => {
+            elem.close();
+        });
+        const closeIcon = elem.querySelector('.native-dialog--close');
+        closeIcon.addEventListener('click', () => {
+            elem.close();
+        });
+    }
 }
 
 /**
@@ -37,11 +37,11 @@ export function initDialogs(elems) {
  * @returns `true` if the click was out of bounds.
  */
 function isOutOfBounds(event, dialog) {
-  const rect = dialog.getBoundingClientRect();
-  return (
-    event.clientX < rect.left ||
+    const rect = dialog.getBoundingClientRect();
+    return (
+        event.clientX < rect.left ||
     event.clientX > rect.right ||
     event.clientY < rect.top ||
     event.clientY > rect.bottom
-  );
+    );
 }

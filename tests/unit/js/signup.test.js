@@ -1,7 +1,7 @@
 import { initSignupForm } from '../../../openlibrary/plugins/openlibrary/js/signup';
 
 beforeEach(() => {
-  document.body.innerHTML = `
+    document.body.innerHTML = `
     <form id="signup" name="signup" data-i18n={}>
       <label for="emailAddr">Email</label>
       <div id="emailAddrMessage" class="ol-signup-form__error"></div>
@@ -26,217 +26,217 @@ beforeEach(() => {
 });
 
 describe('Email tests', () => {
-  let emailLabel, emailField;
+    let emailLabel, emailField;
 
-  beforeEach(() => {
+    beforeEach(() => {
     // call the function
-    initSignupForm();
+        initSignupForm();
 
-    //declare the elements
-    emailLabel = document.querySelector('label[for="emailAddr"]');
-    emailField = document.getElementById('emailAddr');
-  });
+        //declare the elements
+        emailLabel = document.querySelector('label[for="emailAddr"]');
+        emailField = document.getElementById('emailAddr');
+    });
 
-  test('validateEmail should update elements correctly on success', () => {
+    test('validateEmail should update elements correctly on success', () => {
     // set the email value
-    emailField.value = 'testemail@archive.org';
+        emailField.value = 'testemail@archive.org';
 
-    // Trigger the blur event on the email field
-    emailField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the email field
+        emailField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(emailField.classList.contains('invalid')).toBe(false);
-    expect(emailLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(emailField.classList.contains('invalid')).toBe(false);
+        expect(emailLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validateEmail should update elements correctly for empty fields', () => {
+    test('validateEmail should update elements correctly for empty fields', () => {
     // set the email value
-    emailField.value = '';
+        emailField.value = '';
 
-    // Trigger the blur event on the email field
-    emailField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the email field
+        emailField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(emailField.classList.contains('invalid')).toBe(false);
-    expect(emailLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(emailField.classList.contains('invalid')).toBe(false);
+        expect(emailLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validateEmail should update elements correctly for emails with plus signs', () => {
+    test('validateEmail should update elements correctly for emails with plus signs', () => {
     // set the email value
-    emailField.value = 'testemail+01@archive.org';
+        emailField.value = 'testemail+01@archive.org';
 
-    // Trigger the blur event on the email field
-    emailField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the email field
+        emailField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(emailField.classList.contains('invalid')).toBe(false);
-    expect(emailLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(emailField.classList.contains('invalid')).toBe(false);
+        expect(emailLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validateEmail should update elements correctly for emails with no punctuation', () => {
+    test('validateEmail should update elements correctly for emails with no punctuation', () => {
     // set the password values
-    emailField.value = 'testemail';
+        emailField.value = 'testemail';
 
-    // Trigger the blur event on the email fields
-    emailField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the email fields
+        emailField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(emailField.classList.contains('invalid')).toBe(true);
-    expect(emailLabel.classList.contains('invalid')).toBe(true);
-  });
+        // Assert that the elements have the expected classes
+        expect(emailField.classList.contains('invalid')).toBe(true);
+        expect(emailLabel.classList.contains('invalid')).toBe(true);
+    });
 
-  test('validateEmail should update elements correctly for emails with invalid punctuation', () => {
+    test('validateEmail should update elements correctly for emails with invalid punctuation', () => {
     // set the email values
-    emailField.value = 'testemail@archive-org';
+        emailField.value = 'testemail@archive-org';
 
-    // Trigger the blur event on the email fields
-    emailField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the email fields
+        emailField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(emailField.classList.contains('invalid')).toBe(true);
-    expect(emailLabel.classList.contains('invalid')).toBe(true);
-  });
+        // Assert that the elements have the expected classes
+        expect(emailField.classList.contains('invalid')).toBe(true);
+        expect(emailLabel.classList.contains('invalid')).toBe(true);
+    });
 });
 
 describe('Username tests', () => {
-  let usernameLabel, usernameField;
+    let usernameLabel, usernameField;
 
-  beforeEach(() => {
+    beforeEach(() => {
     // call the function
-    initSignupForm();
+        initSignupForm();
 
-    //declare the elements
-    usernameLabel = document.querySelector('label[for="username"]');
-    usernameField = document.getElementById('username');
-  });
+        //declare the elements
+        usernameLabel = document.querySelector('label[for="username"]');
+        usernameField = document.getElementById('username');
+    });
 
-  test('validateUsername should update elements correctly on success', () => {
+    test('validateUsername should update elements correctly on success', () => {
     // set the username value
-    usernameField.value = 'username123';
+        usernameField.value = 'username123';
 
-    // Trigger the blur event on the username field
-    usernameField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the username field
+        usernameField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(usernameField.classList.contains('invalid')).toBe(false);
-    expect(usernameLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(usernameField.classList.contains('invalid')).toBe(false);
+        expect(usernameLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validateUsername should update elements correctly for empty fields', () => {
+    test('validateUsername should update elements correctly for empty fields', () => {
     // set the username value
-    usernameField.value = '';
+        usernameField.value = '';
 
-    // Trigger the blur event on the username field
-    usernameField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the username field
+        usernameField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(usernameField.classList.contains('invalid')).toBe(false);
-    expect(usernameLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(usernameField.classList.contains('invalid')).toBe(false);
+        expect(usernameLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validateUsername should update elements correctly for usernames over 20 chars', () => {
+    test('validateUsername should update elements correctly for usernames over 20 chars', () => {
     // set the username values
-    usernameField.value = 'username1234567891011';
+        usernameField.value = 'username1234567891011';
 
-    // Trigger the blur event on the username fields
-    usernameField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the username fields
+        usernameField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(usernameField.classList.contains('invalid')).toBe(true);
-    expect(usernameLabel.classList.contains('invalid')).toBe(true);
-  });
+        // Assert that the elements have the expected classes
+        expect(usernameField.classList.contains('invalid')).toBe(true);
+        expect(usernameLabel.classList.contains('invalid')).toBe(true);
+    });
 
-  test('validateusername should update elements correctly for usernames under 3 chars', () => {
+    test('validateusername should update elements correctly for usernames under 3 chars', () => {
     // set the username values
-    usernameField.value = 'us';
+        usernameField.value = 'us';
 
-    // Trigger the blur event on the username fields
-    usernameField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the username fields
+        usernameField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(usernameField.classList.contains('invalid')).toBe(true);
-    expect(usernameLabel.classList.contains('invalid')).toBe(true);
-  });
+        // Assert that the elements have the expected classes
+        expect(usernameField.classList.contains('invalid')).toBe(true);
+        expect(usernameLabel.classList.contains('invalid')).toBe(true);
+    });
 });
 
 describe('Password tests', () => {
-  let passwordLabel, passwordField;
+    let passwordLabel, passwordField;
 
-  beforeEach(() => {
+    beforeEach(() => {
     // call the function
-    initSignupForm();
+        initSignupForm();
 
-    //declare the elements
-    passwordLabel = document.querySelector('label[for="password"]');
-    passwordField = document.getElementById('password');
-  });
+        //declare the elements
+        passwordLabel = document.querySelector('label[for="password"]');
+        passwordField = document.getElementById('password');
+    });
 
-  test('validatePassword should update elements correctly on success', () => {
+    test('validatePassword should update elements correctly on success', () => {
     // set the password value
-    passwordField.value = 'password123';
+        passwordField.value = 'password123';
 
-    // Trigger the blur event on the password field
-    passwordField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the password field
+        passwordField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(passwordField.classList.contains('invalid')).toBe(false);
-    expect(passwordLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(passwordField.classList.contains('invalid')).toBe(false);
+        expect(passwordLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validatePassword should update elements correctly for empty fields', () => {
+    test('validatePassword should update elements correctly for empty fields', () => {
     // set the password value
-    passwordField.value = '';
+        passwordField.value = '';
 
-    // Trigger the blur event on the password field
-    passwordField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the password field
+        passwordField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(passwordField.classList.contains('invalid')).toBe(false);
-    expect(passwordLabel.classList.contains('invalid')).toBe(false);
-  });
+        // Assert that the elements have the expected classes
+        expect(passwordField.classList.contains('invalid')).toBe(false);
+        expect(passwordLabel.classList.contains('invalid')).toBe(false);
+    });
 
-  test('validatePassword should update elements correctly for passwords over 20 chars', () => {
+    test('validatePassword should update elements correctly for passwords over 20 chars', () => {
     // set the password values
-    passwordField.value = 'password1234567891011';
+        passwordField.value = 'password1234567891011';
 
-    // Trigger the blur event on the password fields
-    passwordField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the password fields
+        passwordField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(passwordField.classList.contains('invalid')).toBe(true);
-    expect(passwordLabel.classList.contains('invalid')).toBe(true);
-  });
+        // Assert that the elements have the expected classes
+        expect(passwordField.classList.contains('invalid')).toBe(true);
+        expect(passwordLabel.classList.contains('invalid')).toBe(true);
+    });
 
-  test('validatePassword should update elements correctly for passwords under 3 chars', () => {
+    test('validatePassword should update elements correctly for passwords under 3 chars', () => {
     // set the password values
-    passwordField.value = 'pa';
+        passwordField.value = 'pa';
 
-    // Trigger the blur event on the password fields
-    passwordField.dispatchEvent(new Event('blur'));
+        // Trigger the blur event on the password fields
+        passwordField.dispatchEvent(new Event('blur'));
 
-    // Assert that the elements have the expected classes
-    expect(passwordField.classList.contains('invalid')).toBe(true);
-    expect(passwordLabel.classList.contains('invalid')).toBe(true);
-  });
+        // Assert that the elements have the expected classes
+        expect(passwordField.classList.contains('invalid')).toBe(true);
+        expect(passwordLabel.classList.contains('invalid')).toBe(true);
+    });
 });
 
 describe('Print disability tests', () => {
-  let checkbox, selector;
+    let checkbox, selector;
 
-  beforeEach(() => {
-    initSignupForm();
+    beforeEach(() => {
+        initSignupForm();
 
-    checkbox = document.querySelector('#pd-request');
-    selector = document.querySelector('#pda-selector');
-  });
+        checkbox = document.querySelector('#pd-request');
+        selector = document.querySelector('#pda-selector');
+    });
 
-  test('Qualifying authority selector only visible when PD checkbox is checked', () => {
-    checkbox.checked = false;
-    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-    expect(selector.classList.contains('hidden')).toBe(true);
+    test('Qualifying authority selector only visible when PD checkbox is checked', () => {
+        checkbox.checked = false;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        expect(selector.classList.contains('hidden')).toBe(true);
 
-    checkbox.checked = true;
-    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-    expect(selector.classList.contains('hidden')).toBe(false);
-  });
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        expect(selector.classList.contains('hidden')).toBe(false);
+    });
 });

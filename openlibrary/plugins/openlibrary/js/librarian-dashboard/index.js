@@ -9,15 +9,15 @@ let i18nStrings;
  * @param {HTMLDetailsElement} rootElement
  */
 export function initLibrarianDashboard(rootElement) {
-  i18nStrings = JSON.parse(rootElement.dataset.i18n);
-  const table = rootElement.querySelector('.dq-table');
-  rootElement.addEventListener(
-    'click',
-    () => {
-      populateTable(table);
-    },
-    { once: true },
-  );
+    i18nStrings = JSON.parse(rootElement.dataset.i18n);
+    const table = rootElement.querySelector('.dq-table');
+    rootElement.addEventListener(
+        'click',
+        () => {
+            populateTable(table);
+        },
+        { once: true },
+    );
 }
 
 /**
@@ -27,10 +27,10 @@ export function initLibrarianDashboard(rootElement) {
  * @returns {Promise<void>}
  */
 async function populateTable(table) {
-  const bookCount = Number(table.dataset.totalBooks);
-  const rows = table.querySelectorAll('.dq-table__row');
+    const bookCount = Number(table.dataset.totalBooks);
+    const rows = table.querySelectorAll('.dq-table__row');
 
-  await Promise.all([...rows].map((row) => updateRow(row, bookCount)));
+    await Promise.all([...rows].map((row) => updateRow(row, bookCount)));
 }
 
 /**
@@ -41,44 +41,44 @@ async function populateTable(table) {
  * @returns {Promise<void>}
  */
 async function updateRow(row, totalCount) {
-  const queryFragment = row.dataset.queryFragment;
-  const apiUrl = buildUrl(queryFragment, false);
-  const searchPageUrl = buildUrl(queryFragment);
+    const queryFragment = row.dataset.queryFragment;
+    const apiUrl = buildUrl(queryFragment, false);
+    const searchPageUrl = buildUrl(queryFragment);
 
-  // Make query
-  const data = await fetch(apiUrl)
-    .then((resp) => {
-      if (!resp.ok) {
-        throw new Error(`Data quality response status : ${resp.status}`);
-      }
-      return resp.json();
-    })
-    .catch(() => {
-      return null;
-    });
+    // Make query
+    const data = await fetch(apiUrl)
+        .then((resp) => {
+            if (!resp.ok) {
+                throw new Error(`Data quality response status : ${resp.status}`);
+            }
+            return resp.json();
+        })
+        .catch(() => {
+            return null;
+        });
 
-  // Render status cell markup
-  let newCellMarkup;
-  if (data === null) {
-    newCellMarkup = renderErrorCell(searchPageUrl);
-  } else {
-    newCellMarkup = renderResultsCells(data, totalCount, searchPageUrl);
-  }
+    // Render status cell markup
+    let newCellMarkup;
+    if (data === null) {
+        newCellMarkup = renderErrorCell(searchPageUrl);
+    } else {
+        newCellMarkup = renderResultsCells(data, totalCount, searchPageUrl);
+    }
 
-  // Include retry affordance, regardless of result
-  newCellMarkup += renderRetryCell();
+    // Include retry affordance, regardless of result
+    newCellMarkup += renderRetryCell();
 
-  replaceStatusCells(row, newCellMarkup);
+    replaceStatusCells(row, newCellMarkup);
 
-  // Add listener to retry affordance
-  const retryAffordance = row.querySelector('.dqs-run-again');
-  retryAffordance.addEventListener('click', () => {
+    // Add listener to retry affordance
+    const retryAffordance = row.querySelector('.dqs-run-again');
+    retryAffordance.addEventListener('click', () => {
     // Update view to "pending"
-    replaceStatusCells(row, renderPendingCell());
+        replaceStatusCells(row, renderPendingCell());
 
-    // Retry query
-    updateRow(row, totalCount);
-  });
+        // Retry query
+        updateRow(row, totalCount);
+    });
 }
 
 /**
@@ -88,14 +88,14 @@ async function updateRow(row, totalCount) {
  * @param {boolean} forUi
  */
 function buildUrl(queryFragment, forUi = true) {
-  const match = window.location.pathname.match(/authors\/(OL\d+A)/);
-  const queryParamString = match
-    ? `?q=author_key:${match[1]}`
-    : window.location.search;
+    const match = window.location.pathname.match(/authors\/(OL\d+A)/);
+    const queryParamString = match
+        ? `?q=author_key:${match[1]}`
+        : window.location.search;
 
-  const params = new URLSearchParams(queryParamString);
-  params.set('q', `${params.get('q')} ${queryFragment}`);
-  return `/search${forUi ? '' : '.json'}?${params.toString()}`;
+    const params = new URLSearchParams(queryParamString);
+    params.set('q', `${params.get('q')} ${queryFragment}`);
+    return `/search${forUi ? '' : '.json'}?${params.toString()}`;
 }
 
 /**
@@ -105,14 +105,14 @@ function buildUrl(queryFragment, forUi = true) {
  * @param {string} newCellMarkup Markup for the new status cells
  */
 function replaceStatusCells(row, newCellMarkup) {
-  const statusCells = row.querySelectorAll('td:not(.dq-table__criterion-cell)');
-  for (const cell of statusCells) {
-    cell.remove();
-  }
+    const statusCells = row.querySelectorAll('td:not(.dq-table__criterion-cell)');
+    for (const cell of statusCells) {
+        cell.remove();
+    }
 
-  const template = document.createElement('template');
-  template.innerHTML = newCellMarkup;
-  row.append(...template.content.children);
+    const template = document.createElement('template');
+    template.innerHTML = newCellMarkup;
+    row.append(...template.content.children);
 }
 
 /**
@@ -125,10 +125,10 @@ function replaceStatusCells(row, newCellMarkup) {
  * @returns {string} HTML string
  */
 function renderResultsCells(results, totalCount, failingHref) {
-  const numFound = results.numFound;
-  const percentage = Math.floor(((totalCount - numFound) / totalCount) * 100);
+    const numFound = results.numFound;
+    const percentage = Math.floor(((totalCount - numFound) / totalCount) * 100);
 
-  return `<td class="dq-table__results-cell">
+    return `<td class="dq-table__results-cell">
         <meter title="${numFound} of ${totalCount}" min="0" max="100" value="${percentage}"></meter>
         <span>${percentage}%</span>
     </td>
@@ -143,7 +143,7 @@ function renderResultsCells(results, totalCount, failingHref) {
  * @returns {string} HTML string
  */
 function renderRetryCell() {
-  return `<td>
+    return `<td>
         <button class="dqs-run-again">
             ${i18nStrings['reload']}
         </button>
@@ -157,7 +157,7 @@ function renderRetryCell() {
  * @returns {string}
  */
 function renderErrorCell(href) {
-  return `<td colspan="2">
+    return `<td colspan="2">
         <a href="${href}">${i18nStrings['error']}</a>
     </td>`;
 }
@@ -168,5 +168,5 @@ function renderErrorCell(href) {
  * @returns {string}
  */
 function renderPendingCell() {
-  return `<td colspan="3">${i18nStrings['loading']}</td>`;
+    return `<td colspan="3">${i18nStrings['loading']}</td>`;
 }

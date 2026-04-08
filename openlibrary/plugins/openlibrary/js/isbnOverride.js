@@ -8,14 +8,14 @@
  * @property {Function} clear - clears the ISBN object
  */
 export const isbnOverride = {
-  data: null,
-  set(isbnData) {
-    this.data = isbnData;
-  },
-  get() {
-    return this.data;
-  },
-  clear() {
-    this.data = null;
-  },
+    data: null,
+    set(isbnData) {
+        this.data = isbnData;
+    },
+    get() {
+        return this.data;
+    },
+    clear() {
+        this.data = null;
+    },
 };

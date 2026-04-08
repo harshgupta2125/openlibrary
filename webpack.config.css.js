@@ -12,89 +12,89 @@ const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const distDir = path.resolve(
-  __dirname,
-  process.env.BUILD_DIR || 'static/build/css',
+    __dirname,
+    process.env.BUILD_DIR || 'static/build/css',
 );
 
 // Find all CSS entry files matching static/css/page-*.css
 const cssFiles = glob.sync('./static/css/page-*.css');
 const entries = {
-  // Design tokens — compiled from static/css/tokens/ into a single file
-  tokens: './static/css/tokens.css',
+    // Design tokens — compiled from static/css/tokens/ into a single file
+    tokens: './static/css/tokens.css',
 };
 
 cssFiles.forEach((file) => {
-  const name = path.basename(file, '.css');
-  entries[name] = file;
+    const name = path.basename(file, '.css');
+    entries[name] = file;
 });
 
 module.exports = {
-  context: __dirname,
-  entry: entries,
-  output: {
-    path: distDir,
-    // Output only CSS, JS is not needed
-    filename: '[name].css.js', // dummy, CSS will be extracted
-    clean: true,
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              url: false,
-              import: true, // Enable @import resolution
-            },
-          },
-        ],
-      },
-    ],
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
-    // Inline plugin to remove intermediary JS assets
-    {
-      apply: (compiler) => {
-        compiler.hooks.thisCompilation.tap(
-          'RemoveJSAssetsPlugin',
-          (compilation) => {
-            compilation.hooks.processAssets.tap(
-              {
-                name: 'RemoveJSAssetsPlugin',
-                stage:
-                  compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
-              },
-              (assets) => {
-                Object.keys(assets)
-                  .filter((asset) => asset.endsWith('.js'))
-                  .forEach((asset) => {
-                    compilation.deleteAsset(asset);
-                  });
-              },
-            );
-          },
-        );
-      },
+    context: __dirname,
+    entry: entries,
+    output: {
+        path: distDir,
+        // Output only CSS, JS is not needed
+        filename: '[name].css.js', // dummy, CSS will be extracted
+        clean: true,
     },
-  ],
-  optimization: {
-    minimizer: [new CssMinimizerPlugin()],
-    runtimeChunk: false,
-    splitChunks: false,
-  },
-  // Useful for developing in docker/windows, which doesn't support file watchers
-  watchOptions:
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: false,
+                            import: true, // Enable @import resolution
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+        }),
+        // Inline plugin to remove intermediary JS assets
+        {
+            apply: (compiler) => {
+                compiler.hooks.thisCompilation.tap(
+                    'RemoveJSAssetsPlugin',
+                    (compilation) => {
+                        compilation.hooks.processAssets.tap(
+                            {
+                                name: 'RemoveJSAssetsPlugin',
+                                stage:
+                  compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
+                            },
+                            (assets) => {
+                                Object.keys(assets)
+                                    .filter((asset) => asset.endsWith('.js'))
+                                    .forEach((asset) => {
+                                        compilation.deleteAsset(asset);
+                                    });
+                            },
+                        );
+                    },
+                );
+            },
+        },
+    ],
+    optimization: {
+        minimizer: [new CssMinimizerPlugin()],
+        runtimeChunk: false,
+        splitChunks: false,
+    },
+    // Useful for developing in docker/windows, which doesn't support file watchers
+    watchOptions:
     process.env.FORCE_POLLING === 'true'
-      ? {
-          poll: 1000, // Check for changes every second
-          aggregateTimeout: 300, // Delay before rebuilding
-          ignored: /node_modules/,
+        ? {
+            poll: 1000, // Check for changes every second
+            aggregateTimeout: 300, // Delay before rebuilding
+            ignored: /node_modules/,
         }
-      : undefined,
+        : undefined,
 };

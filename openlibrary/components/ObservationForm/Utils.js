@@ -5,7 +5,7 @@
  * @returns A JavaScript object
  */
 export function decodeAndParseJSON(str) {
-  return JSON.parse(decodeURIComponent(str));
+    return JSON.parse(decodeURIComponent(str));
 }
 
 /*
@@ -13,11 +13,11 @@ export function decodeAndParseJSON(str) {
     window.$.colorbox is a jQuery plugin
 */
 export function resizeColorbox() {
-  if (
-    window.$ &&
+    if (
+        window.$ &&
     window.$.colorbox &&
     typeof window.$.colorbox.resize === 'function'
-  ) {
-    window.$.colorbox.resize();
-  }
+    ) {
+        window.$.colorbox.resize();
+    }
 }

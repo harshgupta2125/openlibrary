@@ -15,11 +15,11 @@ import { css, html, LitElement } from 'lit';
  * </ol-chip-group>
  */
 export class OLChipGroup extends LitElement {
-  static properties = {
-    gap: { type: String, reflect: true },
-  };
+    static properties = {
+        gap: { type: String, reflect: true },
+    };
 
-  static styles = css`
+    static styles = css`
         :host {
             display: flex;
             flex-wrap: wrap;
@@ -35,21 +35,21 @@ export class OLChipGroup extends LitElement {
         }
     `;
 
-  constructor() {
-    super();
-    this.gap = 'medium';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    if (!this.hasAttribute('role')) {
-      this.setAttribute('role', 'group');
+    constructor() {
+        super();
+        this.gap = 'medium';
     }
-  }
 
-  render() {
-    return html`<slot></slot>`;
-  }
+    connectedCallback() {
+        super.connectedCallback();
+        if (!this.hasAttribute('role')) {
+            this.setAttribute('role', 'group');
+        }
+    }
+
+    render() {
+        return html`<slot></slot>`;
+    }
 }
 
 customElements.define('ol-chip-group', OLChipGroup);

@@ -4,8 +4,8 @@
  * @param {HTMLElement} buttonElement
  */
 function disableButton(buttonElement) {
-  buttonElement.setAttribute('disabled', 'true');
-  buttonElement.setAttribute('aria-disabled', 'true');
+    buttonElement.setAttribute('disabled', 'true');
+    buttonElement.setAttribute('aria-disabled', 'true');
 }
 
 /**
@@ -17,10 +17,10 @@ function disableButton(buttonElement) {
  * @param {NodeList<HTMLFormElement>} elems
  */
 export function initPatronExportForms(elems) {
-  elems.forEach((form) => {
-    const submitButton = form.querySelector('input[type=submit]');
-    form.addEventListener('submit', () => {
-      disableButton(submitButton);
+    elems.forEach((form) => {
+        const submitButton = form.querySelector('input[type=submit]');
+        form.addEventListener('submit', () => {
+            disableButton(submitButton);
+        });
     });
-  });
 }
