@@ -1,7 +1,8 @@
-javascript: (async () => {
-  const url = prompt('Enter the book URL you want to import:');
-  if (!url) return;
-  const promptText = `You are an expert book metadata librarian and research assistant. Your role is to search the web and collect accurate data to produce the most useful, factual, complete, and patron-oriented book page possible for the URL:
+/* eslint-disable no-unused-labels */
+javascript:(async()=> {
+    const url = prompt('Enter the book URL you want to import:');
+    if (!url) return;
+    const promptText = `You are an expert book metadata librarian and research assistant. Your role is to search the web and collect accurate data to produce the most useful, factual, complete, and patron-oriented book page possible for the URL:
 
 Book URL: ${url}
 
@@ -97,10 +98,6 @@ Field-Specific Instructions:
     - "pdf", "epub", "html", "web", etc.
   - Always set "access": "read" and "provider_name": "Open Library Community Librarians".`;
 
-  const chatUrl = `https://chatgpt.com/?hints=search&q=${encodeURIComponent(promptText)}`;
-  window.open(
-    chatUrl,
-    '_blank',
-    'width=1000,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes',
-  );
+    const chatUrl = `https://chatgpt.com/?hints=search&q=${encodeURIComponent(promptText)}`;
+    window.open(chatUrl, '_blank', 'width=1000,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes');
 })();

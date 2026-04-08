@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 Creates the js files to be imported for the dev server
 */
