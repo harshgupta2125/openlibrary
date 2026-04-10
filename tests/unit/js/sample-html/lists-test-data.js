@@ -122,26 +122,12 @@ export const showcaseDetailsData = [
         listOwner: '/people/openlibrary',
         seedType: 'subject',
     },
-];
+]
 
-export const multipleShowcasesOnPage =
-  createShowcaseMarkup(true, [showcaseDetailsData[0], showcaseDetailsData[2]]) +
-  createShowcaseMarkup(false, [showcaseDetailsData[0], showcaseDetailsData[1]]);
-export const activeListShowcase = createShowcaseMarkup(true, [
-    showcaseDetailsData[0],
-]);
-export const listsSectionShowcase = createShowcaseMarkup(false, [
-    showcaseDetailsData[0],
-]);
-export const subjectShowcase = createShowcaseMarkup(false, [
-    showcaseDetailsData[4],
-]);
-export const authorShowcase = createShowcaseMarkup(false, [
-    showcaseDetailsData[3],
-]);
-export const workShowcase = createShowcaseMarkup(false, [
-    showcaseDetailsData[0],
-]);
-export const editionShowcase = createShowcaseMarkup(false, [
-    showcaseDetailsData[1],
-]);
+export const multipleShowcasesOnPage = createShowcaseMarkup(true, [showcaseDetailsData[0], showcaseDetailsData[2]]) + createShowcaseMarkup(false, [showcaseDetailsData[0], showcaseDetailsData[1]])
+export const activeListShowcase = createShowcaseMarkup(true, [showcaseDetailsData[0]])
+export const listsSectionShowcase = createShowcaseMarkup(false, [showcaseDetailsData[0]])
+export const subjectShowcase = createShowcaseMarkup(false, [showcaseDetailsData[4]])
+export const authorShowcase = createShowcaseMarkup(false, [showcaseDetailsData[3]])
+export const workShowcase = createShowcaseMarkup(false, [showcaseDetailsData[0]])
+export const editionShowcase = createShowcaseMarkup(false, [showcaseDetailsData[1]])
