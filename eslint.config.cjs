@@ -135,7 +135,7 @@ module.exports = [
       "quote-props": ["error", "as-needed"],
       "keyword-spacing": ["error", { before: true, after: true }],
       "key-spacing": ["error", { mode: "strict" }],
-      
+
       // GLOBALLY ENFORCED FORMATTING RULES
       "semi": ["error", "always"],
       "space-before-function-paren": ["error", "always"],
