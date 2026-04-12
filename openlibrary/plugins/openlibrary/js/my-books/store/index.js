@@ -11,7 +11,7 @@ class MyBooksStore {
     /**
    * Initializes the store.
    */
-    constructor() {
+    constructor () {
         this._store = {
             droppers: [],
             showcases: [],
@@ -23,56 +23,56 @@ class MyBooksStore {
     /**
    * @returns {Array<MyBooksDropper>}
    */
-    getDroppers() {
+    getDroppers () {
         return this._store.droppers;
     }
 
     /**
    * @param {Array<MyBooksDropper>} droppers
    */
-    setDroppers(droppers) {
+    setDroppers (droppers) {
         this._store.droppers = droppers;
     }
 
     /**
    * @returns {Array<ShowcaseItem>}
    */
-    getShowcases() {
+    getShowcases () {
         return this._store.showcases;
     }
 
     /**
    * @param {Array<ShowcaseItem>} showcases
    */
-    setShowcases(showcases) {
+    setShowcases (showcases) {
         this._store.showcases = showcases;
     }
 
     /**
    * @returns {string}
    */
-    getUserKey() {
+    getUserKey () {
         return this._store.userKey;
     }
 
     /**
    * @param {string} userKey
    */
-    setUserKey(userKey) {
+    setUserKey (userKey) {
         this._store.userKey = userKey;
     }
 
     /**
    * @returns {MyBooksDropper}
    */
-    getOpenDropper() {
+    getOpenDropper () {
         return this._store.openDropper;
     }
 
     /**
    * @param {MyBooksDropper} dropper
    */
-    setOpenDropper(dropper) {
+    setOpenDropper (dropper) {
         this._store.openDropper = dropper;
     }
 }

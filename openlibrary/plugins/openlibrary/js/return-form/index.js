@@ -4,7 +4,7 @@
  *
  * @param {NodeList<HTMLElement>} returnForms
  */
-export function initReturnForms(returnForms) {
+export function initReturnForms (returnForms) {
     for (const form of returnForms) {
         const i18nStrings = JSON.parse(form.dataset.i18n);
         form.addEventListener('submit', (event) => {

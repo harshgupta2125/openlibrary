@@ -12,7 +12,7 @@ import { buildPartialsUrl } from '../utils';
  * @param {object} data Object containing the new list's name, description, and seeds.
  * @returns {Promise<Response>} The results of the POST request
  */
-export async function createList(userKey, data) {
+export async function createList (userKey, data) {
     return await fetch(`${userKey}/lists.json`, {
         method: 'post',
         headers: {
@@ -30,7 +30,7 @@ export async function createList(userKey, data) {
  * @param {object} seed Object containing the new list's name, description, and seeds.
  * @returns {Promise<Response>} The result of the POST request
  */
-export async function addItem(listKey, seed) {
+export async function addItem (listKey, seed) {
     const body = { add: [seed] };
     return await fetch(`${listKey}/seeds.json`, {
         method: 'post',
@@ -49,7 +49,7 @@ export async function addItem(listKey, seed) {
  * @param {string|{ key: string }} seed The item being removed from the list.
  * @returns {Promise<Response>} The POST response
  */
-export async function removeItem(listKey, seed) {
+export async function removeItem (listKey, seed) {
     const body = { remove: [seed] };
     return await fetch(`${listKey}/seeds.json`, {
         method: 'post',
@@ -62,7 +62,7 @@ export async function removeItem(listKey, seed) {
 }
 
 // XXX : jsdoc
-export async function getListPartials() {
+export async function getListPartials () {
     return await fetch(buildPartialsUrl('MyBooksDropperLists'), {
         headers: {
             'Content-Type': 'application/json',

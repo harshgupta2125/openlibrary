@@ -29,7 +29,7 @@ export class Dropper {
    *
    * @param {HTMLElement} dropper Reference to the dropper's root element
    */
-    constructor(dropper) {
+    constructor (dropper) {
     /**
      * References the root element of the dropper.
      *
@@ -80,7 +80,7 @@ export class Dropper {
     /**
    * Adds click listener to dropper's toggle arrow.
    */
-    initialize() {
+    initialize () {
         this.dropClick.addEventListener('click', () => {
             this.toggleDropper();
         });
@@ -92,7 +92,7 @@ export class Dropper {
    * Subclasses of `Dropper` may override this to add
    * functionality that should occur on dropper open.
    */
-    onOpen() {}
+    onOpen () {}
 
     /**
    * Function that is called after a dropper has closed.
@@ -100,7 +100,7 @@ export class Dropper {
    * Subclasses of `Dropper` may override this to add
    * functionality that should occur on dropper close.
    */
-    onClose() {}
+    onClose () {}
 
     /**
    * Function that is called when the drop-click affordance of
@@ -108,7 +108,7 @@ export class Dropper {
    *
    * Subclasses of `Dropper` may override this as needed.
    */
-    onDisabledClick() {}
+    onDisabledClick () {}
 
     /**
    * Closes dropper if opened; opens dropper if closed.
@@ -119,7 +119,7 @@ export class Dropper {
    * Calls either `onOpen()` or `onClose()` after the dropper
    * has been toggled.
    */
-    toggleDropper() {
+    toggleDropper () {
         if (this.isDropperDisabled) {
             this.onDisabledClick();
         } else {
@@ -144,7 +144,7 @@ export class Dropper {
    * Calls `onDisabledClick()` if this dropper is disabled.
    * Otherwise, closes dropper and calls `onClose()`.
    */
-    closeDropper() {
+    closeDropper () {
         if (this.isDropperDisabled) {
             this.onDisabledClick();
         } else {

@@ -25,7 +25,7 @@ let mainTitleElem;
  * @param {HTMLElement} navbar The book page navbar component
  * @param {HTMLElement} title The compact title component
  */
-export function initCompactTitle(navbar, title) {
+export function initCompactTitle (navbar, title) {
     mainTitleElem = document.querySelector(
         '.work-title-and-author.desktop .work-title',
     );
@@ -46,7 +46,7 @@ export function initCompactTitle(navbar, title) {
  * @param {HTMLElement} navbar The book page navbar component
  * @param {HTMLElement} title The compact title component
  */
-function onScroll(navbar, title) {
+function onScroll (navbar, title) {
     const compactTitleBounds = title.getBoundingClientRect();
     const navbarBounds = navbar.getBoundingClientRect();
     const mainTitleBounds = mainTitleElem.getBoundingClientRect();

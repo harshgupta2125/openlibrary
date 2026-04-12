@@ -38,7 +38,7 @@ if (itemsWithDeleteSeed.length) {
  * @param {string} seed - path to seed book being removed, ex: /books/OL23269118M
  * @param {function} success - click function
  */
-function remove_seed(list_key, seed, success) {
+function remove_seed (list_key, seed, success) {
     if (seed[0] === '/') {
         seed = { key: seed };
     }
@@ -63,7 +63,7 @@ function remove_seed(list_key, seed, success) {
 /**
  * @returns {number} count of number of seed books in a list
  */
-function get_seed_count() {
+function get_seed_count () {
     return $('ul#listResults').children().length;
 }
 

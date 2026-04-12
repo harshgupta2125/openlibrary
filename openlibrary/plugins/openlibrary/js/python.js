@@ -7,7 +7,7 @@
  * @param {mixed} n
  * @return {string}
  */
-export function commify(n) {
+export function commify (n) {
     var text = n.toString();
     var re = /(\d+)(\d{3})/;
 
@@ -19,7 +19,7 @@ export function commify(n) {
 }
 
 // Implementation of Python urllib.urlencode in Javascript.
-export function urlencode(query) {
+export function urlencode (query) {
     var parts = [];
     var k;
     for (k in query) {
@@ -28,7 +28,7 @@ export function urlencode(query) {
     return parts.join('&');
 }
 
-export function slice(array, begin, end) {
+export function slice (array, begin, end) {
     var a = [];
     var i;
     for (i = begin; i < Math.min(array.length, end); i++) {

@@ -1,7 +1,7 @@
 /**
  * @param {string} container
  */
-function getIsbnToElementMap(container) {
+function getIsbnToElementMap (container) {
     const reISBN = /(978)?[0-9]{9}[0-9X]/i;
     const elements = Array.from(document.querySelectorAll(container));
     const isbnElementMap = {};
@@ -18,7 +18,7 @@ function getIsbnToElementMap(container) {
  * @param {string[]} isbnList
  * @returns {Promise<Array>}
  */
-async function getAvailabilityDataFromOpenLibrary(isbnList) {
+async function getAvailabilityDataFromOpenLibrary (isbnList) {
     const apiBaseUrl = 'https://openlibrary.org/search.json';
     const apiUrl = `${apiBaseUrl}?fields=*,availability&q=isbn:${isbnList.join('+OR+')}`;
     const response = await fetch(apiUrl);
@@ -47,7 +47,7 @@ async function getAvailabilityDataFromOpenLibrary(isbnList) {
  *    textOnBtn: "Open Library!"
  * });
  */
-async function addOpenLibraryButtons(options) {
+async function addOpenLibraryButtons (options) {
     const { bookContainer, selectorToPlaceBtnIn, textOnBtn } = options;
     if (bookContainer === undefined) {
         throw Error(

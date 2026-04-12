@@ -5,7 +5,7 @@
  * @returns {Promise<void>}
  * @see /openlibrary/templates/admin/index.html
  */
-export async function initUniqueLoginCounts(containerElem) {
+export async function initUniqueLoginCounts (containerElem) {
     const loadingIndicator = containerElem.querySelector('.loadingIndicator');
     const i18nStrings = JSON.parse(containerElem.dataset.i18n);
 
@@ -29,6 +29,6 @@ export async function initUniqueLoginCounts(containerElem) {
  * @returns {Promise<Response>}
  * @see `monthly_logins` class in /openlibrary/plugins/openlibrary/api.py
  */
-async function fetchCounts() {
+async function fetchCounts () {
     return fetch('/api/monthly_logins.json');
 }

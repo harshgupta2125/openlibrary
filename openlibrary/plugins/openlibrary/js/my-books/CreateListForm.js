@@ -27,7 +27,7 @@ export class CreateListForm {
    *
    * @param {HTMLElement} form
    */
-    constructor(form) {
+    constructor (form) {
     /**
      * References this form's "Create List" button.
      *
@@ -56,7 +56,7 @@ export class CreateListForm {
     /**
    * Attaches click listener to the "Create List" button.
    */
-    initialize() {
+    initialize () {
         this.createListButton.addEventListener('click', (event) => {
             event.preventDefault();
             this.createNewList();
@@ -78,7 +78,7 @@ export class CreateListForm {
    *
    * @async
    */
-    async createNewList() {
+    async createNewList () {
     // Construct seed object for first list item:
         const listTitle = websafe(this.listTitleInput.value);
         const listDescription = websafe(this.listDescriptionInput.value);
@@ -117,7 +117,7 @@ export class CreateListForm {
    * @param {string} listKey Key of the newly created list
    * @param {string} listTitle Title of the new list
    */
-    updateDroppersOnListCreation(listKey, listTitle, coverUrl) {
+    updateDroppersOnListCreation (listKey, listTitle, coverUrl) {
         const droppers = myBooksStore.getDroppers();
         const openDropper = myBooksStore.getOpenDropper();
 
@@ -135,7 +135,7 @@ export class CreateListForm {
     /**
    * Clears the list title and desciption fields in the form.
    */
-    resetForm() {
+    resetForm () {
         this.listTitleInput.value = '';
         this.listDescriptionInput.value = '';
     }

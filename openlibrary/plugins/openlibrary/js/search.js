@@ -11,7 +11,7 @@ import { buildPartialsUrl } from './utils';
  * @param {Number} start_facet_count initial number of displayed facets
  * @param {Number} facet_inc number of hidden facets to be displayed
  */
-export function more(header, start_facet_count, facet_inc) {
+export function more (header, start_facet_count, facet_inc) {
     const facetEntry = `div.${header} div.facetEntry`;
     const shown = $(`${facetEntry}:not(:hidden)`).length;
     const total = $(facetEntry).length;
@@ -33,7 +33,7 @@ export function more(header, start_facet_count, facet_inc) {
  * @param {Number} start_facet_count initial number of displayed facets
  * @param {Number} facet_inc number of displayed facets to be hidden
  */
-export function less(header, start_facet_count, facet_inc) {
+export function less (header, start_facet_count, facet_inc) {
     const facetEntry = `div.${header} div.facetEntry`;
     const shown = $(`${facetEntry}:not(:hidden)`).length;
     const total = $(facetEntry).length;
@@ -66,7 +66,7 @@ export function less(header, start_facet_count, facet_inc) {
  *
  * @param {HTMLElement} facetsElem Root element of the search facets sidebar component
  */
-export async function initSearchFacets(facetsElem) {
+export async function initSearchFacets (facetsElem) {
     const asyncLoad = facetsElem.dataset.asyncLoad;
 
     if (asyncLoad) {
@@ -99,7 +99,7 @@ export async function initSearchFacets(facetsElem) {
 /**
  * Adds click listeners to the "show more" and "show less" facet affordances.
  */
-function hydrateFacets() {
+function hydrateFacets () {
     const data_config_json = $('#searchFacets').data('config');
     const start_facet_count = data_config_json['start_facet_count'];
     const facet_inc = data_config_json['facet_inc'];
@@ -130,7 +130,7 @@ function hydrateFacets() {
  *
  * @throws Error when `/partials` response is not in 200-299 range.
  */
-function fetchPartials(param) {
+function fetchPartials (param) {
     const data = {
         param: param,
         path: location.pathname,
@@ -156,7 +156,7 @@ function fetchPartials(param) {
  * @param {string} markup HTML markup for a single element
  * @returns {HTMLElement}
  */
-function createElementFromMarkup(markup) {
+function createElementFromMarkup (markup) {
     const template = document.createElement('template');
     template.innerHTML = markup;
     return template.content.children[0];
@@ -169,7 +169,7 @@ function createElementFromMarkup(markup) {
  * @param {IntersectionObserverInit} options
  * @returns {Promise<void>}
  */
-async function whenVisible(elem, options = {}) {
+async function whenVisible (elem, options = {}) {
     return new Promise((resolve) => {
         const intersectionObserver = new IntersectionObserver(
             (entries, observer) => {

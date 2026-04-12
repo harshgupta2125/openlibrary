@@ -11,7 +11,7 @@ import {
  * @param {Number} minVisibleFacet minimum number of visible facet
  * @return {String} HTML search facets section
  */
-function createSearchFacets(
+function createSearchFacets (
     totalFacet = 2,
     visibleFacet = 2,
     minVisibleFacet = 2,
@@ -66,7 +66,7 @@ function createSearchFacets(
  * @param {Number} totalFacet           total number of facet
  * @param {Number} expectedVisibleFacet expected number of visible facet
  */
-function checkFacetVisibility(totalFacet, expectedVisibleFacet) {
+function checkFacetVisibility (totalFacet, expectedVisibleFacet) {
     const facetEntryList = document.getElementsByClassName('facetEntry');
 
     test('facetEntry element number', () => {
@@ -96,7 +96,7 @@ function checkFacetVisibility(totalFacet, expectedVisibleFacet) {
  * @param {Number} minVisibleFacet      minimum visible facet number
  * @param {Number} expectedVisibleFacet expected number of visible facet
  */
-function checkFacetMoreLessVisibility(
+function checkFacetMoreLessVisibility (
     totalFacet,
     minVisibleFacet,
     expectedVisibleFacet,

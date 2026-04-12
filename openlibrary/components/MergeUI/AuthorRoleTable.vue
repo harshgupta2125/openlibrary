@@ -54,9 +54,9 @@ export default {
         roles: Array
     },
     computed: {
-        fields() {
+        fields () {
             return _.uniq(_.flatMap(this.roles, Object.keys)).sort();
         }
     }
-}
+};
 </script>

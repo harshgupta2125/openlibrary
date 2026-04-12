@@ -6,7 +6,7 @@ import Template from './template';
  *
  * Used in addbook process.
  */
-export function init() {
+export function init () {
     // used in books/edit/exercpt, books/edit/web and books/edit/edition
     $.fn.repeat = function (options) {
         var addSelector, removeSelector, id, elems, t, code, nextRowId;
@@ -21,7 +21,7 @@ export function init() {
             template: $(`${id}-template`),
         };
 
-        function createTemplate(selector) {
+        function createTemplate (selector) {
             code = $(selector)
                 .html()
                 .replace(/%7B%7B/gi, '<%=')
@@ -38,7 +38,7 @@ export function init() {
      * object representing.
      * @return {object} data mapping names to values
      */
-        function formdata() {
+        function formdata () {
             var data = {};
             $(':input', elems.form).each(function () {
                 var $e = $(this),
@@ -60,7 +60,7 @@ export function init() {
      * Creates a removable `repeat-item`.
      * @param {jQuery.Event} event
      */
-        function onAdd(event) {
+        function onAdd (event) {
             var data, newid;
             const isbnOverrideData = isbnOverride.get();
             event.preventDefault();
@@ -100,7 +100,7 @@ export function init() {
 
             elems._this.trigger('repeat-add');
         }
-        function onRemove(event) {
+        function onRemove (event) {
             event.preventDefault();
             $(this).parents('.repeat-item').eq(0).remove();
             elems._this.trigger('repeat-remove');

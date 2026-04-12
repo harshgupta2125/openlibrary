@@ -4,7 +4,7 @@ import '../../../../../static/css/legacy-datatables.css';
 const DEFAULT_LENGTH = 3;
 const LS_RESULTS_LENGTH_KEY = 'editions-table.resultsLength';
 
-export function initEditionsTable() {
+export function initEditionsTable () {
     var rowCount;
     let currentLength;
     // Prevent reinitialization of the editions datatable
@@ -30,7 +30,7 @@ export function initEditionsTable() {
         }
     });
 
-    function toggleSorting(e) {
+    function toggleSorting (e) {
         $('#editions th span').html('');
         $(e).find('span').html('&nbsp;&uarr;');
         if ($(e).hasClass('sorting_asc')) {

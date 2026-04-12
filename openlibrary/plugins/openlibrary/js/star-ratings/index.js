@@ -2,7 +2,7 @@ import { findDropperForWork } from '../my-books';
 import { ReadingLogShelves } from '../my-books/MyBooksDropper/ReadingLogForms';
 import { FadingToast } from '../Toast.js';
 
-export function initRatingHandlers(ratingForms) {
+export function initRatingHandlers (ratingForms) {
     for (const form of ratingForms) {
         form.addEventListener('submit', (e) => {
             handleRatingSubmission(e, form);
@@ -10,7 +10,7 @@ export function initRatingHandlers(ratingForms) {
     }
 }
 
-function handleRatingSubmission(event, form) {
+function handleRatingSubmission (event, form) {
     event.preventDefault();
     // Continue only if selected star is different from previous rating
     if (!event.submitter.classList.contains('star-selected')) {

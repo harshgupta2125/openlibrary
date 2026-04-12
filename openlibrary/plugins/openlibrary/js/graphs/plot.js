@@ -15,7 +15,7 @@ import 'flot/jquery.flot.time.js';
  * - http://localhost:8080/subjects/fantasy#sort=date_published&ebooks=true
  * - http://localhost:8080/publishers/Barnes_&_Noble
  */
-export function loadEditionsGraph() {
+export function loadEditionsGraph () {
     var data, options, placeholder, plot, dateFrom, dateTo, previousPoint;
     data = [
         {
@@ -57,7 +57,7 @@ export function loadEditionsGraph() {
     };
 
     placeholder = $('#chartPubHistory');
-    function showTooltip(x, y, contents) {
+    function showTooltip (x, y, contents) {
         $(`<div id="chartLabel">${contents}</div>`)
             .css({
                 position: 'absolute',
@@ -125,7 +125,7 @@ export function loadEditionsGraph() {
         applyDateFilter(yearFrom, yearTo);
     });
 
-    function applyDateFilter(
+    function applyDateFilter (
         yearFrom,
         yearTo,
         hideSelector = '.chartUnzoom',
@@ -161,7 +161,7 @@ export function loadEditionsGraph() {
     }
 }
 
-export function plot_minigraph(node, data) {
+export function plot_minigraph (node, data) {
     var options = {
         series: {
             lines: {
@@ -182,7 +182,7 @@ export function plot_minigraph(node, data) {
     $.plot(node, [data], options);
 }
 
-export function plot_tooltip_graph(
+export function plot_tooltip_graph (
     node,
     data,
     tooltip_message,
@@ -223,7 +223,7 @@ export function plot_tooltip_graph(
 
     graph = $.plot(node, [data], options);
 
-    function showTooltip(x, y, contents) {
+    function showTooltip (x, y, contents) {
         $(`<div id="chartLabelA">${contents}</div>`)
             .css({
                 position: 'absolute',
@@ -268,7 +268,7 @@ export function plot_tooltip_graph(
  * @param {string} [color] in hexidecimal to apply to the bars of a tooltip graph.
  *  Ignored if options and no tooltip_message is passed.
  */
-export function loadGraph(
+export function loadGraph (
     id,
     options = {},
     tooltip_message = '',
@@ -307,7 +307,7 @@ export function loadGraph(
  * @param {string} [color] in hexidecimal to apply to the bars of a tooltip graph.
  *  Ignored if options and no tooltip_message is passed.
  */
-export function loadGraphIfExists(id, options, tooltip_message, color) {
+export function loadGraphIfExists (id, options, tooltip_message, color) {
     if ($(`#${id}`).length) {
         loadGraph(id, options, tooltip_message, color);
     }

@@ -5,7 +5,7 @@
  *
  */
 
-export default function initAnalytics() {
+export default function initAnalytics () {
     var vs, i;
     var startTime = new Date();
     if (window.archive_analytics) {
@@ -52,7 +52,7 @@ export default function initAnalytics() {
     // NOTE: This might cause issues if this script is made async #4474
     window.addEventListener(
         'DOMContentLoaded',
-        function send_analytics_pageview() {
+        function send_analytics_pageview () {
             window.archive_analytics.send_pageview({});
         },
     );

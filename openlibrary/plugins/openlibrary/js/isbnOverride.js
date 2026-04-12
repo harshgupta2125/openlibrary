@@ -9,13 +9,13 @@
  */
 export const isbnOverride = {
     data: null,
-    set(isbnData) {
+    set (isbnData) {
         this.data = isbnData;
     },
-    get() {
+    get () {
         return this.data;
     },
-    clear() {
+    clear () {
         this.data = null;
     },
 };

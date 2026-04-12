@@ -157,7 +157,7 @@ export default {
         }
     },
     computed: {
-        title() {
+        title () {
             let title = `.${this.field}`;
             if (this.value instanceof Array) {
                 const length = this.value.length;

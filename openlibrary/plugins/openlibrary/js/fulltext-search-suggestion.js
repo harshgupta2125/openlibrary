@@ -1,6 +1,6 @@
 import { buildPartialsUrl } from './utils';
 
-export function initFulltextSearchSuggestion(fulltextSearchSuggestion) {
+export function initFulltextSearchSuggestion (fulltextSearchSuggestion) {
     const isLoading = showLoadingIndicators(fulltextSearchSuggestion);
     if (isLoading) {
         const query = fulltextSearchSuggestion.dataset.query;
@@ -8,7 +8,7 @@ export function initFulltextSearchSuggestion(fulltextSearchSuggestion) {
     }
 }
 
-function showLoadingIndicators(fulltextSearchSuggestion) {
+function showLoadingIndicators (fulltextSearchSuggestion) {
     let isLoading = false;
     const loadingIndicator =
     fulltextSearchSuggestion.querySelector('.loadingIndicator');
@@ -18,7 +18,7 @@ function showLoadingIndicators(fulltextSearchSuggestion) {
     }
     return isLoading;
 }
-async function getPartials(fulltextSearchSuggestion, query) {
+async function getPartials (fulltextSearchSuggestion, query) {
     return fetch(buildPartialsUrl('FulltextSearchSuggestion', { data: query }))
         .then((resp) => {
             if (resp.status !== 200) {
@@ -68,6 +68,6 @@ async function getPartials(fulltextSearchSuggestion, query) {
  *
  * @returns {string} HTML for a retry link.
  */
-function renderRetryLink() {
+function renderRetryLink () {
     return '<span class="fulltext-suggestions__retry">Failed to fetch fulltext search suggestions. <button type="button" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;">Retry?</button></span>';
 }
