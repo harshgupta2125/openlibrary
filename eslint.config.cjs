@@ -138,7 +138,7 @@ module.exports = [
 
       // GLOBALLY ENFORCED FORMATTING RULES
       "semi": ["error", "always"],
-      "space-before-function-paren": ["error", "always"],
+      "space-before-function-paren": ["error", "never"],
       "comma-spacing": ["error", { "before": false, "after": true }],
 
       "vue/no-mutating-props": "off",
