@@ -1,8 +1,8 @@
-import $ from 'jquery';
-import { websafe } from './jsdef';
 import { debounce } from './nonjquery_utils.js';
 import * as SearchUtils from './SearchUtils';
 import { PersistentValue } from './SearchUtils';
+import $ from 'jquery';
+import { websafe } from './jsdef'
 
 /** Mapping of search bar facets to search endpoints */
 const FACET_TO_ENDPOINT = {
@@ -62,26 +62,26 @@ const RENDER_AUTOCOMPLETE_RESULT = {
                     <span class="author-desc"><div class="author-name">${websafe(author.name)}</div></span>
                 </a>
             </li>`;
-    },
-};
+    }
+}
 
 /**
  * Manages the interactions associated with the search bar in the header
  */
 export class SearchBar {
     /**
-   * @param {JQuery} $component
-   * @param {Object?} urlParams
-   */
-    constructor($component, urlParams = {}) {
-    /** UI Elements */
+     * @param {JQuery} $component
+     * @param {Object?} urlParams
+     */
+    constructor($component, urlParams={}) {
+        /** UI Elements */
         this.$component = $component;
         this.$form = this.$component.find('form.search-bar-input');
         this.$input = this.$form.find('input[type="text"]');
         this.$results = this.$component.find('ul.search-results');
         this.$facetSelect = this.$component.find('.search-facet-selector select');
         this.$barcodeScanner = this.$component.find('#barcode_scanner_link');
-        this.$searchSubmit = this.$component.find('.search-bar-submit');
+        this.$searchSubmit = this.$component.find('.search-bar-submit')
 
         /** State */
         /** Whether the bar is in collapsible mode */
@@ -91,9 +91,7 @@ export class SearchBar {
         /** Selected facet (persisted) */
         this.facet = new PersistentValue('facet', {
             default: DEFAULT_FACET,
-            initValidation(val) {
-                return val in FACET_TO_ENDPOINT;
-            },
+            initValidation(val) { return val in FACET_TO_ENDPOINT; }
         });
 
         this.initFromUrlParams(urlParams);
@@ -112,7 +110,7 @@ export class SearchBar {
             if (e.key === 'Tab' && e.shiftKey) {
                 this.clearAutocompletionResults();
             }
-        });
+        })
 
         this.$input.on('keydown', (e) => {
             if (e.key === 'ArrowUp') {
@@ -124,19 +122,18 @@ export class SearchBar {
             } else if (e.key === 'Escape') {
                 this.clearAutocompletionResults();
             }
-        });
+        })
 
         this.$barcodeScanner.on('keydown', (e) => {
             if (e.key === 'Tab') {
                 this.clearAutocompletionResults();
             }
-        });
+        })
 
         this.$results.on('keydown', (e) => {
             if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                 // On arrow keys focus on the next item unless there is none, then focus on input
-                const direction =
-          e.key === 'ArrowUp' ? 'previousElementSibling' : 'nextElementSibling';
+                const direction = e.key === 'ArrowUp' ? 'previousElementSibling' : 'nextElementSibling';
                 if (!e.target[direction]) {
                     this.$input.trigger('focus');
                     return false;
@@ -161,7 +158,7 @@ export class SearchBar {
                 this.escapeInput = true;
                 this.clearAutocompletionResults();
             }
-        });
+        })
 
         this.$form.on('keydown', (e) => {
             if (e.key === 'Tab') {
@@ -178,9 +175,9 @@ export class SearchBar {
     }
 
     /**
-   * Update internal state from url parameters
-   * @param {Object} urlParams
-   */
+     * Update internal state from url parameters
+     * @param {Object} urlParams
+     */
     initFromUrlParams(urlParams) {
         if (urlParams.facet in FACET_TO_ENDPOINT) {
             this.facet.write(urlParams.facet);
@@ -203,22 +200,16 @@ export class SearchBar {
             const q = this.$input.val();
             this.$input.val(SearchBar.marshalBookSearchQuery(q));
         }
-        this.$form.attr(
-            'action',
-            SearchBar.composeSearchUrl(this.facetEndpoint, this.$input.val()),
-        );
+        this.$form.attr('action', SearchBar.composeSearchUrl(this.facetEndpoint, this.$input.val()));
         SearchUtils.addModeInputsToForm(this.$form, SearchUtils.mode.read());
     }
 
     /** Initialize event handlers that allow the form to collapse for small screens */
     initCollapsibleMode() {
         this.toggleCollapsibleModeForSmallScreens($(window).width());
-        $(window).on(
-            'resize',
-            debounce(() => {
-                this.toggleCollapsibleModeForSmallScreens($(window).width());
-            }, 50),
-        );
+        $(window).on('resize', debounce(() => {
+            this.toggleCollapsibleModeForSmallScreens($(window).width());
+        }, 50));
 
         const expandAndFocusSearch = (event) => {
             if (this.inCollapsibleMode && this.collapsed) {
@@ -226,15 +217,13 @@ export class SearchBar {
                 this.toggleCollapse();
                 this.$input.trigger('focus');
             }
-        };
+        }
         const expandSelectors = ['.search-component', 'a[href="/search"]'];
 
         // When clicking on the search bar or a link to /search, expand search if it isn't already.
         // If clicking elsewhere, collapse search.
-        $(document).on('submit', '.in-collapsible-mode', (event) =>
-            expandAndFocusSearch(event),
-        );
-        $(document).on('click', (event) => {
+        $(document).on('submit', '.in-collapsible-mode', event => expandAndFocusSearch(event));
+        $(document).on('click', event => {
             const shouldExpand = (item) => $(event.target).closest(item).length === 1;
             if (expandSelectors.some(shouldExpand)) {
                 expandAndFocusSearch(event);
@@ -245,9 +234,9 @@ export class SearchBar {
     }
 
     /**
-   * Enables/disables CollapsibleMode depending on screen size
-   * @param {Number} windowWidth
-   */
+     * Enables/disables CollapsibleMode depending on screen size
+     * @param {Number} windowWidth
+     */
     toggleCollapsibleModeForSmallScreens(windowWidth) {
         if (windowWidth < 568) {
             if (!this.inCollapsibleMode) {
@@ -295,20 +284,14 @@ export class SearchBar {
     }
 
     /**
-   * Converts an already processed query into a search url
-   * @param {String} facetEndpoint
-   * @param {String} q query that's ready to get passed to the search endpoint
-   * @param {Boolean} [json] whether to hit the JSON endpoint
-   * @param {Number} [limit] how many items to get
-   * @param {String[]} [fields] the Solr fields to fetch (if using JSON)
-   */
-    static composeSearchUrl(
-        facetEndpoint,
-        q,
-        json = false,
-        limit = null,
-        fields = null,
-    ) {
+     * Converts an already processed query into a search url
+     * @param {String} facetEndpoint
+     * @param {String} q query that's ready to get passed to the search endpoint
+     * @param {Boolean} [json] whether to hit the JSON endpoint
+     * @param {Number} [limit] how many items to get
+     * @param {String[]} [fields] the Solr fields to fetch (if using JSON)
+     */
+    static composeSearchUrl(facetEndpoint, q, json=false, limit=null, fields=null) {
         let url = facetEndpoint;
         if (json) {
             url += `.json?q=${q}&_spellcheck_count=0`;
@@ -323,10 +306,10 @@ export class SearchBar {
     }
 
     /**
-   * Prepare an unprocessed query for book searching
-   * @param {String} q
-   * @return {String}
-   */
+     * Prepare an unprocessed query for book searching
+     * @param {String} q
+     * @return {String}
+     */
     static marshalBookSearchQuery(q) {
         if (q && q.indexOf(':') === -1 && q.indexOf('"') === -1) {
             q = `title: "${q}"`;
@@ -336,56 +319,38 @@ export class SearchBar {
 
     /** Setup event listeners for autocompletion */
     initAutocompletionLogic() {
-    // searches should be cancelled if you click anywhere in the page
+        // searches should be cancelled if you click anywhere in the page
         $(document.body).on('click', this.clearAutocompletionResults.bind(this));
         // but clicking search input should not empty search results.
         this.$input.on('click', false);
 
-        this.$input.on(
-            'keyup',
-            debounce(
-                (event) => {
-                    // ignore directional keys, enter, escape, and shift for callback
-                    if (![13, 16, 27, 37, 38, 39, 40].includes(event.keyCode)) {
-                        this.renderAutocompletionResults();
-                    }
-                },
-                500,
-                false,
-            ),
-        );
+        this.$input.on('keyup', debounce(event => {
+            // ignore directional keys, enter, escape, and shift for callback
+            if (![13,16,27,37,38,39,40].includes(event.keyCode)) {
+                this.renderAutocompletionResults();
+            }
+        }, 500, false));
 
-        this.$input.on(
-            'focus',
-            debounce(
-                (event) => {
-                    event.stopPropagation();
-                    // don't render on focus if there are already results showing, avoid flashing
-                    const resultsAreRendered = this.$results.children().length > 0;
-                    if (this.escapeInput || resultsAreRendered) {
-                        return;
-                    }
-                    this.renderAutocompletionResults();
-                },
-                300,
-                false,
-            ),
-        );
+        this.$input.on('focus', debounce(event => {
+            event.stopPropagation();
+            // don't render on focus if there are already results showing, avoid flashing
+            const resultsAreRendered = this.$results.children().length > 0;
+            if (this.escapeInput || resultsAreRendered) {
+                return;
+            }
+            this.renderAutocompletionResults();
+        }, 300, false));
     }
 
     /**
-   * @async
-   * Awkwardly fetches the the results as well as renders them :/
-   * Cleans up and performs the query, then update the autocomplete results
-   * @returns {JQuery.jqXHR}
-   **/
+     * @async
+     * Awkwardly fetches the the results as well as renders them :/
+     * Cleans up and performs the query, then update the autocomplete results
+     * @returns {JQuery.jqXHR}
+     **/
     renderAutocompletionResults() {
         let q = this.$input.val().trim();
-        if (
-            q.length < 3 ||
-      q.toLowerCase() === 'the' ||
-      !(this.facetEndpoint in RENDER_AUTOCOMPLETE_RESULT)
-        ) {
+        if (q.length < 3 || q.toLowerCase() === 'the' || !(this.facetEndpoint in RENDER_AUTOCOMPLETE_RESULT)) {
             return;
         }
         if (this.facet.read() === 'title') {
@@ -393,23 +358,14 @@ export class SearchBar {
         }
 
         this.$results.css('opacity', 0.5);
-        return $.getJSON(
-            SearchBar.composeSearchUrl(
-                this.facetEndpoint,
-                q,
-                true,
-                10,
-                DEFAULT_JSON_FIELDS,
-            ),
-            (data) => {
-                const renderer = RENDER_AUTOCOMPLETE_RESULT[this.facetEndpoint];
-                this.$results.css('opacity', 1);
-                this.clearAutocompletionResults();
-                for (const d in data.docs) {
-                    this.$results.append(renderer(data.docs[d]));
-                }
-            },
-        );
+        return $.getJSON(SearchBar.composeSearchUrl(this.facetEndpoint, q, true, 10, DEFAULT_JSON_FIELDS), data => {
+            const renderer = RENDER_AUTOCOMPLETE_RESULT[this.facetEndpoint];
+            this.$results.css('opacity', 1);
+            this.clearAutocompletionResults();
+            for (const d in data.docs) {
+                this.$results.append(renderer(data.docs[d]));
+            }
+        });
     }
 
     clearAutocompletionResults() {
@@ -417,11 +373,11 @@ export class SearchBar {
     }
 
     /**
-   * Updates the UI to match after the facet is changed
-   * @param {String} newFacet
-   */
+     * Updates the UI to match after the facet is changed
+     * @param {String} newFacet
+     */
     handleFacetValueChange(newFacet) {
-    // update the UI
+        // update the UI
         this.$facetSelect.val(newFacet);
         const text = this.$facetSelect.find('option:selected').text();
         $('header#header-bar .search-facet-value').html(text);
@@ -433,9 +389,9 @@ export class SearchBar {
     }
 
     /**
-   * Handles changes to the facet from the UI
-   * @param {JQuery.Event} event
-   */
+     * Handles changes to the facet from the UI
+     * @param {JQuery.Event} event
+     */
     handleFacetSelectChange(event) {
         const newFacet = event.target.value;
         // We don't want to persist advanced becaues it behaves like a button
@@ -448,27 +404,27 @@ export class SearchBar {
     }
 
     /**
-   * For testing purposes, wraps window.location
-   * @returns {URL} The current URL
-   */
+     * For testing purposes, wraps window.location
+     * @returns {URL} The current URL
+     */
     getCurUrl() {
         return window.location;
     }
 
     /**
-   * Just so we can stub/test this
-   * @param {String} path
-   */
+     * Just so we can stub/test this
+     * @param {String} path
+     */
     navigateTo(path) {
         window.location.assign(path);
     }
 
     /**
-   * Makes changes to the UI after a change occurs to the mode
-   * Parts of this might be dead code; I don't really understand why
-   * this is necessary, so opting to leave it alone for now.
-   * @param {String} newMode
-   */
+     * Makes changes to the UI after a change occurs to the mode
+     * Parts of this might be dead code; I don't really understand why
+     * this is necessary, so opting to leave it alone for now.
+     * @param {String} newMode
+     */
     handleSearchModeChange(newMode) {
         $('.instantsearch-mode').val(newMode);
         $(`input[name=mode][value=${newMode}]`).prop('checked', true);

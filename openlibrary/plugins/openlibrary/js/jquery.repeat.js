@@ -1,15 +1,16 @@
-import { isbnOverride } from '../../openlibrary/js/isbnOverride';
-import Template from './template';
+import Template from './template'
+import { isbnOverride } from '../../openlibrary/js/isbnOverride'
 
 /**
  * jquery repeat: jquery plugin to handle repetitive inputs in a form.
  *
  * Used in addbook process.
  */
-export function init () {
+export function init() {
     // used in books/edit/exercpt, books/edit/web and books/edit/edition
-    $.fn.repeat = function (options) {
-        var addSelector, removeSelector, id, elems, t, code, nextRowId;
+    $.fn.repeat = function(options) {
+        var addSelector, removeSelector, id, elems, t, code,
+            nextRowId;
         options = options || {};
 
         id = `#${this.attr('id')}`;
@@ -18,12 +19,11 @@ export function init () {
             add: $(`${id}-add`),
             form: $(`${id}-form`),
             display: $(`${id}-display`),
-            template: $(`${id}-template`),
-        };
+            template: $(`${id}-template`)
+        }
 
-        function createTemplate (selector) {
-            code = $(selector)
-                .html()
+        function createTemplate(selector) {
+            code = $(selector).html()
                 .replace(/%7B%7B/gi, '<%=')
                 .replace(/%7D%7D/gi, '%>')
                 .replace(/{{/g, '<%=')
@@ -34,13 +34,13 @@ export function init () {
         t = createTemplate(`${id}-template`);
 
         /**
-     * Search elems.form for input fields and create an
-     * object representing.
-     * @return {object} data mapping names to values
-     */
-        function formdata () {
+         * Search elems.form for input fields and create an
+         * object representing.
+         * @return {object} data mapping names to values
+         */
+        function formdata() {
             var data = {};
-            $(':input', elems.form).each(function () {
+            $(':input', elems.form).each(function() {
                 var $e = $(this),
                     name = $e.attr('name'),
                     type = $e.attr('type'),
@@ -56,11 +56,11 @@ export function init () {
         }
 
         /**
-     * triggered when "add link" button is clicked on author edit field.
-     * Creates a removable `repeat-item`.
-     * @param {jQuery.Event} event
-     */
-        function onAdd (event) {
+         * triggered when "add link" button is clicked on author edit field.
+         * Creates a removable `repeat-item`.
+         * @param {jQuery.Event} event
+         */
+        function onAdd(event) {
             var data, newid;
             const isbnOverrideData = isbnOverride.get();
             event.preventDefault();
@@ -100,7 +100,7 @@ export function init () {
 
             elems._this.trigger('repeat-add');
         }
-        function onRemove (event) {
+        function onRemove(event) {
             event.preventDefault();
             $(this).parents('.repeat-item').eq(0).remove();
             elems._this.trigger('repeat-remove');
@@ -110,5 +110,5 @@ export function init () {
         // Click handlers should apply to newly created add/remove selectors
         $(document).on('click', addSelector, onAdd);
         $(document).on('click', removeSelector, onRemove);
-    };
+    }
 }

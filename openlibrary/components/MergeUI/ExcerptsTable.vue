@@ -37,9 +37,9 @@ export default {
         excerpts: Array
     },
     computed: {
-        fields () {
+        fields() {
             return _.uniq(_.flatMap(this.excerpts, Object.keys));
         }
     }
-};
+}
 </script>

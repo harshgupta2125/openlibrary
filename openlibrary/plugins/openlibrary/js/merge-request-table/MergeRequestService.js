@@ -1,36 +1,31 @@
+
 export const REQUEST_TYPES = {
     WORK_MERGE: 1,
-    AUTHOR_MERGE: 2,
-};
+    AUTHOR_MERGE: 2
+}
 
-export async function createRequest(
-    olids,
-    action,
-    type,
-    comment = null,
-    primary = null,
-) {
+export async function createRequest(olids, action, type, comment = null, primary = null) {
     const data = {
         rtype: 'create-request',
         action: action,
         mr_type: type,
-        olids: olids,
-    };
+        olids: olids
+    }
     if (comment) {
-        data['comment'] = comment;
+        data['comment'] = comment
     }
     if (primary) {
-        data['primary'] = primary;
+        data['primary'] = primary
     }
 
     return fetch('/merges', {
         method: 'POST',
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
-    });
+        body: JSON.stringify(data)
+    })
 }
 
 /**
@@ -45,20 +40,20 @@ async function updateRequest(action, mrid, comment = null) {
     const data = {
         rtype: 'update-request',
         action: action,
-        mrid: mrid,
-    };
+        mrid: mrid
+    }
     if (comment) {
-        data['comment'] = comment;
+        data['comment'] = comment
     }
 
     return fetch('/merges', {
         method: 'POST',
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
-    });
+        body: JSON.stringify(data)
+    })
 }
 
 /**
@@ -69,7 +64,7 @@ async function updateRequest(action, mrid, comment = null) {
  * @returns {Promise<Response>} The results of the update POST request
  */
 export async function commentOnRequest(mrid, comment) {
-    return updateRequest('comment', mrid, comment);
+    return updateRequest('comment', mrid, comment)
 }
 
 /**
@@ -78,17 +73,17 @@ export async function commentOnRequest(mrid, comment) {
  * @param {Number} mrid Unique identifier for the request being claimed
  */
 export async function claimRequest(mrid) {
-    return updateRequest('claim', mrid);
+    return updateRequest('claim', mrid)
 }
 
 export async function unassignRequest(mrid) {
-    return updateRequest('unassign', mrid);
+    return updateRequest('unassign', mrid)
 }
 
 export async function declineRequest(mrid, comment) {
-    return updateRequest('decline', mrid, comment);
+    return updateRequest('decline', mrid, comment)
 }
 
 export async function approveRequest(mrid, comment) {
-    return updateRequest('approve', mrid, comment);
+    return updateRequest('approve', mrid, comment)
 }

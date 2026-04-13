@@ -1,7 +1,7 @@
 import { PersistentToast } from './Toast';
 
-export async function initAsyncFollowing (followForms) {
-    followForms.forEach((form) => {
+export async function initAsyncFollowing(followForms) {
+    followForms.forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = form.action;
@@ -18,17 +18,15 @@ export async function initAsyncFollowing (followForms) {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: new URLSearchParams(formData),
+                body: new URLSearchParams(formData)
             })
-                .then((resp) => {
+                .then(resp => {
                     if (!resp.ok) {
                         throw new Error('Network response was not ok');
                     }
                     submitButton.classList.toggle('cta-btn--primary');
                     submitButton.classList.toggle('cta-btn--delete');
-                    submitButton.textContent = isFollowRequest
-                        ? i18nStrings.unfollow
-                        : i18nStrings.follow;
+                    submitButton.textContent = isFollowRequest ? i18nStrings.unfollow : i18nStrings.follow;
                     stateInput.value = isFollowRequest ? '1' : '0';
                 })
                 .catch(() => {

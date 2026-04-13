@@ -1,7 +1,7 @@
+import { loadGraphIfExists, loadEditionsGraph } from './plot';
 import options from './options.js';
-import { loadEditionsGraph, loadGraphIfExists } from './plot';
 
-export function plotAdminGraphs () {
+export function plotAdminGraphs() {
     loadGraphIfExists('editgraph', {}, 'edit(s) on');
     loadGraphIfExists('membergraph', {}, 'new members(s) on');
     loadGraphIfExists('works_minigraph', {}, ' works on ');
@@ -13,7 +13,7 @@ export function plotAdminGraphs () {
     loadGraphIfExists('books-added-per-day', options.booksAdded);
 }
 
-export function initHomepageGraphs () {
+export function initHomepageGraphs() {
     loadGraphIfExists('visitors-graph', {}, 'unique visitors on', '#e44028');
     loadGraphIfExists('members-graph', {}, 'new members on', '#748d36');
     loadGraphIfExists('edits-graph', {}, 'catalog edits on', '#00636a');
@@ -21,13 +21,13 @@ export function initHomepageGraphs () {
     loadGraphIfExists('ebooks-graph', {}, 'ebooks borrowed on', '#35672e');
 }
 
-export function initPublishersGraph () {
+export function initPublishersGraph() {
     if (document.getElementById('chartPubHistory')) {
         loadEditionsGraph('chartPubHistory', {}, 'editions in');
     }
 }
 
-export function init () {
+export function init() {
     plotAdminGraphs();
     initHomepageGraphs();
     initPublishersGraph();

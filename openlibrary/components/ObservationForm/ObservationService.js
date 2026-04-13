@@ -10,23 +10,23 @@
  * @returns A Promise representing the state of the POST request.
  */
 export function updateObservation(action, type, value, workKey, username) {
-    const data = constructDataObject(type, value, username, action);
+    const data = constructDataObject(type, value, username, action)
 
     return fetch(`${workKey}/observations`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
     })
-        .then((response) => {
+        .then(response => {
             if (!response.ok) {
-                throw new Error('Server response was not ok');
+                throw new Error('Server response was not ok')
             }
         })
-        .catch((error) => {
-            throw error;
-        });
+        .catch(error => {
+            throw error
+        })
 }
 
 /**
@@ -51,8 +51,8 @@ function constructDataObject(type, value, username, action) {
     const data = {
         username: username,
         action: action,
-        observation: {},
-    };
+        observation: {}
+    }
 
     data.observation[type] = value;
 

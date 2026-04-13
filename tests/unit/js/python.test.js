@@ -1,14 +1,10 @@
-import {
-    commify,
-    slice,
-    urlencode,
-} from '../../../openlibrary/plugins/openlibrary/js/python';
+import { commify, urlencode, slice } from '../../../openlibrary/plugins/openlibrary/js/python';
 
 test('commify', () => {
     expect(commify('5443232')).toBe('5,443,232');
     expect(commify('50')).toBe('50');
     expect(commify('5000')).toBe('5,000');
-    expect(commify(['1', '2', '3', '45'])).toBe('1,2,3,45');
+    expect(commify(['1','2','3','45'])).toBe('1,2,3,45');
     expect(commify([1, 20, 3])).toBe('1,20,3');
 });
 
@@ -20,9 +16,7 @@ describe('urlencode', () => {
         expect(urlencode(['apple'])).toEqual('0=apple');
     });
     test('array of 3', () => {
-        expect(urlencode(['apple', 'grapes', 'orange'])).toEqual(
-            '0=apple&1=grapes&2=orange',
-        );
+        expect(urlencode(['apple', 'grapes', 'orange'])).toEqual('0=apple&1=grapes&2=orange');
     });
 });
 

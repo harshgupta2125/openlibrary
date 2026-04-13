@@ -6,38 +6,35 @@ It is in a is a separate file to avoid this error when writing tests:
     > 1 | import { ExpirationPlugin } from 'workbox-expiration';
 */
 
-export function matchMiscFiles ({ url }) {
-    const miscFiles = [
-        '/favicon.ico',
-        '/static/manifest.json',
-        '/cdn/archive.org/athena.js',
-        '/cdn/archive.org/donate.js',
-    ];
+
+export function matchMiscFiles({ url }) {
+    const miscFiles = ['/favicon.ico', '/static/manifest.json', '/cdn/archive.org/athena.js',
+        '/cdn/archive.org/donate.js']
     return miscFiles.includes(url.pathname);
 }
 
-export function matchSmallMediumCovers ({ url }) {
+export function matchSmallMediumCovers({ url }) {
     const regex = /-[SM].jpg$/;
     return regex.test(url.pathname);
 }
 
-export function matchLargeCovers ({ url }) {
+export function matchLargeCovers({ url }) {
     const regex = /-L.jpg$/;
     return regex.test(url.pathname);
 }
 
-export function matchStaticImages ({ url }) {
+export function matchStaticImages({ url }) {
     const regex = /^\/images\/|^\/static\/images\//;
     return regex.test(url.pathname);
 }
 
-export function matchStaticBuild ({ url }) {
+export function matchStaticBuild({ url }) {
     const regex = /^\/static\/build\/.*(\.js|\.css)/;
-    const localhost = url.origin.includes('localhost');
+    const localhost = url.origin.includes('localhost')
     return !localhost && regex.test(url.pathname);
 }
 
-export function matchArchiveOrgImage ({ url }) {
+export function matchArchiveOrgImage({ url }) {
     // most importantly, to cache your profile picture from loading every time
     // also caches some covers
     return url.href.startsWith('https://archive.org/services/img/');

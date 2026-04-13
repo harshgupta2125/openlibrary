@@ -15,27 +15,22 @@ import 'flot/jquery.flot.time.js';
  * - http://localhost:8080/subjects/fantasy#sort=date_published&ebooks=true
  * - http://localhost:8080/publishers/Barnes_&_Noble
  */
-export function loadEditionsGraph () {
-    var data, options, placeholder, plot, dateFrom, dateTo, previousPoint;
-    data = [
-        {
-            data: JSON.parse(
-                document.getElementById('graph-json-chartPubHistory').textContent,
-            ),
-        },
-    ];
+export function loadEditionsGraph() {
+    var data, options, placeholder,
+        plot, dateFrom, dateTo, previousPoint;
+    data = [{data: JSON.parse(document.getElementById('graph-json-chartPubHistory').textContent)}];
     options = {
         series: {
             bars: {
                 show: true,
                 fill: 0.6,
                 color: '#615132',
-                align: 'center',
+                align: 'center'
             },
             points: {
-                show: true,
+                show: true
             },
-            color: '#615132',
+            color: '#615132'
         },
         grid: {
             hoverable: true,
@@ -44,7 +39,7 @@ export function loadEditionsGraph () {
             tickColor: '#d9d9d9',
             borderWidth: 1,
             borderColor: '#d9d9d9',
-            backgroundColor: '#fff',
+            backgroundColor: '#fff'
         },
         xaxis: { tickDecimals: 0 },
         yaxis: { tickDecimals: 0 },
@@ -52,31 +47,28 @@ export function loadEditionsGraph () {
         crosshair: {
             mode: 'xy',
             color: 'rgba(000, 099, 106, 0.4)',
-            lineWidth: 1,
-        },
+            lineWidth: 1
+        }
     };
 
     placeholder = $('#chartPubHistory');
-    function showTooltip (x, y, contents) {
-        $(`<div id="chartLabel">${contents}</div>`)
-            .css({
-                position: 'absolute',
-                display: 'none',
-                top: y + 12,
-                left: x + 12,
-                border: '1px solid #615132',
-                padding: '2px',
-                'background-color': '#fffdcd',
-                color: '#615132',
-                'font-size': '11px',
-                opacity: 0.9,
-                'z-index': 100,
-            })
-            .appendTo('body')
-            .fadeIn(200);
+    function showTooltip(x, y, contents) {
+        $(`<div id="chartLabel">${contents}</div>`).css({
+            position: 'absolute',
+            display: 'none',
+            top: y + 12,
+            left: x + 12,
+            border: '1px solid #615132',
+            padding: '2px',
+            'background-color': '#fffdcd',
+            color: '#615132',
+            'font-size': '11px',
+            opacity: 0.90,
+            'z-index': 100
+        }).appendTo('body').fadeIn(200);
     }
     previousPoint = null;
-    placeholder.bind('plothover', (event, pos, item) => {
+    placeholder.bind('plothover', function (event, pos, item) {
         var x, y;
         $('#x').text(pos.x.toFixed(0));
         $('#y').text(pos.y.toFixed(0));
@@ -87,37 +79,40 @@ export function loadEditionsGraph () {
                 x = item.datapoint[0].toFixed(0);
                 y = item.datapoint[1].toFixed(0);
                 if (y === 1) {
-                    showTooltip(item.pageX, item.pageY, `${y} edition in ${x}`);
+                    showTooltip(item.pageX, item.pageY,
+                        `${y} edition in ${x}`);
                 } else {
-                    showTooltip(item.pageX, item.pageY, `${y} editions in ${x}`);
+                    showTooltip(item.pageX, item.pageY,
+                        `${y} editions in ${x}`);
                 }
             }
-        } else {
+        }
+        else {
             $('#chartLabel').remove();
             previousPoint = null;
         }
     });
 
-    placeholder.bind('plotclick', (event, pos, item) => {
+    placeholder.bind('plotclick', function (event, pos, item) {
+
         if (item) {
             plot.unhighlight();
             const yearFrom = item.datapoint[0].toFixed(0);
             applyDateFilter(yearFrom, yearFrom);
 
-            plot.highlight(item.series, item.datapoint);
-        } else {
+            plot.highlight(item.series,item.datapoint);
+        }
+        else {
             plot.unhighlight();
         }
     });
 
-    placeholder.bind('plotselected', (event, ranges) => {
-        plot = $.plot(
-            placeholder,
-            data,
+    placeholder.bind('plotselected', function (event, ranges) {
+        plot = $.plot(placeholder, data,
             $.extend(true, {}, options, {
                 xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
-                yaxis: { min: ranges.yaxis.from, max: ranges.yaxis.to },
-            }),
+                yaxis: { min: ranges.yaxis.from, max: ranges.yaxis.to }
+            })
         );
 
         const yearFrom = ranges.xaxis.from.toFixed(0);
@@ -125,17 +120,8 @@ export function loadEditionsGraph () {
         applyDateFilter(yearFrom, yearTo);
     });
 
-    function applyDateFilter (
-        yearFrom,
-        yearTo,
-        hideSelector = '.chartUnzoom',
-        showSelector = '.chartZoom',
-    ) {
-        document.dispatchEvent(
-            new CustomEvent('filter', {
-                detail: { yearFrom: yearFrom, yearTo: yearTo },
-            }),
-        );
+    function applyDateFilter(yearFrom, yearTo, hideSelector='.chartUnzoom', showSelector='.chartZoom') {
+        document.dispatchEvent(new CustomEvent('filter', { detail: { yearFrom: yearFrom, yearTo: yearTo } }));
         $(hideSelector).hide();
         $(showSelector).removeClass('hidden').show();
     }
@@ -144,7 +130,7 @@ export function loadEditionsGraph () {
     dateFrom = plot.getAxes().xaxis.min.toFixed(0);
     dateTo = plot.getAxes().xaxis.max.toFixed(0);
 
-    $('.resetSelection').on('click', () => {
+    $('.resetSelection').on('click', function() {
         plot = $.plot(placeholder, data, options);
 
         const yearFrom = plot.getAxes().xaxis.min.toFixed(0);
@@ -152,42 +138,37 @@ export function loadEditionsGraph () {
         applyDateFilter(yearFrom, yearTo, '.chartZoom', '.chartUnzoom');
     });
 
-    $('.chartYaxis').css({ top: '60px', left: '-60px' });
+    $('.chartYaxis').css({top: '60px', left: '-60px'});
 
-    if (dateFrom === dateTo - 1) {
+    if (dateFrom === (dateTo - 1)) {
         $('.clickdata').text(`Published in ${dateFrom}`);
     } else {
-        $('.clickdata').text(`Published between ${dateFrom} & ${dateTo - 1}.`);
+        $('.clickdata').text(`Published between ${dateFrom} & ${dateTo-1}.`);
     }
 }
 
-export function plot_minigraph (node, data) {
+export function plot_minigraph(node, data) {
     var options = {
         series: {
             lines: {
                 show: true,
                 fill: 0,
-                color: '#748d36',
+                color: '#748d36'
             },
             points: {
-                show: false,
+                show: false
             },
-            color: '#748d36',
+            color: '#748d36'
         },
         grid: {
             hoverable: false,
-            show: false,
-        },
+            show: false
+        }
     };
     $.plot(node, [data], options);
 }
 
-export function plot_tooltip_graph (
-    node,
-    data,
-    tooltip_message,
-    color = '#748d36',
-) {
+export function plot_tooltip_graph(node, data, tooltip_message, color='#748d36') {
     var i, options, graph;
     // empty set of rows. Escape early.
     if (!data.length) {
@@ -205,44 +186,41 @@ export function plot_tooltip_graph (
                 fillColor: color,
                 color,
                 align: 'left',
-                barWidth: 24 * 60 * 60 * 1000,
+                barWidth: 24 * 60 * 60 * 1000
             },
             points: {
-                show: false,
+                show: false
             },
-            color,
+            color
         },
         grid: {
             hoverable: true,
-            show: false,
+            show: false
         },
         xaxis: {
-            mode: 'time',
-        },
+            mode: 'time'
+        }
     };
 
     graph = $.plot(node, [data], options);
 
-    function showTooltip (x, y, contents) {
-        $(`<div id="chartLabelA">${contents}</div>`)
-            .css({
-                position: 'absolute',
-                display: 'none',
-                top: y + 12,
-                left: x + 12,
-                border: '1px solid #ccc',
-                padding: '2px',
-                backgroundColor: '#efefef',
-                color: '#454545',
-                fontSize: '11px',
-                webkitBoxShadow: '1px 1px 3px #333',
-                mozBoxShadow: '1px 1px 1px #000',
-                boxShadow: '1px 1px 1px #000',
-            })
-            .appendTo('body')
-            .fadeIn(200);
+    function showTooltip(x, y, contents) {
+        $(`<div id="chartLabelA">${contents}</div>`).css({
+            position: 'absolute',
+            display: 'none',
+            top: y + 12,
+            left: x + 12,
+            border: '1px solid #ccc',
+            padding: '2px',
+            backgroundColor: '#efefef',
+            color: '#454545',
+            fontSize: '11px',
+            webkitBoxShadow: '1px 1px 3px #333',
+            mozBoxShadow: '1px 1px 1px #000',
+            boxShadow: '1px 1px 1px #000'
+        }).appendTo('body').fadeIn(200);
     }
-    node.bind('plothover', (event, pos, item) => {
+    node.bind('plothover', function (event, pos, item) {
         var date, milli, x, y;
         $('#x').text(pos.x);
         $('#y').text(pos.y.toFixed(0));
@@ -268,22 +246,19 @@ export function plot_tooltip_graph (
  * @param {string} [color] in hexidecimal to apply to the bars of a tooltip graph.
  *  Ignored if options and no tooltip_message is passed.
  */
-export function loadGraph (
-    id,
-    options = {},
-    tooltip_message = '',
-    color = null,
-) {
+export function loadGraph(id, options = {}, tooltip_message = '', color = null) {
     let data;
     const node = document.getElementById(id);
     const graphSelector = `graph-json-${id}`;
     const dataSource = document.getElementById(graphSelector);
     if (!node) {
-        throw new Error(`No graph associated with ${id} on the page.`);
+        throw new Error(
+            `No graph associated with ${id} on the page.`
+        );
     }
     if (!dataSource) {
         throw new Error(
-            `No data associated with ${id} - make sure a script tag with type text/json and id "${graphSelector}" is present on the page.`,
+            `No data associated with ${id} - make sure a script tag with type text/json and id "${graphSelector}" is present on the page.`
         );
     } else {
         try {
@@ -294,7 +269,7 @@ export function loadGraph (
         if (tooltip_message) {
             return plot_tooltip_graph($(node), data, tooltip_message, color);
         } else {
-            return $.plot($(node), [{ data: data }], options);
+            return $.plot($(node), [{data: data}], options);
         }
     }
 }
@@ -307,7 +282,7 @@ export function loadGraph (
  * @param {string} [color] in hexidecimal to apply to the bars of a tooltip graph.
  *  Ignored if options and no tooltip_message is passed.
  */
-export function loadGraphIfExists (id, options, tooltip_message, color) {
+export function loadGraphIfExists(id, options, tooltip_message, color) {
     if ($(`#${id}`).length) {
         loadGraph(id, options, tooltip_message, color);
     }

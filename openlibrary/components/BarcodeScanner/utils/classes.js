@@ -1,6 +1,6 @@
 // @ts-check
 /* eslint-disable no-console */
-import { createScheduler, createWorker } from 'tesseract.js';
+import { createWorker, createScheduler } from 'tesseract.js';
 
 export class OCRScanner {
     constructor() {
@@ -10,8 +10,8 @@ export class OCRScanner {
 
         this.listeners = {
             /** @type {Array<(isbn: string) => void>} */
-            onISBNDetected: [],
-        };
+            onISBNDetected: []
+        }
     }
 
     /** @param {(isbn: string) => void} callback */
@@ -39,28 +39,20 @@ export class OCRScanner {
     }
 
     /**
-   * @param {HTMLCanvasElement} canvas
-   */
+     * @param {HTMLCanvasElement} canvas
+     */
     async doOCR(canvas) {
-        const {
-            data: { lines },
-        } = await this.scheduler.addJob('recognize', canvas);
-        const textLines = lines.map((l) => l.text.trim()).filter((line) => line);
+        const { data: { lines } } = await this.scheduler.addJob('recognize', canvas);
+        const textLines = lines.map(l => l.text.trim()).filter(line => line);
         console.log(textLines.join('\n'));
         for (const line of textLines) {
             const sanitizedLine = line.replace(/[\s-'.–—]/g, '');
             if (!/\d{2}/.test(sanitizedLine)) continue;
             console.log(sanitizedLine);
-            if (
-                sanitizedLine.includes('isbn') ||
-        /97[0-9]{10}[0-9x]/i.test(sanitizedLine) ||
-        /[0-9]{9}[0-9x]/i.test(sanitizedLine)
-            ) {
-                const isbn = sanitizedLine.match(
-                    /(97[0-9]{10}[0-9x]|[0-9]{9}[0-9x])/i,
-                )[0];
+            if (sanitizedLine.includes('isbn') || /97[0-9]{10}[0-9x]/i.test(sanitizedLine) || /[0-9]{9}[0-9x]/i.test(sanitizedLine)) {
+                const isbn = sanitizedLine.match(/(97[0-9]{10}[0-9x]|[0-9]{9}[0-9x])/i)[0];
                 console.log(`ISBN detected: ${isbn}`);
-                this.listeners.onISBNDetected.forEach((callback) => callback(isbn));
+                this.listeners.onISBNDetected.forEach(callback => callback(isbn));
             }
         }
     }
@@ -71,12 +63,12 @@ export class OCRScanner {
  */
 export class ThrottleGrouping {
     /**
-   * @param {object} param0
-   * @param {TFunc} param0.func
-   * @param {function(Parameters<TFunc>[]): Parameters<TFunc>} param0.reducer
-   * @param {number} param0.wait
-   */
-    constructor({ func, reducer, wait = 100 }) {
+     * @param {object} param0
+     * @param {TFunc} param0.func
+     * @param {function(Parameters<TFunc>[]): Parameters<TFunc>} param0.reducer
+     * @param {number} param0.wait
+     */
+    constructor({func, reducer, wait=100}) {
         this.func = func;
         this.reducer = reducer;
         this.wait = wait;
@@ -92,8 +84,8 @@ export class ThrottleGrouping {
     }
 
     /**
-   * @param  {Parameters<TFunc>} args
-   */
+     * @param  {Parameters<TFunc>} args
+     */
     takeNext(...args) {
         this.curGroup.push(args);
         if (!this.timeout) {

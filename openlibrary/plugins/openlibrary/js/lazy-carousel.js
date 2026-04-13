@@ -1,4 +1,4 @@
-import { initialzeCarousels } from './carousel';
+import {initialzeCarousels} from './carousel';
 import { buildPartialsUrl } from './utils';
 
 /**
@@ -7,25 +7,25 @@ import { buildPartialsUrl } from './utils';
  *
  * @param elems {NodeList<HTMLElement>} Collection of placeholder carousel elements
  */
-export function initLazyCarousel (elems) {
+export function initLazyCarousel(elems) {
     // Create intersection observer
     const intersectionObserver = new IntersectionObserver(intersectionCallback, {
         root: null,
         rootMargin: '200px',
-        threshold: 0,
-    });
+        threshold: 0
+    })
 
-    elems.forEach((elem) => {
-    // Observe element for intersections
-        intersectionObserver.observe(elem);
+    elems.forEach(elem => {
+        // Observe element for intersections
+        intersectionObserver.observe(elem)
 
         // Add retry listener
-        const retryElem = elem.querySelector('.retry-btn');
+        const retryElem = elem.querySelector('.retry-btn')
         retryElem.addEventListener('click', (e) => {
-            e.preventDefault();
+            e.preventDefault()
             handleRetry(elem);
-        });
-    });
+        })
+    })
 }
 
 /**
@@ -34,8 +34,8 @@ export function initLazyCarousel (elems) {
  * @param data {object}
  * @returns {Promise<Response>}
  */
-async function fetchPartials (data) {
-    return fetch(buildPartialsUrl('LazyCarousel', { ...data }));
+async function fetchPartials(data) {
+    return fetch(buildPartialsUrl('LazyCarousel', {...data}))
 }
 
 /**
@@ -49,24 +49,22 @@ async function fetchPartials (data) {
  *
  * @param target {HTMLElement} A placeholder element for a carousel
  */
-function doFetchAndUpdate (target) {
-    const config = JSON.parse(target.dataset.config);
-    const loadingIndicator = target.querySelector('.loadingIndicator');
+function doFetchAndUpdate(target) {
+    const config = JSON.parse(target.dataset.config)
+    const loadingIndicator = target.querySelector('.loadingIndicator')
 
     fetchPartials(config)
-        .then((resp) => {
+        .then(resp => {
             if (!resp.ok) {
-                throw new Error('Failed to fetch partials from server');
+                throw new Error('Failed to fetch partials from server')
             }
-            return resp.json();
+            return resp.json()
         })
-        .then((data) => {
-            const newElem = document.createElement('div');
-            newElem.innerHTML = data.partials.trim();
-            const carouselElements = newElem.querySelectorAll(
-                '.carousel--progressively-enhanced',
-            );
-            loadingIndicator.classList.add('hidden');
+        .then(data => {
+            const newElem = document.createElement('div')
+            newElem.innerHTML = data.partials.trim()
+            const carouselElements = newElem.querySelectorAll('.carousel--progressively-enhanced')
+            loadingIndicator.classList.add('hidden')
 
             if (carouselElements.length === 0 && config.fallback) {
                 // No results, disable filters
@@ -77,20 +75,18 @@ function doFetchAndUpdate (target) {
                 config.fallback = false; // Prevents infinite retries
                 target.dataset.config = JSON.stringify(config);
 
-                target
-                    .querySelector('.lazy-carousel-fallback')
-                    .classList.remove('hidden');
+                target.querySelector('.lazy-carousel-fallback').classList.remove('hidden');
             } else {
-                target.parentNode.insertBefore(newElem, target);
-                target.remove();
-                initialzeCarousels(carouselElements);
+                target.parentNode.insertBefore(newElem, target)
+                target.remove()
+                initialzeCarousels(carouselElements)
             }
         })
         .catch(() => {
             loadingIndicator.classList.add('hidden');
-            const retryElem = target.querySelector('.lazy-carousel-retry');
-            retryElem.classList.remove('hidden');
-        });
+            const retryElem = target.querySelector('.lazy-carousel-retry')
+            retryElem.classList.remove('hidden')
+        })
 }
 
 /**
@@ -99,14 +95,14 @@ function doFetchAndUpdate (target) {
  *
  * @param target {Element}
  */
-function handleRetry (target) {
-    target.querySelector('.loadingIndicator').classList.remove('hidden');
-    target.querySelector('.lazy-carousel-retry').classList.add('hidden');
-    const carouselFallbackElem = target.querySelector('.lazy-carousel-fallback');
+function handleRetry(target) {
+    target.querySelector('.loadingIndicator').classList.remove('hidden')
+    target.querySelector('.lazy-carousel-retry').classList.add('hidden')
+    const carouselFallbackElem = target.querySelector('.lazy-carousel-fallback')
     if (carouselFallbackElem) {
-        carouselFallbackElem.classList.add('hidden');
+        carouselFallbackElem.classList.add('hidden')
     }
-    doFetchAndUpdate(target);
+    doFetchAndUpdate(target)
 }
 
 /**
@@ -117,12 +113,12 @@ function handleRetry (target) {
  * @param entries {Array<IntersectionObserverEntry>}
  * @param observer {IntersectionObserver}
  */
-function intersectionCallback (entries, observer) {
-    entries.forEach((entry) => {
+function intersectionCallback(entries, observer) {
+    entries.forEach(entry => {
         if (entry.isIntersecting) {
-            const target = entry.target;
-            observer.unobserve(target);
-            doFetchAndUpdate(target);
+            const target = entry.target
+            observer.unobserve(target)
+            doFetchAndUpdate(target)
         }
-    });
+    })
 }

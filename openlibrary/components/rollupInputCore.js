@@ -1,6 +1,6 @@
-import { kebabCase } from 'lodash';
 import { defineCustomElement } from 'vue';
 import AsyncComputed from 'vue-async-computed';
+import { kebabCase } from 'lodash';
 
 export const createWebComponentSimple = (rootComponent, name) => {
     // This is the name we use in the DOM like: <ol-barcode-scanner></ol-barcode-scanner>

@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement, html, css } from 'lit';
 
 /**
  * OLChipGroup - A flex-wrap container for ol-chip components

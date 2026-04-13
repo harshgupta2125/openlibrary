@@ -52,13 +52,13 @@
 </template>
 
 <script>
-import MergeTable from './MergeUI/MergeTable.vue';
+import MergeTable from './MergeUI/MergeTable.vue'
 import { do_merge, update_merge_request, createMergeRequest, DEFAULT_EDITION_LIMIT } from './MergeUI/utils.js';
 
-const DO_MERGE = 'Do Merge';
-const REQUEST_MERGE = 'Request Merge';
-const LOADING = 'Loading...';
-const SAVING = 'Saving...';
+const DO_MERGE = 'Do Merge'
+const REQUEST_MERGE = 'Request Merge'
+const LOADING = 'Loading...'
+const SAVING = 'Saving...'
 
 export default {
     name: 'App',
@@ -81,17 +81,17 @@ export default {
             default: 'true',
         }
     },
-    data () {
+    data() {
         return {
             url: new URL(location.toString()),
             mergeStatus: LOADING,
             mergeOutput: null,
             show_diffs: false,
             comment: ''
-        };
+        }
     },
     computed: {
-        olids () {
+        olids() {
             const olidsString = this.url.searchParams.get('records');
             if (!olidsString) return [];
             return olidsString
@@ -100,20 +100,20 @@ export default {
                 .filter(Boolean);
         },
 
-        isSuperLibrarian () {
-            return this.canmerge === 'true';
+        isSuperLibrarian() {
+            return this.canmerge === 'true'
         },
 
-        isDisabled () {
-            return this.mergeStatus !== DO_MERGE && this.mergeStatus !== REQUEST_MERGE;
+        isDisabled() {
+            return this.mergeStatus !== DO_MERGE && this.mergeStatus !== REQUEST_MERGE
         },
 
-        showRejectButton () {
-            return this.mrid && this.isSuperLibrarian;
+        showRejectButton() {
+            return this.mrid && this.isSuperLibrarian
         }
     },
-    mounted () {
-        const readyCta = this.isSuperLibrarian ? DO_MERGE : REQUEST_MERGE;
+    mounted() {
+        const readyCta = this.isSuperLibrarian ? DO_MERGE : REQUEST_MERGE
         this.$watch(
             '$refs.mergeTable.merge',
             (new_value) => {
@@ -122,7 +122,7 @@ export default {
         );
     },
     methods: {
-        async doMerge () {
+        async doMerge() {
             if (!this.$refs.mergeTable.merge) return;
             const { record: master, dupes, editions_to_move, unmergeable_works } = this.$refs.mergeTable.merge;
 
@@ -141,10 +141,10 @@ export default {
                     }
                     this.mergeOutput = await r.json();
                     if (this.mrid) {
-                        await update_merge_request(this.mrid, 'approve', this.comment);
+                        await update_merge_request(this.mrid, 'approve', this.comment)
                     } else {
-                        const workIds = [master.key].concat(Array.from(dupes, item => item.key));
-                        await createMergeRequest(workIds);
+                        const workIds = [master.key].concat(Array.from(dupes, item => item.key))
+                        await createMergeRequest(workIds)
                     }
                 } catch (e) {
                     this.mergeOutput = e.message;
@@ -153,25 +153,25 @@ export default {
                 }
             } else {
                 // Create a new merge request with "pending" status
-                const workIds = [master.key].concat(Array.from(dupes, item => item.key));
-                const splitKey = master.key.split('/');
-                const primaryRecord = splitKey[splitKey.length - 1];
+                const workIds = [master.key].concat(Array.from(dupes, item => item.key))
+                const splitKey = master.key.split('/')
+                const primaryRecord = splitKey[splitKey.length - 1]
                 await createMergeRequest(workIds, primaryRecord, 'create-pending', this.comment)
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'ok') {
                             // Redirect to merge table on success:
-                            window.location.replace(`/merges#mrid-${data.id}`);
+                            window.location.replace(`/merges#mrid-${data.id}`)
                         }
-                    });
+                    })
             }
             this.mergeStatus = 'Done';
         },
 
-        async rejectMerge () {
+        async rejectMerge() {
             try {
-                await update_merge_request(this.mrid, 'decline', this.comment);
-                this.mergeOutput = 'Merge request closed';
+                await update_merge_request(this.mrid, 'decline', this.comment)
+                this.mergeOutput = 'Merge request closed'
             } catch (e) {
                 this.mergeOutput = e.message;
                 throw e;
@@ -179,7 +179,7 @@ export default {
             this.mergeStatus = 'Reject Merge';
         }
     }
-};
+}
 </script>
 
 <style>

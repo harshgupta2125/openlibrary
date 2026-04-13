@@ -9,7 +9,7 @@ export function getJsonFromUrl(urlSearch) {
     const query = urlSearch.substr(1);
     const result = {};
     if (query) {
-        query.split('&').forEach((part) => {
+        query.split('&').forEach(part => {
             const item = part.split('=');
             result[item[0]] = decodeURIComponent(item[1]);
         });

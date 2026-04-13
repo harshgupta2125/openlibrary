@@ -32,7 +32,7 @@ describe('PersistentValue', () => {
         localStorage.setItem('foo', 'anything');
         const pv = new PV('foo', {
             default: 'blue',
-            initValidation: () => false,
+            initValidation: () => false
         });
         expect(pv.read()).toBe('blue');
     });
@@ -40,7 +40,7 @@ describe('PersistentValue', () => {
     test('Writes null on invalid init', () => {
         localStorage.setItem('foo', 'anything');
         const pv = new PV('foo', {
-            initValidation: () => false,
+            initValidation: () => false
         });
         expect(pv.read()).toBe(null);
     });
@@ -49,7 +49,7 @@ describe('PersistentValue', () => {
         localStorage.setItem('foo', 'anything');
         const pv = new PV('foo', {
             default: 'blue',
-            initValidation: () => true,
+            initValidation: () => true
         });
         expect(pv.read()).toBe('anything');
     });
@@ -57,7 +57,7 @@ describe('PersistentValue', () => {
     test('Writing applies transformation', () => {
         localStorage.setItem('foo', 'blue');
         const pv = new PV('foo', {
-            writeTransformation: (newVal, oldVal) => oldVal + newVal,
+            writeTransformation: (newVal, oldVal) => oldVal + newVal
         });
         pv.write('green');
         expect(pv.read()).toBe('bluegreen');

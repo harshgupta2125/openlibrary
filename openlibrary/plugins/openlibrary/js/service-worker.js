@@ -1,28 +1,24 @@
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
-import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { offlineFallback } from 'workbox-recipes';
-import { registerRoute, setDefaultHandler } from 'workbox-routing';
-import { CacheFirst, NetworkOnly } from 'workbox-strategies';
-import {
-    matchArchiveOrgImage,
-    matchLargeCovers,
-    matchMiscFiles,
-    matchSmallMediumCovers,
-    matchStaticBuild,
-    matchStaticImages,
-} from './service-worker-matchers';
+import { setDefaultHandler, registerRoute } from 'workbox-routing';
+import { NetworkOnly, CacheFirst } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { clientsClaim } from 'workbox-core';
+import { matchMiscFiles, matchSmallMediumCovers, matchLargeCovers, matchStaticImages, matchStaticBuild, matchArchiveOrgImage } from './service-worker-matchers';
 
 self.skipWaiting();
 clientsClaim();
 
 // This is needed for the offline page to show
-setDefaultHandler(new NetworkOnly());
+setDefaultHandler(
+    new NetworkOnly()
+);
 
 offlineFallback({
     pageFallback: '/static/offline.html',
-    imageFallback: '/static/images/logo_OL-lg.png',
+    imageFallback: '/static/images/logo_OL-lg.png'
 });
+
 
 const HOUR_SECONDS = 60 * 60;
 const DAY_SECONDS = 24 * HOUR_SECONDS;
@@ -37,11 +33,11 @@ registerRoute(
         cacheName: 'misc-files-cache',
         plugins: [
             new ExpirationPlugin({
-                maxAgeSeconds: DAY_SECONDS,
+                maxAgeSeconds: DAY_SECONDS
             }),
-            cacheableResponses,
+            cacheableResponses
         ],
-    }),
+    })
 );
 
 registerRoute(
@@ -53,9 +49,9 @@ registerRoute(
                 maxEntries: 100,
                 maxAgeSeconds: DAY_SECONDS * 365,
             }),
-            cacheableResponses,
+            cacheableResponses
         ],
-    }),
+    })
 );
 
 registerRoute(
@@ -71,10 +67,10 @@ registerRoute(
             new ExpirationPlugin({
                 maxAgeSeconds: 60 * 10,
             }),
-            cacheableResponses,
+            cacheableResponses
         ],
-    }),
-);
+    })
+)
 
 registerRoute(
     matchSmallMediumCovers,
@@ -86,9 +82,9 @@ registerRoute(
                 maxEntries: 150,
                 purgeOnQuotaError: true,
             }),
-            cacheableResponses,
+            cacheableResponses
         ],
-    }),
+    })
 );
 
 registerRoute(
@@ -102,9 +98,9 @@ registerRoute(
                 maxAgeSeconds: HOUR_SECONDS,
                 purgeOnQuotaError: true,
             }),
-            cacheableResponses,
+            cacheableResponses
         ],
-    }),
+    })
 );
 
 registerRoute(
@@ -117,7 +113,7 @@ registerRoute(
                 maxAgeSeconds: DAY_SECONDS,
                 purgeOnQuotaError: true,
             }),
-            cacheableResponses,
+            cacheableResponses
         ],
-    }),
+    })
 );

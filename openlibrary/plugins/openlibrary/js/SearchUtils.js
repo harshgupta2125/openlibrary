@@ -1,5 +1,5 @@
-import $ from 'jquery';
 import { removeURLParameter } from './Browser';
+import $ from 'jquery';
 
 /**
  * Adds hidden input elements/modifes the action of the form to match the given search mode
@@ -25,6 +25,7 @@ export function addModeInputsToForm($form, searchMode) {
     }
 }
 
+
 /**
  * @typedef {Object} PersistentValue.Options
  * @property {String?} [default]
@@ -36,34 +37,33 @@ export function addModeInputsToForm($form, searchMode) {
 /** String value that's persisted to localstorage */
 export class PersistentValue {
     /**
-   * @param {String} key
-   * @param {PersistentValue.Options} options
-   */
-    constructor(key, options = {}) {
+     * @param {String} key
+     * @param {PersistentValue.Options} options
+     */
+    constructor(key, options={}) {
         this.key = key;
         this.options = Object.assign({}, PersistentValue.DEFAULT_OPTIONS, options);
         this._listeners = [];
 
         const noValue = this.read() === null;
-        const isValid = () =>
-            !this.options.initValidation || this.options.initValidation(this.read());
+        const isValid = () => !this.options.initValidation || this.options.initValidation(this.read());
         if (noValue || !isValid()) {
             this.write(this.options.default);
         }
     }
 
     /**
-   * Read the stored value
-   * @return {String}
-   */
+     * Read the stored value
+     * @return {String}
+     */
     read() {
         return localStorage.getItem(this.key);
     }
 
     /**
-   * Update the stored value
-   * @param {String} newValue
-   */
+     * Update the stored value
+     * @param {String} newValue
+     */
     write(newValue) {
         const oldValue = this.read();
         let toWrite = newValue;
@@ -83,22 +83,22 @@ export class PersistentValue {
     }
 
     /**
-   * Listen to updates to this value
-   * @param {Function} listener
-   * @param {Boolean} callAtStart whether to call the listener right now with the current value
-   */
-    sync(listener, callAtStart = true) {
+     * Listen to updates to this value
+     * @param {Function} listener
+     * @param {Boolean} callAtStart whether to call the listener right now with the current value
+     */
+    sync(listener, callAtStart=true) {
         this._listeners.push(listener);
         if (callAtStart) listener(this.read());
     }
 
     /**
-   * @private
-   * Notify listeners of an update
-   * @param {String} newValue
-   */
+     * @private
+     * Notify listeners of an update
+     * @param {String} newValue
+     */
     _emit(newValue) {
-        this._listeners.forEach((listener) => listener(newValue));
+        this._listeners.forEach(listener => listener(newValue));
     }
 }
 
@@ -109,34 +109,35 @@ PersistentValue.DEFAULT_OPTIONS = {
     writeTransformation: null,
 };
 
+
 const MODES = ['everything', 'ebooks'];
 const DEFAULT_MODE = 'everything';
 /** Search mode; {@see MODES} */
 export const mode = new PersistentValue('mode', {
     default: DEFAULT_MODE,
-    initValidation: (mode) => MODES.indexOf(mode) !== -1,
+    initValidation: mode => MODES.indexOf(mode) !== -1,
     writeTransformation(newValue, oldValue) {
         const mode = (newValue && newValue.toLowerCase()) || oldValue;
         const isValidMode = MODES.indexOf(mode) !== -1;
         return isValidMode ? mode : DEFAULT_MODE;
-    },
+    }
 });
 
 /** Manages interactions of the search mode radio buttons */
 export class SearchModeSelector {
     /**
-   * @param {JQuery} radioButtons
-   */
+     * @param {JQuery} radioButtons
+     */
     constructor(radioButtons) {
         this.$radioButtons = radioButtons;
-        this.change((newMode) => mode.write(newMode));
+        this.change(newMode => mode.write(newMode));
     }
 
     /**
-   * Listen for changes
-   * @param {Function} handler
-   */
+     * Listen for changes
+     * @param {Function} handler
+     */
     change(handler) {
-        this.$radioButtons.on('change', (event) => handler($(event.target).val()));
+        this.$radioButtons.on('change', event => handler($(event.target).val()));
     }
 }

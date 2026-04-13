@@ -1,6 +1,6 @@
 import team from '../../../templates/about/team.json';
 import { updateURLParameters } from './utils';
-export function initTeamFilter () {
+export function initTeamFilter() {
     const currentYear = new Date().getFullYear().toString();
     // Photos
     const default_profile_image =
@@ -38,41 +38,41 @@ export function initTeamFilter () {
     // ********** STAFF **********
     const staff = team.filter((person) => matchSubstring(person.roles, 'staff'));
     const staffEmeritus = staff.filter((person) =>
-        matchSubstring(person.roles, 'emeritus'),
+        matchSubstring(person.roles, 'emeritus')
     );
     const staffCurrent = staff.filter(
-        (person) => !matchSubstring(person.roles, 'emeritus'),
+        (person) => !matchSubstring(person.roles, 'emeritus')
     );
 
     // ********** FELLOWS **********
     const fellows = team.filter(
         (person) =>
             matchSubstring(person.roles, 'fellow') &&
-      !matchSubstring(person.roles, 'staff'),
+      !matchSubstring(person.roles, 'staff')
     );
     const currentFellows = fellows.filter((person) =>
-        matchSubstring(person.roles, currentYear),
+        matchSubstring(person.roles, currentYear)
     );
     const pastFellows = fellows.filter(
-        (person) => !matchSubstring(person.roles, currentYear),
+        (person) => !matchSubstring(person.roles, currentYear)
     );
 
     // ********** VOLUNTEERS **********
     const volunteers = team.filter(
         (person) =>
             matchSubstring(person.roles, 'volunteer') &&
-      !matchSubstring(person.roles, 'fellow'),
+      !matchSubstring(person.roles, 'fellow')
     );
 
     // *************************************** Selectors and eventListeners ***************************************
     const roleFilter = document.getElementById('role');
     const departmentFilter = document.getElementById('department');
     roleFilter.value = initialRole;
-    roleFilter.addEventListener('change', (e) => {
+    roleFilter.addEventListener('change', (e) =>   {
         filterTeam(e.target.value, departmentFilter.value);
         updateURLParameters({
             role: e.target.value,
-            department: departmentFilter.value,
+            department: departmentFilter.value
         });
     });
     departmentFilter.value = initialDepartment;
@@ -80,7 +80,7 @@ export function initTeamFilter () {
         filterTeam(roleFilter.value, e.target.value);
         updateURLParameters({
             role: roleFilter.value,
-            department: departmentFilter.value,
+            department: departmentFilter.value
         });
     });
     const cardsContainer = document.querySelector('.teamCards_container');
@@ -167,7 +167,7 @@ export function initTeamFilter () {
                 // memberRole,
                 // memberDepartment,
                 memberTitle,
-                descriptionLinks,
+                descriptionLinks
             );
             teamCard.append(teamCardPhotoContainer, teamCardDescription);
             teamCardContainer.append(teamCard);
@@ -211,35 +211,35 @@ export function initTeamFilter () {
             const filteredTeam = team.filter(
                 (person) =>
                     matchSubstring(person.roles, role) &&
-          matchSubstring(person.departments, department),
+          matchSubstring(person.departments, department)
             );
 
             const staff = filteredTeam.filter((person) =>
-                matchSubstring(person.roles, 'staff'),
+                matchSubstring(person.roles, 'staff')
             );
             const staffEmeritus = staff.filter((person) =>
-                matchSubstring(person.roles, 'emeritus'),
+                matchSubstring(person.roles, 'emeritus')
             );
             const staffCurrent = staff.filter(
-                (person) => !matchSubstring(person.roles, 'emeritus'),
+                (person) => !matchSubstring(person.roles, 'emeritus')
             );
 
             const fellows = filteredTeam.filter(
                 (person) =>
                     matchSubstring(person.roles, 'fellow') &&
-          !matchSubstring(person.roles, 'staff'),
+          !matchSubstring(person.roles, 'staff')
             );
             const currentFellows = fellows.filter((person) =>
-                matchSubstring(person.roles, currentYear),
+                matchSubstring(person.roles, currentYear)
             );
             const pastFellows = fellows.filter(
-                (person) => !matchSubstring(person.roles, currentYear),
+                (person) => !matchSubstring(person.roles, currentYear)
             );
 
             const volunteers = filteredTeam.filter(
                 (person) =>
                     matchSubstring(person.roles, 'volunteer') &&
-          !matchSubstring(person.roles, 'fellow'),
+          !matchSubstring(person.roles, 'fellow')
             );
 
             staff.length && createSectionHeading('Staff');
@@ -259,17 +259,17 @@ export function initTeamFilter () {
             createSectionHeading(capitalize(role));
             if (role === 'volunteer') {
                 const filteredVolunteers = volunteers.filter((person) =>
-                    matchSubstring(person.departments, department),
+                    matchSubstring(person.departments, department)
                 );
                 filteredVolunteers.length !== 0
                     ? createCards(filteredVolunteers)
                     : showError();
             } else if (role === 'staff') {
                 const filteredCurrentStaff = staffCurrent.filter((person) =>
-                    matchSubstring(person.departments, department),
+                    matchSubstring(person.departments, department)
                 );
                 const filteredStaffEmeritus = staffEmeritus.filter((person) =>
-                    matchSubstring(person.departments, department),
+                    matchSubstring(person.departments, department)
                 );
                 filteredCurrentStaff.length &&
           createsubSection(filteredCurrentStaff, 'Current');
@@ -280,10 +280,10 @@ export function initTeamFilter () {
           showError();
             } else {
                 const filteredCurrentFellows = currentFellows.filter((person) =>
-                    matchSubstring(person.departments, department),
+                    matchSubstring(person.departments, department)
                 );
                 const filteredPastFellows = pastFellows.filter((person) =>
-                    matchSubstring(person.departments, department),
+                    matchSubstring(person.departments, department)
                 );
                 filteredCurrentFellows.length &&
           createsubSection(filteredCurrentFellows, 'Current');

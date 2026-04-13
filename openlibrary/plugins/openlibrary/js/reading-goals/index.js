@@ -1,15 +1,15 @@
-import { initDialogs } from '../native-dialog';
-import { buildPartialsUrl } from '../utils';
+import { initDialogs } from '../native-dialog'
+import { buildPartialsUrl } from '../utils'
 
 /**
  * Adds listener to open reading goal modal.
  *
  * @param {HTMLCollection<HTMLElement>} links Prompts for adding a reading goal
  */
-export function initYearlyGoalPrompt (links) {
+export function initYearlyGoalPrompt(links) {
     for (const link of links) {
         if (!link.classList.contains('goal-set')) {
-            link.addEventListener('click', onYearlyGoalClick);
+            link.addEventListener('click', onYearlyGoalClick)
         }
     }
 }
@@ -17,9 +17,9 @@ export function initYearlyGoalPrompt (links) {
 /**
  * Finds and shows the yearly goal modal.
  */
-function onYearlyGoalClick () {
-    const yearlyGoalModal = document.querySelector('#yearly-goal-modal');
-    yearlyGoalModal.showModal();
+function onYearlyGoalClick() {
+    const yearlyGoalModal = document.querySelector('#yearly-goal-modal')
+    yearlyGoalModal.showModal()
 }
 
 /**
@@ -33,12 +33,12 @@ function onYearlyGoalClick () {
  *
  * @param {HTMLCollection<HTMLElement>} elems ELements which display only the current year
  */
-export function displayLocalYear (elems) {
-    const localYear = new Date().getFullYear();
+export function displayLocalYear(elems) {
+    const localYear = new Date().getFullYear()
     for (const elem of elems) {
-        const serverYear = Number(elem.dataset.serverYear);
+        const serverYear = Number(elem.dataset.serverYear)
         if (localYear !== serverYear) {
-            elem.textContent = localYear;
+            elem.textContent = localYear
         }
     }
 }
@@ -48,11 +48,11 @@ export function displayLocalYear (elems) {
  *
  * @param {HTMLCollection<HTMLElement>} editLinks Edit goal links
  */
-export function initGoalEditLinks (editLinks) {
+export function initGoalEditLinks(editLinks) {
     for (const link of editLinks) {
-        const parent = link.closest('.reading-goal-progress');
-        const modal = parent.querySelector('dialog');
-        addGoalEditClickListener(link, modal);
+        const parent = link.closest('.reading-goal-progress')
+        const modal = parent.querySelector('dialog')
+        addGoalEditClickListener(link, modal)
     }
 }
 
@@ -64,10 +64,10 @@ export function initGoalEditLinks (editLinks) {
  * @param {HTMLElement} editLink An edit goal link
  * @param {HTMLDialogElement} modal The modal that will be shown
  */
-function addGoalEditClickListener (editLink, modal) {
-    editLink.addEventListener('click', () => {
-        modal.showModal();
-    });
+function addGoalEditClickListener(editLink, modal) {
+    editLink.addEventListener('click', function() {
+        modal.showModal()
+    })
 }
 
 /**
@@ -76,9 +76,9 @@ function addGoalEditClickListener (editLink, modal) {
  *
  * @param {HTMLCollection<HTMLElement>} submitButtons Submit goal buttons
  */
-export function initGoalSubmitButtons (submitButtons) {
+export function initGoalSubmitButtons(submitButtons) {
     for (const button of submitButtons) {
-        addGoalSubmissionListener(button);
+        addGoalSubmissionListener(button)
     }
 }
 
@@ -89,78 +89,69 @@ export function initGoalSubmitButtons (submitButtons) {
  * the action set a new goal, or updated an existing goal.
  * @param {HTMLELement} submitButton Reading goal form submit button
  */
-function addGoalSubmissionListener (submitButton) {
-    submitButton.addEventListener('click', (event) => {
-        event.preventDefault();
+function addGoalSubmissionListener(submitButton) {
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault()
 
-        const form = submitButton.closest('form');
+        const form = submitButton.closest('form')
 
         if (!form.checkValidity()) {
-            form.reportValidity();
-            throw new Error('Form invalid');
+            form.reportValidity()
+            throw new Error('Form invalid')
         }
-        const formData = new FormData(form);
+        const formData = new FormData(form)
 
         fetch(form.action, {
             method: 'POST',
             headers: {
-                'content-type': 'application/x-www-form-urlencoded',
+                'content-type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams(formData),
-        }).then((response) => {
-            if (!response.ok) {
-                throw new Error('Failed to set reading goal');
-            }
-            const modal = form.closest('dialog');
-            if (modal) {
-                modal.close();
-            }
-
-            const yearlyGoalSections = document.querySelectorAll(
-                '.yearly-goal-section',
-            );
-            if (formData.get('is_update')) {
-                // Progress component exists on page
-                yearlyGoalSections.forEach((yearlyGoalSection) => {
-                    const goalInput = form.querySelector('input[name=goal]');
-                    const isDeleted = Number(goalInput.value) === 0;
-
-                    if (isDeleted) {
-                        const chipGroup = yearlyGoalSection.querySelector('.chip-group');
-                        const goalContainer = yearlyGoalSection.querySelector(
-                            '#reading-goal-container',
-                        );
-                        if (chipGroup) {
-                            chipGroup.classList.remove('hidden');
-                        }
-                        if (goalContainer) {
-                            goalContainer.remove();
-                        }
-                        // Restore "Set reading goal" link hidden when goal was first set
-                        const setGoalLink = yearlyGoalSection.querySelector(
-                            '.set-reading-goal-link',
-                        );
-                        if (setGoalLink) {
-                            setGoalLink.classList.remove('hidden');
-                        }
-                    } else {
-                        const progressComponent = modal.closest('.reading-goal-progress');
-                        updateProgressComponent(
-                            progressComponent,
-                            Number(formData.get('goal')),
-                        );
-                    }
-                });
-            } else {
-                const goalYear = formData.get('year');
-                fetchProgressAndUpdateViews(yearlyGoalSections, goalYear);
-                const banner = document.querySelector('.page-banner-mybooks');
-                if (banner) {
-                    banner.remove();
+            body: new URLSearchParams(formData)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to set reading goal')
                 }
-            }
-        });
-    });
+                const modal = form.closest('dialog')
+                if (modal) {
+                    modal.close()
+                }
+
+                const yearlyGoalSections = document.querySelectorAll('.yearly-goal-section')
+                if (formData.get('is_update')) {  // Progress component exists on page
+                    yearlyGoalSections.forEach((yearlyGoalSection) => {
+                        const goalInput = form.querySelector('input[name=goal]')
+                        const isDeleted = Number(goalInput.value) === 0
+
+                        if (isDeleted) {
+                            const chipGroup = yearlyGoalSection.querySelector('.chip-group')
+                            const goalContainer = yearlyGoalSection.querySelector('#reading-goal-container')
+                            if (chipGroup) {
+                                chipGroup.classList.remove('hidden')
+                            }
+                            if (goalContainer) {
+                                goalContainer.remove()
+                            }
+                            // Restore "Set reading goal" link hidden when goal was first set
+                            const setGoalLink = yearlyGoalSection.querySelector('.set-reading-goal-link')
+                            if (setGoalLink) {
+                                setGoalLink.classList.remove('hidden')
+                            }
+                        } else {
+                            const progressComponent = modal.closest('.reading-goal-progress')
+                            updateProgressComponent(progressComponent, Number(formData.get('goal')))
+                        }
+                    })
+                } else {
+                    const goalYear = formData.get('year')
+                    fetchProgressAndUpdateViews(yearlyGoalSections, goalYear)
+                    const banner = document.querySelector('.page-banner-mybooks')
+                    if (banner) {
+                        banner.remove()
+                    }
+                }
+            })
+    })
 }
 
 /**
@@ -170,19 +161,17 @@ function addGoalSubmissionListener (submitButton) {
  * @param {HTMLElement} elem A reading goal progress component
  * @param {Number} goal The new reading goal
  */
-function updateProgressComponent (elem, goal) {
+function updateProgressComponent(elem, goal) {
     // Calculate new percentage:
-    const booksReadSpan = elem.querySelector(
-        '.reading-goal-progress__books-read',
-    );
-    const booksRead = Number(booksReadSpan.textContent);
-    const percentComplete = Math.floor((booksRead / goal) * 100);
+    const booksReadSpan = elem.querySelector('.reading-goal-progress__books-read')
+    const booksRead = Number(booksReadSpan.textContent)
+    const percentComplete = Math.floor((booksRead / goal) * 100)
 
     // Update view:
-    const goalSpan = elem.querySelector('.reading-goal-progress__goal');
-    const completedBar = elem.querySelector('.reading-goal-progress__completed');
-    goalSpan.textContent = goal;
-    completedBar.style.width = `${Math.min(100, percentComplete)}%`;
+    const goalSpan = elem.querySelector('.reading-goal-progress__goal')
+    const completedBar = elem.querySelector('.reading-goal-progress__completed')
+    goalSpan.textContent = goal
+    completedBar.style.width = `${Math.min(100, percentComplete)}%`
 }
 
 /**
@@ -194,43 +183,39 @@ function updateProgressComponent (elem, goal) {
  * @param {NodeList} yearlyGoalElems Containers for progress components and reading goal links.
  * @param {string} goalYear Year that the goal is set for.
  */
-function fetchProgressAndUpdateViews (yearlyGoalElems, goalYear) {
-    fetch(buildPartialsUrl('ReadingGoalProgress', { year: goalYear }))
+function fetchProgressAndUpdateViews(yearlyGoalElems, goalYear) {
+    fetch(buildPartialsUrl('ReadingGoalProgress', {year: goalYear}))
         .then((response) => {
             if (!response.ok) {
-                throw new Error('Failed to fetch progress element');
+                throw new Error('Failed to fetch progress element')
             }
-            return response.json();
+            return response.json()
         })
-        .then((data) => {
-            const html = data['partials'];
+        .then(function(data) {
+            const html = data['partials']
             yearlyGoalElems.forEach((yearlyGoalElem) => {
-                const progress = document.createElement('SPAN');
-                progress.id = 'reading-goal-container';
-                progress.innerHTML = html;
-                yearlyGoalElem.appendChild(progress);
+                const progress = document.createElement('SPAN')
+                progress.id = 'reading-goal-container'
+                progress.innerHTML = html
+                yearlyGoalElem.appendChild(progress)
 
                 const link = yearlyGoalElem.querySelector('.set-reading-goal-link');
                 if (link) {
                     if (link.classList.contains('li-title-desktop')) {
                         // Remove click listener in mobile views
-                        link.removeEventListener('click', onYearlyGoalClick);
+                        link.removeEventListener('click', onYearlyGoalClick)
                     } else {
                         // Hide desktop "set 20XX reading goal" link
                         link.classList.add('hidden');
                     }
                 }
 
-                const progressEditLink = progress.querySelector(
-                    '.edit-reading-goal-link',
-                );
-                const updateModal = progress.querySelector('dialog');
-                initDialogs([updateModal]);
-                addGoalEditClickListener(progressEditLink, updateModal);
-                const submitButton = updateModal.querySelector(
-                    '.reading-goal-submit-button',
-                );
-                addGoalSubmissionListener(submitButton);
-            });
-        });
+                const progressEditLink = progress.querySelector('.edit-reading-goal-link')
+                const updateModal = progress.querySelector('dialog')
+                initDialogs([updateModal])
+                addGoalEditClickListener(progressEditLink, updateModal)
+                const submitButton = updateModal.querySelector('.reading-goal-submit-button')
+                addGoalSubmissionListener(submitButton)
+            })
+        })
 }

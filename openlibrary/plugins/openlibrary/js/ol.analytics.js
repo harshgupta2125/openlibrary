@@ -1,18 +1,18 @@
 /**
- * OpenLibrary-specific convenience functions for use with Archive.org athena.js
- *
- * Depends on Archive.org athena.js function archive_analytics.send_ping()
- *
- */
+* OpenLibrary-specific convenience functions for use with Archive.org athena.js
+*
+* Depends on Archive.org athena.js function archive_analytics.send_ping()
+*
+*/
 
-export default function initAnalytics () {
+export default function initAnalytics() {
     var vs, i;
     var startTime = new Date();
     if (window.archive_analytics) {
-    // Setup analytics, depends on script loaded from CDN
+        // Setup analytics, depends on script loaded from CDN
         window.archive_analytics.set_up_event_tracking();
 
-        window.archive_analytics.ol_send_event_ping = (values) => {
+        window.archive_analytics.ol_send_event_ping = function(values) {
             var endTime = new Date();
             window.archive_analytics.send_ping({
                 service: 'ol',
@@ -21,22 +21,22 @@ export default function initAnalytics () {
                 ea: values['action'],
                 el: values['label'] || location.pathname,
                 ev: 1,
-                loadtime: endTime.getTime() - startTime.getTime(),
-                cache_bust: Math.random(),
+                loadtime: (endTime.getTime() - startTime.getTime()),
+                cache_bust: Math.random()
             });
-        };
+        }
 
         vs = window.archive_analytics.get_data_packets();
         for (i in vs) {
-            vs[i]['cache_bust'] = Math.random();
-            vs[i]['server_ms'] = $('.analytics-stats-time-calculator').data('time');
-            vs[i]['server_name'] = 'ol-web.us.archive.org';
-            vs[i]['service'] = 'ol';
+            vs[i]['cache_bust']=Math.random();
+            vs[i]['server_ms']=$('.analytics-stats-time-calculator').data('time');
+            vs[i]['server_name']='ol-web.us.archive.org';
+            vs[i]['service']='ol';
         }
-        if (window.flights) {
+        if (window.flights){
             window.flights.init();
         }
-        $(document).on('click', '[data-ol-link-track]', function () {
+        $(document).on('click', '[data-ol-link-track]', function() {
             var category_action = $(this).attr('data-ol-link-track').split('|');
             // for testing,
             // console.log(category_action[0], category_action[1]);
@@ -50,10 +50,7 @@ export default function initAnalytics () {
     window.vs = vs;
 
     // NOTE: This might cause issues if this script is made async #4474
-    window.addEventListener(
-        'DOMContentLoaded',
-        function send_analytics_pageview () {
-            window.archive_analytics.send_pageview({});
-        },
-    );
+    window.addEventListener('DOMContentLoaded', function send_analytics_pageview() {
+        window.archive_analytics.send_pageview({});
+    });
 }

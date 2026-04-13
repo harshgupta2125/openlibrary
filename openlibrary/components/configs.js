@@ -3,9 +3,8 @@
 
 const urlParams = new URLSearchParams(location.search);
 
-const IS_VUE_APP = document.title === 'Vue App';
-const OL_BASE_DEFAULT =
-  urlParams.get('ol_base') || (IS_VUE_APP ? 'openlibrary.org' : '');
+const IS_VUE_APP =  document.title === 'Vue App';
+const OL_BASE_DEFAULT = urlParams.get('ol_base') || (IS_VUE_APP ? 'openlibrary.org' : '');
 
 const CONFIGS = {
     OL_BASE_COVERS: urlParams.get('ol_base_covers') || 'covers.openlibrary.org',
@@ -21,13 +20,7 @@ const CONFIGS = {
     LANG: urlParams.get('lang'),
 };
 
-for (const key of [
-    'OL_BASE_COVERS',
-    'OL_BASE_SEARCH',
-    'OL_BASE_BOOKS',
-    'OL_BASE_LANGS',
-    'OL_BASE_SAVES',
-]) {
+for (const key of ['OL_BASE_COVERS', 'OL_BASE_SEARCH', 'OL_BASE_BOOKS', 'OL_BASE_LANGS', 'OL_BASE_SAVES']) {
     if (CONFIGS[key] && !CONFIGS[key].startsWith('http')) {
         CONFIGS[key] = `https://${CONFIGS[key]}`;
     }

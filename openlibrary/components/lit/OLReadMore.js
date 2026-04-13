@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement, html, css } from 'lit';
 
 /**
  * OLReadMore - A web component for expandable/collapsible content
@@ -142,10 +142,7 @@ export class OLReadMore extends LitElement {
 
     _updateBackgroundColor() {
         if (this.backgroundColor) {
-            this.style.setProperty(
-                '--ol-readmore-gradient-color',
-                this.backgroundColor,
-            );
+            this.style.setProperty('--ol-readmore-gradient-color', this.backgroundColor);
         }
     }
 

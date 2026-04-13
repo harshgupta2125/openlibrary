@@ -9,13 +9,13 @@ const DEFAULT_TIMEOUT = 2500;
 
 export class Toast {
     /**
-   * @param {JQuery} $toast The element containing the appropriate parts
-   * @param {JQuery|HTMLElement} containerParent where to add the toast bar
-   */
-    constructor($toast, containerParent = document.body) {
+     * @param {JQuery} $toast The element containing the appropriate parts
+     * @param {JQuery|HTMLElement} containerParent where to add the toast bar
+     */
+    constructor($toast, containerParent=document.body) {
         const $parent = $(containerParent);
         if (!$parent.has('.toast-container').length) {
-            $parent.prepend('<div class="toast-container"></div>');
+            $parent.prepend('<div class="toast-container"></div>')
         }
         if ($toast.data('toast-trigger')) {
             $($toast.data('toast-trigger')).on('click', () => this.show());
@@ -27,8 +27,11 @@ export class Toast {
 
     /** Displays the toast component on the page. */
     show() {
-        this.$toast.appendTo(this.$container).fadeIn();
-        this.$toast.find('.toast__close').one('click', () => this.close());
+        this.$toast
+            .appendTo(this.$container)
+            .fadeIn();
+        this.$toast.find('.toast__close')
+            .one('click', () => this.close());
     }
 
     /** Hides the toast component and removes it from the DOM. */
@@ -42,19 +45,19 @@ export class Toast {
  */
 export class FadingToast extends Toast {
     /**
-   * Creates a new toast component, adds a close listener to the component, and adds the component
-   * as the first child of the given parent element.
-   *
-   * @param {string} message Message that will be displayed in the toast component
-   * @param {JQuery} [$parent] Designates where the toast component will be attached
-   * @param {number} [timeout] Amount of time, in milliseconds, that the component will be visible
-   */
-    constructor(message, $parent = null, timeout = DEFAULT_TIMEOUT) {
-    // TODO(i18n-js)
+     * Creates a new toast component, adds a close listener to the component, and adds the component
+     * as the first child of the given parent element.
+     *
+     * @param {string} message Message that will be displayed in the toast component
+     * @param {JQuery} [$parent] Designates where the toast component will be attached
+     * @param {number} [timeout] Amount of time, in milliseconds, that the component will be visible
+     */
+    constructor(message, $parent=null, timeout=DEFAULT_TIMEOUT) {
+        // TODO(i18n-js)
         const $toast = $(`<div class="toast">
             <span class="toast__body">${message}</span>
             <a class="toast__close">&times;<span class="shift">Close</span></a>
-        </div>`);
+        </div>`)
 
         // Prevent sending null parent:
         if ($parent) {
@@ -80,14 +83,14 @@ export class FadingToast extends Toast {
  */
 export class PersistentToast extends Toast {
     /**
-   * @param {string} message String that will be displayed within the toast component
-   * @param {string} classes Additional classes to add to the toast component
-   */
-    constructor(message, classes = '') {
+     * @param {string} message String that will be displayed within the toast component
+     * @param {string} classes Additional classes to add to the toast component
+     */
+    constructor(message, classes='') {
         const $toast = $(`<div class="toast ${classes}">
             <span class="toast__body">${message}</span>
             <a class="toast__close">&times;<span class="shift">Close</span>
-        </div>`);
-        super($toast);
+        </div>`)
+        super($toast)
     }
 }

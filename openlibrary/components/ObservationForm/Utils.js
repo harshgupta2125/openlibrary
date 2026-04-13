@@ -13,11 +13,7 @@ export function decodeAndParseJSON(str) {
     window.$.colorbox is a jQuery plugin
 */
 export function resizeColorbox() {
-    if (
-        window.$ &&
-    window.$.colorbox &&
-    typeof window.$.colorbox.resize === 'function'
-    ) {
+    if (window.$ && window.$.colorbox && typeof window.$.colorbox.resize === 'function') {
         window.$.colorbox.resize();
     }
 }

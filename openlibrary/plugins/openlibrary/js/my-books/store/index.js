@@ -9,75 +9,75 @@
  */
 class MyBooksStore {
     /**
-   * Initializes the store.
-   */
-    constructor () {
+     * Initializes the store.
+     */
+    constructor() {
         this._store = {
             droppers: [],
             showcases: [],
-            userKey: '',
-            openDropper: null,
-        };
+            userkey: '',
+            openDropper: null
+        }
     }
 
     /**
-   * @returns {Array<MyBooksDropper>}
-   */
-    getDroppers () {
-        return this._store.droppers;
+     * @returns {Array<MyBooksDropper>}
+     */
+    getDroppers() {
+        return this._store.droppers
     }
 
     /**
-   * @param {Array<MyBooksDropper>} droppers
-   */
-    setDroppers (droppers) {
-        this._store.droppers = droppers;
+     * @param {Array<MyBooksDropper>} droppers
+     */
+    setDroppers(droppers) {
+        this._store.droppers = droppers
     }
 
     /**
-   * @returns {Array<ShowcaseItem>}
-   */
-    getShowcases () {
-        return this._store.showcases;
+     * @returns {Array<ShowcaseItem>}
+     */
+    getShowcases() {
+        return this._store.showcases
     }
 
     /**
-   * @param {Array<ShowcaseItem>} showcases
-   */
-    setShowcases (showcases) {
-        this._store.showcases = showcases;
+     * @param {Array<ShowcaseItem>} showcases
+     */
+    setShowcases(showcases) {
+        this._store.showcases = showcases
     }
 
     /**
-   * @returns {string}
-   */
-    getUserKey () {
-        return this._store.userKey;
+     * @returns {string}
+     */
+    getUserKey() {
+        return this._store.userKey
     }
 
     /**
-   * @param {string} userKey
-   */
-    setUserKey (userKey) {
-        this._store.userKey = userKey;
+     * @param {string} userKey
+     */
+    setUserKey(userKey) {
+        this._store.userKey = userKey
     }
 
     /**
-   * @returns {MyBooksDropper}
-   */
-    getOpenDropper () {
-        return this._store.openDropper;
+     * @returns {MyBooksDropper}
+     */
+    getOpenDropper() {
+        return this._store.openDropper
     }
 
     /**
-   * @param {MyBooksDropper} dropper
-   */
-    setOpenDropper (dropper) {
-        this._store.openDropper = dropper;
+     * @param {MyBooksDropper} dropper
+     */
+    setOpenDropper(dropper) {
+        this._store.openDropper = dropper
     }
 }
 
-const myBooksStore = new MyBooksStore();
-Object.freeze(myBooksStore);
+const myBooksStore = new MyBooksStore()
+Object.freeze(myBooksStore)
 
-export default myBooksStore;
+export default myBooksStore

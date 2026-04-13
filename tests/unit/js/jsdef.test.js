@@ -1,12 +1,5 @@
-import {
-    enumerate,
-    foreach,
-    htmlquote,
-    join,
-    len,
-    range,
-    websafe,
-} from '../../../openlibrary/plugins/openlibrary/js/jsdef';
+import { foreach, range, join, len, htmlquote, enumerate,
+    websafe } from '../../../openlibrary/plugins/openlibrary/js/jsdef';
 
 test('jsdef: python range function', () => {
     expect(range(2, 5)).toEqual([2, 3, 4]);
@@ -18,7 +11,7 @@ test('jsdef: enumerate', () => {
     expect(enumerate([1, 2, 3])).toEqual([
         ['0', 1],
         ['1', 2],
-        ['2', 3],
+        ['2', 3]
     ]);
 });
 
@@ -28,13 +21,13 @@ test('jsdef: foreach', () => {
     const listToLoop = [1, 2, 3];
     expect.assertions(1);
     return new Promise((resolve) => {
-        foreach(listToLoop, loop, () => {
+        foreach(listToLoop, loop, function () {
             called += 1;
             if (called === 3) {
                 expect(called).toBe(3);
                 resolve();
             }
-        });
+        })
     });
 });
 
@@ -60,5 +53,5 @@ test('jsdef: websafe', () => {
     // not sure if these are really necessary, but they document the current behaviour
     expect(websafe(undefined)).toBe('');
     expect(websafe(null)).toBe('');
-    expect(websafe({ toString: undefined })).toBe('');
+    expect(websafe({toString: undefined})).toBe('');
 });

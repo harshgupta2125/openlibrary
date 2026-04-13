@@ -1,10 +1,9 @@
-import { css, html, LitElement, nothing } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 let _idCounter = 0;
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
  * A reusable popover component that anchors to a trigger element.
@@ -273,20 +272,14 @@ export class OlPopover extends LitElement {
         const showPanel = this._animState !== 'closed';
         return html`
             <slot name="trigger"></slot>
-            ${
-    showPanel
-        ? html`
-                ${
-    this._mobile
-        ? html`
+            ${showPanel ? html`
+                ${this._mobile ? html`
                     <div
                         class="backdrop"
                         data-state="${this._animState}"
                         @click="${this._onBackdropClick}"
                     ></div>
-                `
-        : nothing
-}
+                ` : nothing}
                 <div
                     id="${this._panelId}"
                     class="panel ${this._mobile ? 'tray' : ''}"
@@ -295,15 +288,11 @@ export class OlPopover extends LitElement {
                     aria-modal="true"
                     aria-label="${ifDefined(this.accessibleLabel || undefined)}"
                     tabindex="-1"
-                    style="${
-    this._mobile
-        ? ''
-        : `
+                    style="${this._mobile ? '' : `
                         top: ${this._position.top}px;
                         left: ${this._position.left}px;
                         transform-origin: ${this._transformOrigin};
-                    `
-}"
+                    `}"
                     @transitionend="${this._onTransitionEnd}"
                 >
                     <span
@@ -313,15 +302,11 @@ export class OlPopover extends LitElement {
                         data-edge="start"
                         @focus="${this._onSentinelFocus}"
                     ></span>
-                    ${
-    this._mobile
-        ? html`
+                    ${this._mobile ? html`
                         <div class="tray-handle" aria-hidden="true">
                             <div class="tray-handle-bar"></div>
                         </div>
-                    `
-        : nothing
-}
+                    ` : nothing}
                     <slot></slot>
                     <span
                         class="focus-sentinel"
@@ -331,9 +316,7 @@ export class OlPopover extends LitElement {
                         @focus="${this._onSentinelFocus}"
                     ></span>
                 </div>
-            `
-        : nothing
-}
+            ` : nothing}
         `;
     }
 
@@ -362,9 +345,7 @@ export class OlPopover extends LitElement {
         document.addEventListener('keydown', this._onKeydownGlobal);
 
         this._mobile = window.matchMedia('(max-width: 767px)').matches;
-        const reducedMotion = window.matchMedia(
-            '(prefers-reduced-motion: reduce)',
-        ).matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (this._mobile) {
             this._lockBodyScroll();
@@ -394,12 +375,8 @@ export class OlPopover extends LitElement {
 
             // Add touch listeners for swipe-to-dismiss (mobile)
             if (this._mobile) {
-                panel.addEventListener('touchstart', this._onTouchStart, {
-                    passive: true,
-                });
-                panel.addEventListener('touchmove', this._onTouchMove, {
-                    passive: false,
-                });
+                panel.addEventListener('touchstart', this._onTouchStart, { passive: true });
+                panel.addEventListener('touchmove', this._onTouchMove, { passive: false });
                 panel.addEventListener('touchend', this._onTouchEnd, { passive: true });
             }
 
@@ -407,13 +384,10 @@ export class OlPopover extends LitElement {
             panel.focus({ preventScroll: true });
 
             if (reducedMotion) {
-                this.dispatchEvent(
-                    new CustomEvent('ol-popover-open', {
-                        bubbles: true,
-                        composed: true,
-                        detail: { placement: this.placement },
-                    }),
-                );
+                this.dispatchEvent(new CustomEvent('ol-popover-open', {
+                    bubbles: true, composed: true,
+                    detail: { placement: this.placement },
+                }));
                 return;
             }
 
@@ -421,22 +395,17 @@ export class OlPopover extends LitElement {
             panel.getBoundingClientRect();
 
             this._animState = 'entering';
-            this.dispatchEvent(
-                new CustomEvent('ol-popover-open', {
-                    bubbles: true,
-                    composed: true,
-                    detail: { placement: this.placement },
-                }),
-            );
+            this.dispatchEvent(new CustomEvent('ol-popover-open', {
+                bubbles: true, composed: true,
+                detail: { placement: this.placement },
+            }));
         });
     }
 
     _hide() {
         if (this._animState === 'closed') return;
 
-        const reducedMotion = window.matchMedia(
-            '(prefers-reduced-motion: reduce)',
-        ).matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (reducedMotion) {
             this._animState = 'closed';
             this._cleanup();
@@ -458,9 +427,9 @@ export class OlPopover extends LitElement {
     }
 
     /**
-   * Central cleanup called when the popover finishes closing.
-   * Removes all global listeners, unlocks scroll, and restores focus.
-   */
+     * Central cleanup called when the popover finishes closing.
+     * Removes all global listeners, unlocks scroll, and restores focus.
+     */
     _cleanup() {
         this._removeListeners();
         this._unlockBodyScroll();
@@ -519,9 +488,9 @@ export class OlPopover extends LitElement {
     // ── Positioning ─────────────────────────────────────────────
 
     /**
-   * Compute the final position of the popover panel, flipping and shifting
-   * as needed to keep it within the viewport.
-   */
+     * Compute the final position of the popover panel, flipping and shifting
+     * as needed to keep it within the viewport.
+     */
     _computePosition(panelW, panelH) {
         const trigger = this._triggerEl;
         if (!trigger) return;
@@ -542,11 +511,7 @@ export class OlPopover extends LitElement {
 
         if (side === 'bottom' && panelH > spaceBelow && spaceAbove > spaceBelow) {
             side = 'top';
-        } else if (
-            side === 'top' &&
-      panelH > spaceAbove &&
-      spaceBelow > spaceAbove
-        ) {
+        } else if (side === 'top' && panelH > spaceAbove && spaceBelow > spaceAbove) {
             side = 'bottom';
         }
 
@@ -606,9 +571,7 @@ export class OlPopover extends LitElement {
     _parsePlacement(placement) {
         const parts = (placement || 'bottom-center').split('-');
         const side = parts[0] === 'top' ? 'top' : 'bottom';
-        const align = ['start', 'center', 'end'].includes(parts[1])
-            ? parts[1]
-            : 'center';
+        const align = ['start', 'center', 'end'].includes(parts[1]) ? parts[1] : 'center';
         return [side, align];
     }
 
@@ -620,17 +583,12 @@ export class OlPopover extends LitElement {
     // ── Scroll / resize repositioning ───────────────────────────
 
     _addScrollResizeListeners() {
-        window.addEventListener('scroll', this._onScrollResize, {
-            capture: true,
-            passive: true,
-        });
+        window.addEventListener('scroll', this._onScrollResize, { capture: true, passive: true });
         window.addEventListener('resize', this._onScrollResize, { passive: true });
     }
 
     _removeScrollResizeListeners() {
-        window.removeEventListener('scroll', this._onScrollResize, {
-            capture: true,
-        });
+        window.removeEventListener('scroll', this._onScrollResize, { capture: true });
         window.removeEventListener('resize', this._onScrollResize);
         if (this._rafId) {
             cancelAnimationFrame(this._rafId);
@@ -676,13 +634,10 @@ export class OlPopover extends LitElement {
     }
 
     _requestClose(reason) {
-        this.dispatchEvent(
-            new CustomEvent('ol-popover-close', {
-                bubbles: true,
-                composed: true,
-                detail: { reason },
-            }),
-        );
+        this.dispatchEvent(new CustomEvent('ol-popover-close', {
+            bubbles: true, composed: true,
+            detail: { reason },
+        }));
     }
 
     // ── Mobile touch / swipe-to-dismiss ─────────────────────────
@@ -750,13 +705,11 @@ export class OlPopover extends LitElement {
         if (dragY > DISMISS_THRESHOLD || velocity > VELOCITY_THRESHOLD) {
             // Swipe dismiss — animate to off-screen, then close
             if (panel) {
-                panel.style.transition =
-          'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)';
+                panel.style.transition = 'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)';
                 panel.style.transform = 'translateY(100%)';
             }
             if (backdrop) {
-                backdrop.style.transition =
-          'opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)';
+                backdrop.style.transition = 'opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)';
                 backdrop.style.opacity = '0';
             }
 
@@ -765,13 +718,10 @@ export class OlPopover extends LitElement {
                 this._clearDragStyles();
                 this._animState = 'closed';
                 this._cleanup();
-                this.dispatchEvent(
-                    new CustomEvent('ol-popover-close', {
-                        bubbles: true,
-                        composed: true,
-                        detail: { reason: 'swipe' },
-                    }),
-                );
+                this.dispatchEvent(new CustomEvent('ol-popover-close', {
+                    bubbles: true, composed: true,
+                    detail: { reason: 'swipe' },
+                }));
             };
 
             if (panel) {
@@ -782,13 +732,11 @@ export class OlPopover extends LitElement {
         } else {
             // Snap back to open position
             if (panel) {
-                panel.style.transition =
-          'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)';
+                panel.style.transition = 'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)';
                 panel.style.transform = '';
             }
             if (backdrop) {
-                backdrop.style.transition =
-          'opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)';
+                backdrop.style.transition = 'opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)';
                 backdrop.style.opacity = '';
             }
 

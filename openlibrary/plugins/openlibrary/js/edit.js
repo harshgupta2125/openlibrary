@@ -1,15 +1,15 @@
-import { init as initAutocomplete } from './autocomplete';
+import { isbnOverride } from './isbnOverride';
 import {
+    parseIsbn,
+    parseLccn,
     isChecksumValidIsbn10,
     isChecksumValidIsbn13,
     isFormatValidIsbn10,
     isFormatValidIsbn13,
-    isIdDupe,
     isValidLccn,
-    parseIsbn,
-    parseLccn,
+    isIdDupe
 } from './idValidation';
-import { isbnOverride } from './isbnOverride';
+import { init as initAutocomplete } from './autocomplete';
 import { init as initJqueryRepeat } from './jquery.repeat';
 import { trimInputValues } from './utils.js';
 
@@ -37,9 +37,7 @@ function update_len() {
     } else {
         color = 'gray';
     }
-    $('#excerpts-excerpt-len')
-        .html(2000 - len)
-        .css('color', color);
+    $('#excerpts-excerpt-len').html(2000 - len).css('color', color);
 }
 
 /**
@@ -65,44 +63,31 @@ function limitChars(textid, limit) {
  * @param selector - css selector used by jQuery
  * @returns {*[]} - array of jQuery elements
  */
-function getJqueryElements(selector) {
+function getJqueryElements(selector){
     const queryResult = $(selector);
     const jQueryElementArray = [];
-    for (let i = 0; i < queryResult.length; i++) {
-        jQueryElementArray.push(queryResult.eq(i));
+    for (let i = 0; i < queryResult.length; i++){
+        jQueryElementArray.push(queryResult.eq(i))
     }
     return jQueryElementArray;
 }
 
 export function initRoleValidation() {
     initJqueryRepeat();
-    const dataConfig = JSON.parse(
-        document.querySelector('#roles').dataset.config,
-    );
+    const dataConfig = JSON.parse(document.querySelector('#roles').dataset.config);
     $('#roles').repeat({
-        vars: { prefix: 'edition--' },
-        validate: (data) => {
+        vars: {prefix: 'edition--'},
+        validate: function (data) {
             if (data.role === '' || data.role === '---') {
-                return error(
-                    '#role-errors',
-                    '#select-role',
-                    dataConfig['Please select a role.'],
-                );
+                return error('#role-errors', '#select-role', dataConfig['Please select a role.']);
             }
             if (data.name === '') {
-                return error(
-                    '#role-errors',
-                    '#role-name',
-                    dataConfig['You need to give this ROLE a name.'].replace(
-                        /ROLE/,
-                        data.role,
-                    ),
-                );
+                return error('#role-errors', '#role-name', dataConfig['You need to give this ROLE a name.'].replace(/ROLE/, data.role));
             }
             $('#role-errors').hide();
             $('#select-role, #role-name').val('');
             return true;
-        },
+        }
     });
 }
 
@@ -117,21 +102,21 @@ export function isbnConfirmAdd(data) {
     // Display the error and option to add the ISBN anyway.
     $('#id-errors').show().html(isbnConfirmString);
 
-    const yesButtonSelector = '#yes-add-isbn';
-    const noButtonSelector = '#do-not-add-isbn';
+    const yesButtonSelector = '#yes-add-isbn'
+    const noButtonSelector = '#do-not-add-isbn'
     const onYes = () => {
         $('#id-errors').hide();
     };
     const onNo = () => {
         $('#id-errors').hide();
         isbnOverride.clear();
-    };
+    }
     $(document).on('click', yesButtonSelector, onYes);
     $(document).on('click', noButtonSelector, onNo);
 
     // Save the data to isbnOverride so it can be picked up via onAdd in
     // js/jquery.repeat.js when the user confirms adding the invalid ISBN.
-    isbnOverride.set(data);
+    isbnOverride.set(data)
     return false;
 }
 
@@ -147,24 +132,14 @@ function validateIsbn10(data, dataConfig, label) {
     data.value = parseIsbn(data.value);
 
     if (!isFormatValidIsbn10(data.value)) {
-        return error(
-            '#id-errors',
-            '#id-value',
-            dataConfig['ID must be exactly 10 characters [0-9] or X.'].replace(
-                /ID/,
-                label,
-            ),
-        );
+        return error('#id-errors', '#id-value', dataConfig['ID must be exactly 10 characters [0-9] or X.'].replace(/ID/, label));
     }
     // Here the ISBN has a valid format, but also has an invalid checksum. Give the user a chance to verify
     // the ISBN, as books sometimes issue with invalid ISBNs and we want to be able to add them.
     // See https://en-academic.com/dic.nsf/enwiki/8948#cite_ref-18 for more.
-    else if (
-        isFormatValidIsbn10(data.value) === true &&
-    isChecksumValidIsbn10(data.value) === false
-    ) {
-        isbnConfirmAdd(data);
-        return false;
+    else if (isFormatValidIsbn10(data.value) === true && isChecksumValidIsbn10(data.value) === false) {
+        isbnConfirmAdd(data)
+        return false
     }
     return true;
 }
@@ -181,23 +156,14 @@ function validateIsbn13(data, dataConfig, label) {
     data.value = parseIsbn(data.value);
 
     if (isFormatValidIsbn13(data.value) === false) {
-        return error(
-            '#id-errors',
-            '#id-value',
-            dataConfig[
-                'ID must be exactly 13 digits [0-9]. For example: 978-1-56619-909-4'
-            ].replace(/ID/, label),
-        );
+        return error('#id-errors', '#id-value', dataConfig['ID must be exactly 13 digits [0-9]. For example: 978-1-56619-909-4'].replace(/ID/, label));
     }
     // Here the ISBN has a valid format, but also has an invalid checksum. Give the user a chance to verify
     // the ISBN, as books sometimes issue with invalid ISBNs and we want to be able to add them.
     // See https://en-academic.com/dic.nsf/enwiki/8948#cite_ref-18 for more.
-    else if (
-        isFormatValidIsbn13(data.value) === true &&
-    isChecksumValidIsbn13(data.value) === false
-    ) {
-        isbnConfirmAdd(data);
-        return false;
+    else if (isFormatValidIsbn13(data.value) === true && isChecksumValidIsbn13(data.value) === false) {
+        isbnConfirmAdd(data)
+        return false
     }
     return true;
 }
@@ -215,11 +181,7 @@ function validateLccn(data, dataConfig, label) {
 
     if (isValidLccn(data.value) === false) {
         $('#id-value').val(data.value);
-        return error(
-            '#id-errors',
-            '#id-value',
-            dataConfig['Invalid ID format'].replace(/ID/, label),
-        );
+        return error('#id-errors', '#id-value', dataConfig['Invalid ID format'].replace(/ID/, label));
     }
     return true;
 }
@@ -232,40 +194,28 @@ function validateLccn(data, dataConfig, label) {
  * @returns {boolean}  true if identifier passes validation
  */
 export function validateIdentifiers(data) {
-    const dataConfig = JSON.parse(
-        document.querySelector('#identifiers').dataset.config,
-    );
+    const dataConfig = JSON.parse(document.querySelector('#identifiers').dataset.config);
 
     if (data.name === '' || data.name === '---') {
         $('#id-value').val(data.value);
-        return error(
-            '#id-errors',
-            '#select-id',
-            dataConfig['Please select an identifier.'],
-        );
+        return error('#id-errors', '#select-id', dataConfig['Please select an identifier.'])
     }
     const label = $('#select-id').find(`option[value='${data.name}']`).html();
     if (data.value === '') {
-        return error(
-            '#id-errors',
-            '#id-value',
-            dataConfig['You need to give a value to ID.'].replace(/ID/, label),
-        );
+        return error('#id-errors', '#id-value', dataConfig['You need to give a value to ID.'].replace(/ID/, label));
     }
     if (['ocaid'].includes(data.name) && /\s/g.test(data.value)) {
-        return error(
-            '#id-errors',
-            '#id-value',
-            dataConfig['ID ids cannot contain whitespace.'].replace(/ID/, label),
-        );
+        return error('#id-errors', '#id-value', dataConfig['ID ids cannot contain whitespace.'].replace(/ID/, label));
     }
 
     let validId = true;
     if (data.name === 'isbn_10') {
         validId = validateIsbn10(data, dataConfig, label);
-    } else if (data.name === 'isbn_13') {
+    }
+    else if (data.name === 'isbn_13') {
         validId = validateIsbn13(data, dataConfig, label);
-    } else if (data.name === 'lccn') {
+    }
+    else if (data.name === 'lccn') {
         validId = validateLccn(data, dataConfig, label);
     }
 
@@ -273,18 +223,9 @@ export function validateIdentifiers(data) {
     // expects parsed ids so placed after validate
     const entries = document.querySelectorAll(`.${data.name}`);
     if (isIdDupe(entries, data.value) === true) {
-    // isbnOverride being set will override the dupe checker, so clear isbnOverride if there's a dupe.
-        if (isbnOverride.get()) {
-            isbnOverride.clear();
-        }
-        return error(
-            '#id-errors',
-            '#id-value',
-            dataConfig['That ID already exists for this edition.'].replace(
-                /ID/,
-                label,
-            ),
-        );
+        // isbnOverride being set will override the dupe checker, so clear isbnOverride if there's a dupe.
+        if (isbnOverride.get()) {isbnOverride.clear()}
+        return error('#id-errors', '#id-value', dataConfig['That ID already exists for this edition.'].replace(/ID/, label));
     }
 
     if (validId === false) return false;
@@ -294,12 +235,10 @@ export function validateIdentifiers(data) {
 
 export function initClassificationValidation() {
     initJqueryRepeat();
-    const dataConfig = JSON.parse(
-        document.querySelector('#classifications').dataset.config,
-    );
+    const dataConfig = JSON.parse(document.querySelector('#classifications').dataset.config);
 
     // Prevent form submission on Enter for classification fields
-    $('#classification-value').on('keydown', (e) => {
+    $('#classification-value').on('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             $('#classifications .repeat-add').trigger('click');
@@ -308,181 +247,144 @@ export function initClassificationValidation() {
     });
 
     $('#classifications').repeat({
-        vars: { prefix: 'edition--' },
-        validate: (data) => {
+        vars: {prefix: 'edition--'},
+        validate: function (data) {
             if (data.name === '' || data.name === '---') {
-                return error(
-                    '#classification-errors',
-                    '#select-classification',
-                    dataConfig['Please select a classification.'],
-                );
+                return error('#classification-errors', '#select-classification', dataConfig['Please select a classification.']);
             }
             if (data.value === '') {
-                const label = $('#select-classification')
-                    .find(`option[value='${data.name}']`)
-                    .html();
-                return error(
-                    '#classification-errors',
-                    '#classification-value',
-                    dataConfig['You need to give a value to CLASS.'].replace(
-                        /CLASS/,
-                        label,
-                    ),
-                );
+                const label = $('#select-classification').find(`option[value='${data.name}']`).html();
+                return error('#classification-errors', '#classification-value', dataConfig['You need to give a value to CLASS.'].replace(/CLASS/, label));
             }
             $('#classification-errors').hide();
             $('#select-classification, #classification-value').val('');
             return true;
-        },
+        }
     });
 }
 
 export function initLanguageMultiInputAutocomplete() {
     initAutocomplete();
-    $(() => {
-        getJqueryElements('.multi-input-autocomplete--language').forEach(
-            (jqueryElement) => {
-                jqueryElement.setup_multi_input_autocomplete(
-                    render_language_field,
-                    {
-                        endpoint: '/languages/_autocomplete',
-                        sortable: true,
-                    },
-                    {
-                        max: 6,
-                        formatItem: render_language_autocomplete_item,
-                    },
-                );
-            },
-        );
+    $(function() {
+        getJqueryElements('.multi-input-autocomplete--language').forEach(jqueryElement => {
+            jqueryElement.setup_multi_input_autocomplete(
+                render_language_field,
+                {
+                    endpoint: '/languages/_autocomplete',
+                    sortable: true,
+                },
+                {
+                    max: 6,
+                    formatItem: render_language_autocomplete_item
+                }
+            );
+        })
     });
 }
 
 export function initWorksMultiInputAutocomplete() {
     initAutocomplete();
-    $(() => {
-        getJqueryElements('.multi-input-autocomplete--works').forEach(
-            (jqueryElement) => {
-                /* Values in the html passed from Python code */
-                const dataConfig = JSON.parse(jqueryElement[0].dataset.config || '{}');
-                jqueryElement.setup_multi_input_autocomplete(
-                    render_work_field,
-                    {
-                        endpoint: '/works/_autocomplete',
-                        addnew: dataConfig['addnew'] || false,
-                        new_name: dataConfig['new_name'] || '',
-                        allow_empty: dataConfig['allow_empty'] || false,
-                    },
-                    {
-                        minChars: 2,
-                        max: 11,
-                        matchSubset: false,
-                        autoFill: true,
-                        formatItem: render_work_autocomplete_item,
-                    },
-                );
-            },
-        );
+    $(function() {
+        getJqueryElements('.multi-input-autocomplete--works').forEach(jqueryElement => {
+            /* Values in the html passed from Python code */
+            const dataConfig = JSON.parse(jqueryElement[0].dataset.config || '{}');
+            jqueryElement.setup_multi_input_autocomplete(
+                render_work_field,
+                {
+                    endpoint: '/works/_autocomplete',
+                    addnew: dataConfig['addnew'] || false,
+                    new_name: dataConfig['new_name'] || '',
+                    allow_empty: dataConfig['allow_empty'] || false,
+                },
+                {
+                    minChars: 2,
+                    max: 11,
+                    matchSubset: false,
+                    autoFill: true,
+                    formatItem: render_work_autocomplete_item,
+                });
+        });
     });
 
     // Show the new work options checkboxes only if "New work" selected
-    $('input[name="works--0"]').on('autocompleteselect', (_event, ui) => {
+    $('input[name="works--0"]').on('autocompleteselect', function(_event, ui) {
         $('.new-work-options').toggle(ui.item.key === '__new__');
     });
 }
 
 export function initSeedsMultiInputAutocomplete() {
     initAutocomplete();
-    $(() => {
-        getJqueryElements('.multi-input-autocomplete--seeds').forEach(
-            (jqueryElement) => {
-                /* Values in the html passed from Python code */
-                jqueryElement.setup_multi_input_autocomplete(
-                    render_seed_field,
-                    {
-                        endpoint: '/works/_autocomplete',
-                        addnew: false,
-                        allow_empty: true,
-                        sortable: true,
-                    },
-                    {
-                        minChars: 2,
-                        max: 11,
-                        matchSubset: false,
-                        autoFill: true,
-                        formatItem: render_lazy_work_preview,
-                    },
-                );
-            },
-        );
+    $(function() {
+        getJqueryElements('.multi-input-autocomplete--seeds').forEach(jqueryElement => {
+            /* Values in the html passed from Python code */
+            jqueryElement.setup_multi_input_autocomplete(
+                render_seed_field,
+                {
+                    endpoint: '/works/_autocomplete',
+                    addnew: false,
+                    allow_empty: true,
+                    sortable: true,
+                },
+                {
+                    minChars: 2,
+                    max: 11,
+                    matchSubset: false,
+                    autoFill: true,
+                    formatItem: render_lazy_work_preview,
+                });
+        });
     });
 }
 
 export function initAuthorMultiInputAutocomplete() {
     initAutocomplete();
-    getJqueryElements('.multi-input-autocomplete--author').forEach(
-        (jqueryElement) => {
-            /* Values in the html passed from Python code */
-            const dataConfig = JSON.parse(jqueryElement[0].dataset.config);
-            jqueryElement.setup_multi_input_autocomplete(
-                render_author.bind(
-                    null,
-                    dataConfig.name_path,
-                    dataConfig.dict_path,
-                    false,
-                ),
-                {
-                    endpoint: '/authors/_autocomplete',
-                    // Don't render "Create new author" if searching by key
-                    addnew: (query) => !/OL\d+A/i.test(query),
-                    sortable: true,
-                },
-                {
-                    minChars: 2,
-                    max: 11,
-                    matchSubset: false,
-                    autoFill: true,
-                    formatItem: render_author_autocomplete_item,
-                },
-            );
-        },
-    );
+    getJqueryElements('.multi-input-autocomplete--author').forEach(jqueryElement => {
+        /* Values in the html passed from Python code */
+        const dataConfig = JSON.parse(jqueryElement[0].dataset.config);
+        jqueryElement.setup_multi_input_autocomplete(
+            render_author.bind(null, dataConfig.name_path, dataConfig.dict_path, false),
+            {
+                endpoint: '/authors/_autocomplete',
+                // Don't render "Create new author" if searching by key
+                addnew: query => !/OL\d+A/i.test(query),
+                sortable: true,
+            },
+            {
+                minChars: 2,
+                max: 11,
+                matchSubset: false,
+                autoFill: true,
+                formatItem: render_author_autocomplete_item
+            });
+    });
 }
 
 export function initSeriesMultiInputAutocomplete() {
     initAutocomplete();
-    getJqueryElements('.multi-input-autocomplete--series').forEach(
-        (jqueryElement) => {
-            /* Values in the html passed from Python code */
-            const dataConfig = JSON.parse(jqueryElement[0].dataset.config);
-            jqueryElement.setup_multi_input_autocomplete(
-                render_series.bind(
-                    null,
-                    dataConfig.name_path,
-                    dataConfig.dict_path,
-                    false,
-                ),
-                {
-                    endpoint: '/series/_autocomplete',
-                    // Don't render "Create new series" if searching by key
-                    addnew: (query) => !/OL\d+L/i.test(query),
-                    sortable: true,
-                },
-                {
-                    minChars: 2,
-                    max: 11,
-                    matchSubset: false,
-                    autoFill: true,
-                    formatItem: render_series_autocomplete_item,
-                },
-            );
-        },
-    );
+    getJqueryElements('.multi-input-autocomplete--series').forEach(jqueryElement => {
+        /* Values in the html passed from Python code */
+        const dataConfig = JSON.parse(jqueryElement[0].dataset.config);
+        jqueryElement.setup_multi_input_autocomplete(
+            render_series.bind(null, dataConfig.name_path, dataConfig.dict_path, false),
+            {
+                endpoint: '/series/_autocomplete',
+                // Don't render "Create new series" if searching by key
+                addnew: query => !/OL\d+L/i.test(query),
+                sortable: true,
+            },
+            {
+                minChars: 2,
+                max: 11,
+                matchSubset: false,
+                autoFill: true,
+                formatItem: render_series_autocomplete_item
+            });
+    });
 }
 
 export function initSubjectsAutocomplete() {
     initAutocomplete();
-    getJqueryElements('.csv-autocomplete--subjects').forEach((jqueryElement) => {
+    getJqueryElements('.csv-autocomplete--subjects').forEach(jqueryElement => {
         const dataConfig = JSON.parse(jqueryElement[0].dataset.config);
         jqueryElement.setup_csv_autocomplete(
             'textarea',
@@ -492,7 +394,7 @@ export function initSubjectsAutocomplete() {
             },
             {
                 formatItem: render_subject_autocomplete_item,
-            },
+            }
         );
     });
 
@@ -503,10 +405,8 @@ export function initSubjectsAutocomplete() {
     });
 }
 
-export function initEditRow() {
-    document
-        .querySelector('#add_row_button')
-        .addEventListener('click', () => add_row('website'));
+export function initEditRow(){
+    document.querySelector('#add_row_button').addEventListener('click', ()=>add_row('website'));
 }
 
 /**
@@ -518,7 +418,7 @@ function add_row(name) {
     const inputBox = document.createElement('input');
     inputBox.name = `${name}#${inputBoxes.length}`;
     inputBox.type = 'text';
-    inputBoxes[inputBoxes.length - 1].after(inputBox);
+    inputBoxes[inputBoxes.length-1].after(inputBox);
 }
 
 function show_hide_title() {
@@ -535,33 +435,23 @@ export function initEditExcerpts() {
         vars: {
             prefix: 'work--excerpts',
         },
-        validate: (data) => {
-            const i18nStrings = JSON.parse(
-                document.querySelector('#excerpts-errors').dataset.i18n,
-            );
+        validate: function(data) {
+            const i18nStrings = JSON.parse(document.querySelector('#excerpts-errors').dataset.i18n);
 
             if (!data.excerpt) {
-                return error(
-                    '#excerpts-errors',
-                    '#excerpts-excerpt',
-                    i18nStrings['empty_excerpt'],
-                );
+                return error('#excerpts-errors', '#excerpts-excerpt', i18nStrings['empty_excerpt']);
             }
             if (data.excerpt.length > 2000) {
-                return error(
-                    '#excerpts-errors',
-                    '#excerpts-excerpt',
-                    i18nStrings['over_wordcount'],
-                );
+                return error('#excerpts-errors', '#excerpts-excerpt', i18nStrings['over_wordcount']);
             }
             $('#excerpts-errors').hide();
             $('#excerpts-excerpt').val('');
             return true;
-        },
+        }
     });
 
     // update length on every keystroke
-    $('#excerpts-excerpt').on('keyup', () => {
+    $('#excerpts-excerpt').on('keyup', function() {
         limitChars('excerpts-excerpt', 2000);
         update_len();
     });
@@ -590,12 +480,10 @@ export function initEditLinks() {
     initJqueryRepeat();
     $('#links').repeat({
         vars: {
-            prefix: $('#links').data('prefix'),
+            prefix: $('#links').data('prefix')
         },
-        validate: (data) => {
-            const i18nStrings = JSON.parse(
-                document.querySelector('#link-errors').dataset.i18n,
-            );
+        validate: function(data) {
+            const i18nStrings = JSON.parse(document.querySelector('#link-errors').dataset.i18n);
             const url = data.url.trim();
 
             if (data.title.trim() === '') {
@@ -619,7 +507,7 @@ export function initEditLinks() {
             $('#link-errors').addClass('hidden');
             $('#link-label, #link-url').val('');
             return true;
-        },
+        }
     });
 }
 
@@ -644,8 +532,8 @@ export function initEdit() {
     // input field is enabled only after the tab is selected and that takes some time after clicking the link.
     // wait for 1 sec after clicking the link and focus the input field
     if ($(fieldname).length !== 0) {
-        setTimeout(() => {
-            // scroll such that top of the content is visible
+        setTimeout(function() {
+        // scroll such that top of the content is visible
             $(fieldname).trigger('focus');
             $(window).scrollTop($('#contentHead').offset().top);
         }, 1000);

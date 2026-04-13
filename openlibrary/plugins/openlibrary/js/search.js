@@ -11,10 +11,10 @@ import { buildPartialsUrl } from './utils';
  * @param {Number} start_facet_count initial number of displayed facets
  * @param {Number} facet_inc number of hidden facets to be displayed
  */
-export function more (header, start_facet_count, facet_inc) {
-    const facetEntry = `div.${header} div.facetEntry`;
-    const shown = $(`${facetEntry}:not(:hidden)`).length;
-    const total = $(facetEntry).length;
+export function more(header, start_facet_count, facet_inc) {
+    const facetEntry = `div.${header} div.facetEntry`
+    const shown = $(`${facetEntry}:not(:hidden)`).length
+    const total = $(facetEntry).length
     if (shown === start_facet_count) {
         $(`#${header}_less`).show();
         $(`#${header}_bull`).show();
@@ -33,12 +33,12 @@ export function more (header, start_facet_count, facet_inc) {
  * @param {Number} start_facet_count initial number of displayed facets
  * @param {Number} facet_inc number of displayed facets to be hidden
  */
-export function less (header, start_facet_count, facet_inc) {
-    const facetEntry = `div.${header} div.facetEntry`;
-    const shown = $(`${facetEntry}:not(:hidden)`).length;
-    const total = $(facetEntry).length;
+export function less(header, start_facet_count, facet_inc) {
+    const facetEntry = `div.${header} div.facetEntry`
+    const shown = $(`${facetEntry}:not(:hidden)`).length
+    const total = $(facetEntry).length
     const increment_extra = (shown - start_facet_count) % facet_inc;
-    const facet_dec = increment_extra === 0 ? facet_inc : increment_extra;
+    const facet_dec = (increment_extra === 0) ? facet_inc:increment_extra;
     const next_shown = Math.max(start_facet_count, shown - facet_dec);
     if (shown === total) {
         $(`#${header}_more`).show();
@@ -48,9 +48,7 @@ export function less (header, start_facet_count, facet_inc) {
         $(`#${header}_less`).hide();
         $(`#${header}_bull`).hide();
     }
-    $(`${facetEntry}:not(:hidden)`)
-        .slice(next_shown, shown)
-        .addClass('ui-helper-hidden');
+    $(`${facetEntry}:not(:hidden)`).slice(next_shown, shown).addClass('ui-helper-hidden');
 }
 
 /**
@@ -66,49 +64,48 @@ export function less (header, start_facet_count, facet_inc) {
  *
  * @param {HTMLElement} facetsElem Root element of the search facets sidebar component
  */
-export async function initSearchFacets (facetsElem) {
-    const asyncLoad = facetsElem.dataset.asyncLoad;
+export async function initSearchFacets(facetsElem) {
+    const asyncLoad = facetsElem.dataset.asyncLoad
 
     if (asyncLoad) {
-        const param = JSON.parse(facetsElem.dataset.param);
+        const param = JSON.parse(facetsElem.dataset.param)
         await whenVisible(facetsElem);
 
         fetchPartials(param)
             .then((data) => {
                 if (data.activeFacets) {
-                    const activeFacetsElem = createElementFromMarkup(data.activeFacets);
-                    const activeFacetsContainer = document.querySelector(
-                        '.selected-search-facets-container',
-                    );
-                    activeFacetsContainer.replaceChildren(activeFacetsElem);
+                    const activeFacetsElem = createElementFromMarkup(data.activeFacets)
+                    const activeFacetsContainer = document.querySelector('.selected-search-facets-container')
+                    activeFacetsContainer.replaceChildren(activeFacetsElem)
                 }
-                const newFacetsElem = createElementFromMarkup(data.sidebar);
-                facetsElem.replaceWith(newFacetsElem);
-                hydrateFacets();
+                const newFacetsElem = createElementFromMarkup(data.sidebar)
+                facetsElem.replaceWith(newFacetsElem)
+                hydrateFacets()
 
-                document.title = data.title;
+                document.title = data.title
             })
             .catch(() => {
                 // XXX : Handle case where `/partials` response is not `2XX` here
-            });
+            })
     } else {
-        hydrateFacets();
+        hydrateFacets()
     }
 }
+
 
 /**
  * Adds click listeners to the "show more" and "show less" facet affordances.
  */
-function hydrateFacets () {
+function hydrateFacets() {
     const data_config_json = $('#searchFacets').data('config');
     const start_facet_count = data_config_json['start_facet_count'];
     const facet_inc = data_config_json['facet_inc'];
 
     $('.header_bull').hide();
-    $('.header_more').on('click', function () {
+    $('.header_more').on('click', function(){
         more($(this).data('header'), start_facet_count, facet_inc);
     });
-    $('.header_less').on('click', function () {
+    $('.header_less').on('click', function(){
         less($(this).data('header'), start_facet_count, facet_inc);
     });
 }
@@ -130,21 +127,20 @@ function hydrateFacets () {
  *
  * @throws Error when `/partials` response is not in 200-299 range.
  */
-function fetchPartials (param) {
+function fetchPartials(param) {
     const data = {
         param: param,
         path: location.pathname,
-        query: location.search,
-    };
+        query: location.search
+    }
 
-    return fetch(
-        buildPartialsUrl('SearchFacets', { data: JSON.stringify(data) }),
-    ).then((resp) => {
-        if (!resp.ok) {
-            throw new Error(`Failed to fetch partials. Status code: ${resp.status}`);
-        }
-        return resp.json();
-    });
+    return fetch(buildPartialsUrl('SearchFacets', {data: JSON.stringify(data)}))
+        .then((resp) => {
+            if (!resp.ok) {
+                throw new Error(`Failed to fetch partials. Status code: ${resp.status}`)
+            }
+            return resp.json()
+        })
 }
 
 /**
@@ -156,11 +152,12 @@ function fetchPartials (param) {
  * @param {string} markup HTML markup for a single element
  * @returns {HTMLElement}
  */
-function createElementFromMarkup (markup) {
-    const template = document.createElement('template');
-    template.innerHTML = markup;
-    return template.content.children[0];
+function createElementFromMarkup(markup) {
+    const template = document.createElement('template')
+    template.innerHTML = markup
+    return template.content.children[0]
 }
+
 
 /**
  * Waits until the given element is visible in the viewport, then resolves.
@@ -169,30 +166,27 @@ function createElementFromMarkup (markup) {
  * @param {IntersectionObserverInit} options
  * @returns {Promise<void>}
  */
-async function whenVisible (elem, options = {}) {
+async function whenVisible(elem, options = {}) {
     return new Promise((resolve) => {
         const intersectionObserver = new IntersectionObserver(
             (entries, observer) => {
-                entries.forEach((entry) => {
+                entries.forEach(entry => {
                     if (!entry.isIntersecting) {
-                        return;
+                        return
                     }
 
                     // Stop observing once the element is visible
-                    observer.unobserve(entry.target);
-                    observer.disconnect();
-                    resolve();
-                });
+                    observer.unobserve(entry.target)
+                    observer.disconnect()
+                    resolve()
+                })
             },
-            Object.assign(
-                {
-                    root: null,
-                    rootMargin: '200px',
-                    threshold: 0,
-                },
-                options,
-            ),
-        );
+            Object.assign({
+                root: null,
+                rootMargin: '200px',
+                threshold: 0
+            }, options)
+        )
 
         intersectionObserver.observe(elem);
     });

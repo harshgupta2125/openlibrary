@@ -9,11 +9,11 @@ export function initAdmin() {
         var tag;
 
         $(this).toggleClass('active');
-        action = $(this).hasClass('active') ? 'add_tag' : 'remove_tag';
+        action = $(this).hasClass('active') ? 'add_tag': 'remove_tag';
         tag = $(this).text();
         $.post(window.location.href, {
             action: action,
-            tag: tag,
+            tag: tag
         });
     });
 
@@ -26,11 +26,11 @@ export function initAdmin() {
 export function initAnonymizationButton(button) {
     const displayName = button.dataset.displayName;
     const confirmMessage = `Really anonymize ${displayName}'s account? This will delete ${displayName}'s profile page and booknotes, and anonymize ${displayName}'s reading log, reviews, star ratings, and merge request submissions.`;
-    button.addEventListener('click', (event) => {
+    button.addEventListener('click', function(event) {
         if (!confirm(confirmMessage)) {
             event.preventDefault();
         }
-    });
+    })
 }
 
 /**
@@ -40,12 +40,12 @@ export function initAnonymizationButton(button) {
  * @param {NodeList<HTMLButtonElement>} buttons
  */
 export function initConfirmationButtons(buttons) {
-    const confirmMessage = 'Are you sure?';
+    const confirmMessage = 'Are you sure?'
     for (const button of buttons) {
-        button.addEventListener('click', (event) => {
+        button.addEventListener('click', function(event) {
             if (!confirm(confirmMessage)) {
                 event.preventDefault();
             }
-        });
+        })
     }
 }

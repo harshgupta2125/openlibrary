@@ -26,19 +26,19 @@ beforeEach(() => {
 });
 
 describe('Email tests', () => {
-    let emailLabel, emailField;
+    let emailLabel, emailField
 
     beforeEach(() => {
-    // call the function
+        // call the function
         initSignupForm();
 
         //declare the elements
         emailLabel = document.querySelector('label[for="emailAddr"]');
         emailField = document.getElementById('emailAddr');
-    });
+    })
 
     test('validateEmail should update elements correctly on success', () => {
-    // set the email value
+        // set the email value
         emailField.value = 'testemail@archive.org';
 
         // Trigger the blur event on the email field
@@ -50,7 +50,7 @@ describe('Email tests', () => {
     });
 
     test('validateEmail should update elements correctly for empty fields', () => {
-    // set the email value
+        // set the email value
         emailField.value = '';
 
         // Trigger the blur event on the email field
@@ -62,7 +62,7 @@ describe('Email tests', () => {
     });
 
     test('validateEmail should update elements correctly for emails with plus signs', () => {
-    // set the email value
+        // set the email value
         emailField.value = 'testemail+01@archive.org';
 
         // Trigger the blur event on the email field
@@ -74,7 +74,7 @@ describe('Email tests', () => {
     });
 
     test('validateEmail should update elements correctly for emails with no punctuation', () => {
-    // set the password values
+        // set the password values
         emailField.value = 'testemail';
 
         // Trigger the blur event on the email fields
@@ -86,7 +86,7 @@ describe('Email tests', () => {
     });
 
     test('validateEmail should update elements correctly for emails with invalid punctuation', () => {
-    // set the email values
+        // set the email values
         emailField.value = 'testemail@archive-org';
 
         // Trigger the blur event on the email fields
@@ -99,19 +99,19 @@ describe('Email tests', () => {
 });
 
 describe('Username tests', () => {
-    let usernameLabel, usernameField;
+    let usernameLabel, usernameField
 
     beforeEach(() => {
-    // call the function
+        // call the function
         initSignupForm();
 
         //declare the elements
         usernameLabel = document.querySelector('label[for="username"]');
         usernameField = document.getElementById('username');
-    });
+    })
 
     test('validateUsername should update elements correctly on success', () => {
-    // set the username value
+        // set the username value
         usernameField.value = 'username123';
 
         // Trigger the blur event on the username field
@@ -123,7 +123,7 @@ describe('Username tests', () => {
     });
 
     test('validateUsername should update elements correctly for empty fields', () => {
-    // set the username value
+        // set the username value
         usernameField.value = '';
 
         // Trigger the blur event on the username field
@@ -135,7 +135,7 @@ describe('Username tests', () => {
     });
 
     test('validateUsername should update elements correctly for usernames over 20 chars', () => {
-    // set the username values
+        // set the username values
         usernameField.value = 'username1234567891011';
 
         // Trigger the blur event on the username fields
@@ -147,7 +147,7 @@ describe('Username tests', () => {
     });
 
     test('validateusername should update elements correctly for usernames under 3 chars', () => {
-    // set the username values
+        // set the username values
         usernameField.value = 'us';
 
         // Trigger the blur event on the username fields
@@ -159,20 +159,21 @@ describe('Username tests', () => {
     });
 });
 
+
 describe('Password tests', () => {
-    let passwordLabel, passwordField;
+    let passwordLabel, passwordField
 
     beforeEach(() => {
-    // call the function
+        // call the function
         initSignupForm();
 
         //declare the elements
         passwordLabel = document.querySelector('label[for="password"]');
         passwordField = document.getElementById('password');
-    });
+    })
 
     test('validatePassword should update elements correctly on success', () => {
-    // set the password value
+        // set the password value
         passwordField.value = 'password123';
 
         // Trigger the blur event on the password field
@@ -184,7 +185,7 @@ describe('Password tests', () => {
     });
 
     test('validatePassword should update elements correctly for empty fields', () => {
-    // set the password value
+        // set the password value
         passwordField.value = '';
 
         // Trigger the blur event on the password field
@@ -196,7 +197,7 @@ describe('Password tests', () => {
     });
 
     test('validatePassword should update elements correctly for passwords over 20 chars', () => {
-    // set the password values
+        // set the password values
         passwordField.value = 'password1234567891011';
 
         // Trigger the blur event on the password fields
@@ -208,7 +209,7 @@ describe('Password tests', () => {
     });
 
     test('validatePassword should update elements correctly for passwords under 3 chars', () => {
-    // set the password values
+        // set the password values
         passwordField.value = 'pa';
 
         // Trigger the blur event on the password fields
@@ -227,16 +228,16 @@ describe('Print disability tests', () => {
         initSignupForm();
 
         checkbox = document.querySelector('#pd-request');
-        selector = document.querySelector('#pda-selector');
-    });
+        selector = document.querySelector('#pda-selector')
+    })
 
     test('Qualifying authority selector only visible when PD checkbox is checked', () => {
-        checkbox.checked = false;
+        checkbox.checked = false
         checkbox.dispatchEvent(new Event('change', { bubbles: true }));
         expect(selector.classList.contains('hidden')).toBe(true);
 
-        checkbox.checked = true;
+        checkbox.checked = true
         checkbox.dispatchEvent(new Event('change', { bubbles: true }));
         expect(selector.classList.contains('hidden')).toBe(false);
-    });
-});
+    })
+})

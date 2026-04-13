@@ -11,15 +11,15 @@ const booksAdded = {
         hoverable: true,
         show: true,
         borderWidth: 1,
-        borderColor: '#d9d9d9',
+        borderColor: '#d9d9d9'
     },
     xaxis: {
-        mode: 'time',
+        mode: 'time'
     },
     legend: {
         show: true,
-        position: 'nw',
-    },
+        position: 'nw'
+    }
 };
 
 const loans = {
@@ -35,21 +35,21 @@ const loans = {
         hoverable: true,
         show: true,
         borderWidth: 1,
-        borderColor: '#d9d9d9',
+        borderColor: '#d9d9d9'
     },
     xaxis: {
-        mode: 'time',
+        mode: 'time'
     },
     yaxis: {
-        position: 'right',
+        position: 'right'
     },
     legend: {
         show: true,
-        position: 'nw',
-    },
+        position: 'nw'
+    }
 };
 
 export default {
     booksAdded,
-    loans,
+    loans
 };

@@ -1,7 +1,7 @@
 import sinon from 'sinon';
-import { init } from '../../../openlibrary/plugins/openlibrary/js/jquery.repeat';
-import { htmlquote } from '../../../openlibrary/plugins/openlibrary/js/jsdef';
 import * as testData from './html-test-data';
+import { htmlquote } from '../../../openlibrary/plugins/openlibrary/js/jsdef';
+import { init } from '../../../openlibrary/plugins/openlibrary/js/jquery.repeat';
 
 let sandbox;
 
@@ -20,9 +20,9 @@ test('identifiers of repeated elements are never the same.', () => {
     // turn on jQuery repeat
     $('#identifiers').repeat({
         vars: {
-            prefix: 'edition--',
+            prefix: 'edition--'
         },
-        validate: () => {},
+        validate: () => {}
     });
 
     expect($('.repeat-item').length).toBe(5);
@@ -30,14 +30,12 @@ test('identifiers of repeated elements are never the same.', () => {
     $('#id-value').text('fo4rzdaHDAwC');
     $('.repeat-add').trigger('click');
     expect($('.repeat-item').length).toBe(6);
-    $('#identifiers--3 .repeat-remove').trigger('click');
+    $('#identifiers--3 .repeat-remove').trigger('click')
     expect($('.repeat-item').length).toBe(5);
     $('#select-id').val('goodreads');
     $('#id-value').text('44415839');
     $('.repeat-add').trigger('click');
     expect($('.repeat-item').length).toBe(6);
-    const ids = $('[id]')
-        .map((_, node) => node.getAttribute('id'))
-        .toArray();
+    const ids = $('[id]').map((_, node) => node.getAttribute('id')).toArray();
     expect(ids.length).toBe(new Set(ids).size);
 });

@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 
 /**
  * OLChip - A pill-shaped interactive chip web component
@@ -137,13 +137,11 @@ export class OLChip extends LitElement {
     }
 
     _handleClick() {
-        this.dispatchEvent(
-            new CustomEvent('ol-chip-select', {
-                bubbles: true,
-                composed: true,
-                detail: { selected: !this.selected },
-            }),
-        );
+        this.dispatchEvent(new CustomEvent('ol-chip-select', {
+            bubbles: true,
+            composed: true,
+            detail: { selected: !this.selected },
+        }));
     }
 
     _renderIcons() {

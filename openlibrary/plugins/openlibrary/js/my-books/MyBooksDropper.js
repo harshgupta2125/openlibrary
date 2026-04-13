@@ -2,16 +2,12 @@
  * Defines functionality related to Open Library's My Books dropper components.
  * @module my-books/MyBooksDropper
  */
-
-import { Dropper } from '../dropper/Dropper';
-import { removeChildren } from '../utils';
-import { CheckInComponents } from './MyBooksDropper/CheckInComponents';
-import { ReadingLists } from './MyBooksDropper/ReadingLists';
-import {
-    ReadingLogForms,
-    ReadingLogShelves,
-} from './MyBooksDropper/ReadingLogForms';
-import myBooksStore from './store';
+import myBooksStore from './store'
+import { CheckInComponents } from './MyBooksDropper/CheckInComponents'
+import { ReadingLists } from './MyBooksDropper/ReadingLists'
+import {ReadingLogForms, ReadingLogShelves} from './MyBooksDropper/ReadingLogForms'
+import { Dropper } from '../dropper/Dropper'
+import { removeChildren } from '../utils'
 
 /**
  * Represents a single My Books Dropper.
@@ -31,207 +27,190 @@ import myBooksStore from './store';
  */
 export class MyBooksDropper extends Dropper {
     /**
-   * Creates references to the given dropper's reading log forms, read date affordances, and
-   * list affordances.
-   *
-   * @param {HTMLElement} dropper
-   */
-    constructor (dropper) {
-        super(dropper);
+     * Creates references to the given dropper's reading log forms, read date affordances, and
+     * list affordances.
+     *
+     * @param {HTMLElement} dropper
+     */
+    constructor(dropper) {
+        super(dropper)
 
         const dropperActionCallbacks = {
             closeDropper: this.closeDropper.bind(this),
-            toggleDropper: this.toggleDropper.bind(this),
-        };
+            toggleDropper: this.toggleDropper.bind(this)
+        }
 
         /**
-     * Reference to this dropper's list content.
-     * @member {ReadingLists}
-     */
-        this.readingLists = new ReadingLists(dropper, dropperActionCallbacks);
+         * Reference to this dropper's list content.
+         * @member {ReadingLists}
+         */
+        this.readingLists = new ReadingLists(dropper, dropperActionCallbacks)
 
         /**
-     * Reference to the dropper's list loading indicator.
-     *
-     * This is only rendered when the patron is logged in.
-     * @member {HTMLElement|null}
-     */
-        this.loadingIndicator = dropper.querySelector('.list-loading-indicator');
+         * Reference to the dropper's list loading indicator.
+         *
+         * This is only rendered when the patron is logged in.
+         * @member {HTMLElement|null}
+         */
+        this.loadingIndicator = dropper.querySelector('.list-loading-indicator')
 
         /**
-     * Reference to the interval ID of the animation `setInterval` call.
-     * @member {NodeJS.Timer|undefined}
-     */
-        this.loadingAnimationId;
+         * Reference to the interval ID of the animation `setInterval` call.
+         * @member {NodeJS.Timer|undefined}
+         */
+        this.loadingAnimationId
 
         /**
-     * The work key associated with this dropper, if any.
-     *
-     * @member {string|undefined}
-     */
-        this.workKey = this.dropper.dataset.workKey;
+         * The work key associated with this dropper, if any.
+         *
+         * @member {string|undefined}
+         */
+        this.workKey = this.dropper.dataset.workKey
 
-        const splitKey = this.workKey ? this.workKey.split('/') : [''];
-        const workOlid = splitKey[splitKey.length - 1];
-
-        /**
-     * @type {CheckInComponents|null}
-     */
-        this.checkInComponents = workOlid
-            ? new CheckInComponents(
-                document.querySelector(`#check-in-container-${workOlid}`),
-            )
-            : null;
+        const splitKey = this.workKey ? this.workKey.split('/') : ['']
+        const workOlid = splitKey[splitKey.length - 1]
 
         /**
-     * References this dropper's reading log buttons.
-     * @member {ReadingLogForms}
-     */
-        this.readingLogForms = new ReadingLogForms(
-            dropper,
-            this.checkInComponents,
-            dropperActionCallbacks,
-        );
+         * @type {CheckInComponents|null}
+         */
+        this.checkInComponents = workOlid ? new CheckInComponents(document.querySelector(`#check-in-container-${workOlid}`)) : null
+
+        /**
+         * References this dropper's reading log buttons.
+         * @member {ReadingLogForms}
+         */
+        this.readingLogForms = new ReadingLogForms(dropper, this.checkInComponents, dropperActionCallbacks)
     }
 
     /**
-   * Hydrates dropper contents and loads patron's lists.
-   */
-    initialize () {
-        super.initialize();
+     * Hydrates dropper contents and loads patron's lists.
+     */
+    initialize() {
+        super.initialize()
 
-        this.readingLogForms.initialize();
-        this.readingLists.initialize();
+        this.readingLogForms.initialize()
+        this.readingLists.initialize()
         if (this.checkInComponents) {
-            this.checkInComponents.initialize();
+            this.checkInComponents.initialize()
         }
 
-        this.loadingAnimationId = this.initLoadingAnimation(
-            this.dropper.querySelector('.loading-ellipsis'),
-        );
+        this.loadingAnimationId = this.initLoadingAnimation(this.dropper.querySelector('.loading-ellipsis'))
     }
 
     /**
-   * Creates loading animation for list loading indicator.
-   *
-   * @param {HTMLElement} loadingIndicator
-   * @returns {NodeJS.Timer}
-   */
-    initLoadingAnimation (loadingIndicator) {
-        let count = 0;
-        const intervalId = setInterval(() => {
-            let ellipsis = '';
+     * Creates loading animation for list loading indicator.
+     *
+     * @param {HTMLElement} loadingIndicator
+     * @returns {NodeJS.Timer}
+     */
+    initLoadingAnimation(loadingIndicator) {
+        let count = 0
+        const intervalId = setInterval(function() {
+            let ellipsis = ''
             for (let i = 0; i < count % 4; ++i) {
-                ellipsis += '.';
+                ellipsis += '.'
             }
-            loadingIndicator.innerText = ellipsis;
-            ++count;
-        }, 1500);
+            loadingIndicator.innerText = ellipsis
+            ++count
+        }, 1500)
 
-        return intervalId;
+        return intervalId
     }
 
     /**
-   * Replaces dropper loading indicator with the given
-   * partially rendered list affordances.
-   *
-   * @param {string} partialHtml
-   */
-    updateReadingLists (partialHtml) {
-        clearInterval(this.loadingAnimationId);
-        this.replaceLoadingIndicators(this.loadingIndicator, partialHtml);
+     * Replaces dropper loading indicator with the given
+     * partially rendered list affordances.
+     *
+     * @param {string} partialHtml
+     */
+    updateReadingLists(partialHtml) {
+        clearInterval(this.loadingAnimationId)
+        this.replaceLoadingIndicators(this.loadingIndicator, partialHtml)
     }
 
     /**
-   * Returns an array of seed keys associated with this dropper.
-   *
-   * If the seed identifies a book, there should be both an
-   * edition and work key in the results. Otherwise, the results
-   * array should only contain the primary seed key.
-   *
-   * @returns {Array<string>}
-   */
-    getSeedKeys () {
-        const results = [this.readingLists.seedKey];
+     * Returns an array of seed keys associated with this dropper.
+     *
+     * If the seed identifies a book, there should be both an
+     * edition and work key in the results. Otherwise, the results
+     * array should only contain the primary seed key.
+     *
+     * @returns {Array<string>}
+     */
+    getSeedKeys() {
+        const results = [this.readingLists.seedKey]
         if (this.readingLists.workKey) {
-            results.push(this.readingLists.workKey);
+            results.push(this.readingLists.workKey)
         }
-        return results;
+        return results
     }
 
     /**
-   * Object returned by the list partials endpoint.
-   *
-   * @typedef {Object} ListPartials
-   * @property {string} dropper HTML string for dropdown list content
-   * @property {string} active HTML string for patron's active lists
-   */
+     * Object returned by the list partials endpoint.
+     *
+     * @typedef {Object} ListPartials
+     * @property {string} dropper HTML string for dropdown list content
+     * @property {string} active HTML string for patron's active lists
+     */
     /**
-   * Replaces list loading indicators with the given partially rendered HTML.
-   *
-   * @param {HTMLElement} dropperListsPlaceholder Loading indicator found inside of the dropdown content
-   * @param {ListPartials} partials
-   */
-    replaceLoadingIndicators (dropperListsPlaceholder, partialHTML) {
-        const dropperParent = dropperListsPlaceholder
-            ? dropperListsPlaceholder.parentElement
-            : null;
+     * Replaces list loading indicators with the given partially rendered HTML.
+     *
+     * @param {HTMLElement} dropperListsPlaceholder Loading indicator found inside of the dropdown content
+     * @param {ListPartials} partials
+     */
+    replaceLoadingIndicators(dropperListsPlaceholder, partialHTML) {
+        const dropperParent = dropperListsPlaceholder ? dropperListsPlaceholder.parentElement : null
 
         if (dropperParent) {
-            removeChildren(dropperParent);
-            dropperParent.insertAdjacentHTML('afterbegin', partialHTML);
+            removeChildren(dropperParent)
+            dropperParent.insertAdjacentHTML('afterbegin', partialHTML)
 
-            const anchors = this.dropper.querySelectorAll('.modify-list');
-            this.readingLists.initModifyListAffordances(anchors);
+            const anchors = this.dropper.querySelectorAll('.modify-list')
+            this.readingLists.initModifyListAffordances(anchors)
         }
     }
 
     /**
-   * Updates this dropper's primary button's state and display to show that a book is active on the
-   * given shelf.
-   *
-   * When we update to the "Already Read" shelf, the appropriate last read date affordance is
-   * displayed.
-   *
-   * @param shelf {ReadingLogShelf}
-   */
-    updateShelfDisplay (shelf) {
-        this.readingLogForms.updateActivatedStatus(true);
-        this.readingLogForms.updatePrimaryBookshelfId(Number(shelf));
-        this.readingLogForms.updatePrimaryButtonText(
-            this.readingLogForms.getDisplayString(shelf),
-        );
+     * Updates this dropper's primary button's state and display to show that a book is active on the
+     * given shelf.
+     *
+     * When we update to the "Already Read" shelf, the appropriate last read date affordance is
+     * displayed.
+     *
+     * @param shelf {ReadingLogShelf}
+     */
+    updateShelfDisplay(shelf) {
+        this.readingLogForms.updateActivatedStatus(true)
+        this.readingLogForms.updatePrimaryBookshelfId(Number(shelf))
+        this.readingLogForms.updatePrimaryButtonText(this.readingLogForms.getDisplayString(shelf))
 
         if (this.checkInComponents) {
-            if (
-                !this.checkInComponents.hasReadDate() &&
-        shelf === ReadingLogShelves.ALREADY_READ
-            ) {
-                this.checkInComponents.showCheckInDisplay();
+            if (!this.checkInComponents.hasReadDate() && shelf === ReadingLogShelves.ALREADY_READ) {
+                this.checkInComponents.showCheckInDisplay()
             } else {
-                this.checkInComponents.hideCheckInPrompt();
+                this.checkInComponents.hideCheckInPrompt()
             }
         }
     }
 
     // Dropper overrides:
     /**
-   * Updates store with reference to the opened dropper.
-   *
-   * @override
-   */
-    onOpen () {
-        myBooksStore.setOpenDropper(this);
+     * Updates store with reference to the opened dropper.
+     *
+     * @override
+     */
+    onOpen() {
+        myBooksStore.setOpenDropper(this)
     }
 
     /**
-   * Redirects to login page when disabled dropper is clicked.
-   *
-   * My Books droppers are disabled for unauthenticated patrons.
-   *
-   * @override
-   */
-    onDisabledClick () {
-        window.location = `/account/login?redirect=${location.pathname}`;
+     * Redirects to login page when disabled dropper is clicked.
+     *
+     * My Books droppers are disabled for unauthenticated patrons.
+     *
+     * @override
+     */
+    onDisabledClick() {
+        window.location = `/account/login?redirect=${location.pathname}`
     }
 }

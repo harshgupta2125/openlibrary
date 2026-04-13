@@ -2,15 +2,15 @@ import 'jquery-ui/ui/widgets/dialog';
 import { declineRequest } from './merge-request-table/MergeRequestService';
 
 export function initAuthorMergePage() {
-    $('#save').on('click', () => {
+    $('#save').on('click', function () {
         const n = $('#mergeForm input[type=radio]:checked').length;
-        const confirmMergeButton = document.querySelector('#confirmMerge');
+        const confirmMergeButton = document.querySelector('#confirmMerge')
         if (n === 0) {
             $('#noMaster').dialog('open');
         } else if (confirmMergeButton) {
             $('#confirmMerge').dialog('open');
         } else {
-            $('#mergeForm').trigger('submit');
+            $('#mergeForm').trigger('submit')
         }
         return false;
     });
@@ -28,11 +28,7 @@ export function initAuthorMergePage() {
         previousMaster.removeClass('master mergeSelection');
         previousMaster.find('input[type=checkbox]').prop('checked', false);
         $(this).parent().parent().addClass('master');
-        $(this)
-            .parent()
-            .parent()
-            .find('input[type=checkbox]')
-            .prop('checked', true);
+        $(this).parent().parent().find('input[type=checkbox]').prop('checked', true);
     });
     $('#include input[type=checkbox]').on('change', function () {
         if (!$(this).parent().parent().hasClass('master')) {
@@ -43,25 +39,25 @@ export function initAuthorMergePage() {
             }
         }
     });
-    initRejectButton();
+    initRejectButton()
 }
 
 function initRejectButton() {
-    const rejectButton = document.querySelector('#reject-author-merge-btn');
+    const rejectButton = document.querySelector('#reject-author-merge-btn')
     if (rejectButton) {
-        rejectButton.addEventListener('click', () => {
-            rejectMerge();
-            rejectButton.disabled = true;
-            const approveButton = document.querySelector('#save');
-            approveButton.disabled = true;
-        });
+        rejectButton.addEventListener('click', function() {
+            rejectMerge()
+            rejectButton.disabled = true
+            const approveButton = document.querySelector('#save')
+            approveButton.disabled = true
+        })
     }
 }
 
 function rejectMerge() {
-    const commentInput = document.querySelector('#author-merge-comment');
-    const mridInput = document.querySelector('#mrid-input');
-    declineRequest(Number(mridInput.value), commentInput.value);
+    const commentInput = document.querySelector('#author-merge-comment')
+    const mridInput = document.querySelector('#mrid-input')
+    declineRequest(Number(mridInput.value), commentInput.value)
 }
 
 /**
@@ -79,30 +75,30 @@ export function initAuthorView() {
     const data = {
         master: dataKeysJSON['master'],
         duplicates: dataKeysJSON['duplicates'],
-        olids: dataKeysJSON['olids'],
+        olids: dataKeysJSON['olids']
     };
 
-    const mrid = dataKeysJSON['mrid'];
-    const comment = dataKeysJSON['comment'];
+    const mrid = dataKeysJSON['mrid']
+    const comment = dataKeysJSON['comment']
 
     if (mrid) {
-        data['mrid'] = mrid;
+        data['mrid'] = mrid
     }
     if (comment) {
-        data['comment'] = comment;
+        data['comment'] = comment
     }
 
     $.ajax({
         url: '/authors/merge.json',
         type: 'POST',
         data: JSON.stringify(data),
-        error: () => {
+        error: function() {
             $('#preMerge').fadeOut();
             $('#errorMerge').fadeIn();
         },
-        success: () => {
+        success: function() {
             $('#preMerge').fadeOut();
             $('#postMerge').fadeIn();
-        },
+        }
     });
 }

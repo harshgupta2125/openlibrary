@@ -1,12 +1,11 @@
 // @ts-check
-
-import { BulkTagger } from '../bulk-tagger/BulkTagger.js';
-import { renderBulkTagger } from '../bulk-tagger/index.js';
 import SelectionManager from './utils/SelectionManager/SelectionManager.js';
+import { renderBulkTagger } from '../bulk-tagger/index.js';
+import { BulkTagger } from '../bulk-tagger/BulkTagger.js';
 
 export function init() {
     const ile = new IntegratedLibrarianEnvironment();
-    // @ts-expect-error
+    // @ts-ignore
     window.ILE = ile;
     ile.init();
 }
@@ -15,8 +14,7 @@ export class IntegratedLibrarianEnvironment {
     constructor() {
         this.selectionManager = new SelectionManager(this);
         /** This is the main ILE toolbar. Should be moved to a Vue component. */
-        this.$toolbar = $(
-            `
+        this.$toolbar = $(`
             <div id="ile-toolbar">
                 <div id="ile-selections">
                     <div id="ile-drag-status">
@@ -27,22 +25,21 @@ export class IntegratedLibrarianEnvironment {
                 </div>
                 <div id="ile-drag-actions"></div>
                 <div id="ile-hidden-forms"></div>
-            </div>`.trim(),
-        );
+            </div>`.trim());
         this.$selectionActions = this.$toolbar.find('#ile-selection-actions');
         this.$statusText = this.$toolbar.find('.text');
         this.$statusImages = this.$toolbar.find('.images ul');
         this.$actions = this.$toolbar.find('#ile-drag-actions');
         this.$hiddenForms = this.$toolbar.find('#ile-hidden-forms');
-        this.bulkTagger = null;
+        this.bulkTagger = null
     }
 
     init() {
-    // Add the ILE toolbar to bottom of screen
+        // Add the ILE toolbar to bottom of screen
         $(document.body).append(this.$toolbar.hide());
 
         // Ready bulk tagger:
-        this.createBulkTagger();
+        this.createBulkTagger()
 
         this.selectionManager.init();
     }
@@ -54,11 +51,11 @@ export class IntegratedLibrarianEnvironment {
     }
 
     /**
-   * Resets the status bar.
-   */
+     * Resets the status bar.
+     */
     reset() {
         for (const elem of $('.ile-selected')) {
-            elem.classList.remove('ile-selected');
+            elem.classList.remove('ile-selected')
         }
         this.setStatusText('');
         this.$selectionActions.empty();
@@ -67,39 +64,39 @@ export class IntegratedLibrarianEnvironment {
     }
 
     /**
-   * Clears all items selected in SelectionManager.
-   *
-   * This indirectly calls `IntegratedLibrarianEnvironment.reset()`.
-   */
+     * Clears all items selected in SelectionManager.
+     *
+     * This indirectly calls `IntegratedLibrarianEnvironment.reset()`.
+     */
     clearAndReset() {
-        this.selectionManager.clearSelectedItems();
+        this.selectionManager.clearSelectedItems()
     }
 
     /**
-   * Creates a new Bulk Tagger component and attaches it to the DOM.
-   *
-   * Sets the value of `IntegratedLibrarianEnvironment.bulkTagger`
-   */
+     * Creates a new Bulk Tagger component and attaches it to the DOM.
+     *
+     * Sets the value of `IntegratedLibrarianEnvironment.bulkTagger`
+     */
     createBulkTagger() {
-        const target = this.$hiddenForms[0];
-        target.innerHTML += renderBulkTagger();
-        const bulkTaggerElem = document.querySelector('.bulk-tagging-form');
-        // @ts-expect-error
-        this.bulkTagger = new BulkTagger(bulkTaggerElem);
-        this.bulkTagger.initialize();
+        const target = this.$hiddenForms[0]
+        target.innerHTML += renderBulkTagger()
+        const bulkTaggerElem = document.querySelector('.bulk-tagging-form')
+        // @ts-ignore
+        this.bulkTagger = new BulkTagger(bulkTaggerElem)
+        this.bulkTagger.initialize()
     }
 
     /**
-   * Updates the Bulk Tagger with the selected works, then displays the tagger.
-   *
-   * @param {Array<String>} workIds
-   * @param {boolean} isBookPageEdit `true` if the bulk tagger is opened on a /books or /works page
-   */
+     * Updates the Bulk Tagger with the selected works, then displays the tagger.
+     *
+     * @param {Array<String>} workIds
+     * @param {boolean} isBookPageEdit `true` if the bulk tagger is opened on a /books or /works page
+     */
     updateAndShowBulkTagger(workIds, isBookPageEdit = false) {
         if (this.bulkTagger) {
-            this.bulkTagger.isBookPageEdit = isBookPageEdit;
-            this.bulkTagger.updateWorks(workIds);
-            this.bulkTagger.showTaggingMenu();
+            this.bulkTagger.isBookPageEdit = isBookPageEdit
+            this.bulkTagger.updateWorks(workIds)
+            this.bulkTagger.showTaggingMenu()
         }
     }
 }
