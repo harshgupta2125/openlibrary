@@ -2,8 +2,8 @@ import { matchMiscFiles, matchSmallMediumCovers, matchLargeCovers, matchStaticIm
 
 
 // Helper function to create a URL object
-function _u(url) {
-    return { url: new URL(url) }
+function _u (url) {
+    return { url: new URL(url) };
 }
 // Group related tests together
 describe('URL Matchers', () => {

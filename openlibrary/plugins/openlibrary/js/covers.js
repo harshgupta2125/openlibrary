@@ -8,7 +8,7 @@ import 'jquery-ui-touch-punch'; // this makes drag-to-reorder work on touch devi
 import { closePopup } from './utils';
 
 //cover/change.html
-export function initCoversChange() {
+export function initCoversChange () {
     // Pull data from data-config of class "manageCovers" in covers/manage.html
     const data_config_json = $('.manageCovers').data('config');
     const doc_type_key = data_config_json['key'];
@@ -38,14 +38,14 @@ export function initCoversChange() {
         });
 }
 
-function add_iframe(selector, src) {
+function add_iframe (selector, src) {
     $(selector)
         .append('<iframe frameborder="0" height="580" width="580" marginheight="0" marginwidth="0" scrolling="auto"></iframe>')
         .find('iframe')
         .attr('src', src);
 }
 
-function showLoadingIndicator() {
+function showLoadingIndicator () {
     const loadingIndicator = document.querySelector('.loadingIndicator');
     const formDivs = document.querySelectorAll('.ol-cover-form, .imageIntro');
 
@@ -56,8 +56,8 @@ function showLoadingIndicator() {
 }
 
 // covers/manage.html and covers/add.html
-export function initCoversAddManage() {
-    $('.ol-cover-form').on('submit', function() {
+export function initCoversAddManage () {
+    $('.ol-cover-form').on('submit', function () {
         showLoadingIndicator();
     });
 
@@ -73,7 +73,7 @@ export function initCoversAddManage() {
 
 // covers/saved.html
 // Uses parent.$ in place of $ where elements lie outside of the "saved" window
-export function initCoversSaved() {
+export function initCoversSaved () {
     // Save the new image
     // Pull data from data-config of class "imageSaved" in covers/saved.html
     const data_config_json = parent.$('.manageCovers').data('config');
@@ -117,7 +117,7 @@ export function initCoversSaved() {
 }
 
 // This function will be triggered when the user clicks the "Paste" button
-async function pasteImage() {
+async function pasteImage () {
     let formData = null;
     try {
         const clipboardItems = await navigator.clipboard.read();
@@ -131,9 +131,9 @@ async function pasteImage() {
             const blob = await item.getType(mimeType);
             const image = document.createElement('img');
             image.src = URL.createObjectURL(blob);
-            image.alt = ''
-            const imageContainer = document.querySelector('.image-container')
-            imageContainer.replaceChildren(image)
+            image.alt = '';
+            const imageContainer = document.querySelector('.image-container');
+            imageContainer.replaceChildren(image);
 
             // Update the global formData with the new image blob
             formData = new FormData();
@@ -148,7 +148,7 @@ async function pasteImage() {
 
             // Show the upload button
             const uploadButton = document.getElementById('uploadButtonPaste');
-            uploadButton.classList.remove('hidden')
+            uploadButton.classList.remove('hidden');
 
             return formData;
         }
@@ -158,13 +158,13 @@ async function pasteImage() {
     }
 }
 
-export function initPasteForm(coverForm) {
+export function initPasteForm (coverForm) {
     const pasteButton = coverForm.querySelector('#pasteButton');
     let formData = null;
 
     pasteButton.addEventListener('click', async () => {
         formData = await pasteImage(coverForm);
-        pasteButton.textContent = 'Change Image'
+        pasteButton.textContent = 'Change Image';
     });
 
     coverForm.addEventListener('submit', (event) => {

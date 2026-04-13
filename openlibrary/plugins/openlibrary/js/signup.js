@@ -1,11 +1,11 @@
 import { debounce } from './nonjquery_utils.js';
 
-export function initSignupForm() {
+export function initSignupForm () {
     const signupForm = document.querySelector('form[name=signup]');
     const submitBtn = document.querySelector('button[name=signup]');
-    const rpdCheckbox = document.querySelector('#pd-request')
-    const pdaSelectorContainer = document.querySelector('#pda-selector')
-    const pdaSelector = document.querySelector('#pd_program')
+    const rpdCheckbox = document.querySelector('#pd-request');
+    const pdaSelectorContainer = document.querySelector('#pda-selector');
+    const pdaSelector = document.querySelector('#pd_program');
     const i18nStrings = JSON.parse(signupForm.dataset.i18n);
     const emailLoadingIcon = $('.ol-signup-form__input--emailAddr .ol-signup-form__icon--loading');
     const usernameLoadingIcon = $('.ol-signup-form__input--username .ol-signup-form__icon--loading');
@@ -21,16 +21,16 @@ export function initSignupForm() {
     const USERNAME_MAXLENGTH = 20;
 
     // Callback that is called when grecaptcha.execute() is successful
-    function submitCreateAccountForm() {
+    function submitCreateAccountForm () {
         signupForm.submit();
     }
-    window.submitCreateAccountForm = submitCreateAccountForm
+    window.submitCreateAccountForm = submitCreateAccountForm;
 
     // Checks whether reportValidity exists for cross-browser compatibility
     // Includes invalid input count to account for checks not covered by reportValidity
-    $(signupForm).on('submit', function(e) {
+    $(signupForm).on('submit', function (e) {
         e.preventDefault();
-        validatePDSelection()
+        validatePDSelection();
         const numInvalidInputs = signupForm.querySelectorAll('.invalid').length;
         const isFormattingValid = !signupForm.reportValidity || signupForm.reportValidity();
         if (numInvalidInputs === 0 && isFormattingValid && window.grecaptcha) {
@@ -39,9 +39,9 @@ export function initSignupForm() {
         }
     });
 
-    $('#username').on('keyup', function(){
+    $('#username').on('keyup', function (){
         const value = $(this).val();
-        $('#userUrl').addClass('darkgreen').text(value).css('font-weight','700');
+        $('#userUrl').addClass('darkgreen').text(value).css('font-weight', '700');
     });
 
     /**
@@ -51,7 +51,7 @@ export function initSignupForm() {
      * @param {string} errorDiv The ID (incl #) of the div where the error msg will be rendered
      * @param {string} errorMsg The error message text
      */
-    function renderError(inputId, errorDiv, errorMsg) {
+    function renderError (inputId, errorDiv, errorMsg) {
         $(inputId).addClass('invalid');
         $(`label[for=${inputId.slice(1)}]`).addClass('invalid');
         $(errorDiv).text(errorMsg);
@@ -63,13 +63,13 @@ export function initSignupForm() {
      * @param {string} inputId The ID (incl #) of the input the error relates to
      * @param {string} errorDiv The ID (incl #) of the div where the error msg is currently rendered
      */
-    function clearError(inputId, errorDiv) {
+    function clearError (inputId, errorDiv) {
         $(inputId).removeClass('invalid');
         $(`label[for=${inputId.slice(1)}]`).removeClass('invalid');
         $(errorDiv).text('');
     }
 
-    function validateUsername() {
+    function validateUsername () {
         const value_username = $('#username').val();
 
         usernameSuccessIcon.hide();
@@ -95,7 +95,7 @@ export function initSignupForm() {
             url: '/account/validate',
             data: { username: value_username },
             type: 'GET',
-            success: function(errors) {
+            success: function (errors) {
                 usernameLoadingIcon.hide();
 
                 if (errors.username) {
@@ -108,7 +108,7 @@ export function initSignupForm() {
         });
     }
 
-    function validateEmail() {
+    function validateEmail () {
         const value_email = $('#emailAddr').val();
 
         emailSuccessIcon.hide();
@@ -129,7 +129,7 @@ export function initSignupForm() {
             url: '/account/validate',
             data: { email: value_email },
             type: 'GET',
-            success: function(errors) {
+            success: function (errors) {
                 emailLoadingIcon.hide();
 
                 if (errors.email) {
@@ -142,7 +142,7 @@ export function initSignupForm() {
         });
     }
 
-    function validatePassword() {
+    function validatePassword () {
         const value_password = $('#password').val();
 
         if (value_password === '') {
@@ -158,24 +158,24 @@ export function initSignupForm() {
         clearError('#password', '#passwordMessage');
     }
 
-    function validatePDSelection() {
+    function validatePDSelection () {
         if (!rpdCheckbox.checked) {
-            clearError('#pd_program', '#pd_programMessage')
+            clearError('#pd_program', '#pd_programMessage');
             pdaSelector.setAttribute('aria-invalid', 'false');
-            return
+            return;
         }
         if (pdaSelector.value === '') {
-            renderError('#pd_program', '#pd_programMessage', i18nStrings['missing_pda_err'])
+            renderError('#pd_program', '#pd_programMessage', i18nStrings['missing_pda_err']);
             pdaSelector.setAttribute('aria-invalid', 'true');
-            return
+            return;
         }
 
-        clearError('#pd_program', '#pd_programMessage')
+        clearError('#pd_program', '#pd_programMessage');
         pdaSelector.setAttribute('aria-invalid', 'false');
     }
 
     // Maps input ID attribute to corresponding validation function
-    function validateInput(input) {
+    function validateInput (input) {
         const id = $(input).attr('id');
         if (id === 'emailAddr') {
             validateEmail();
@@ -188,53 +188,53 @@ export function initSignupForm() {
         }
     }
 
-    const $nonCheckboxInputs = $('form[name=signup] input:not([type="checkbox"])')
+    const $nonCheckboxInputs = $('form[name=signup] input:not([type="checkbox"])');
 
     // Validates input fields already marked as invalid on value change
-    $nonCheckboxInputs.on('input', debounce(function(){
+    $nonCheckboxInputs.on('input', debounce(function (){
         if ($(this).hasClass('invalid')) {
             validateInput(this);
         }
     }, 50));
 
     // Validates all other input fields (i.e. not already marked as invalid) on blur
-    $nonCheckboxInputs.on('blur', function() {
+    $nonCheckboxInputs.on('blur', function () {
         if (!$(this).hasClass('invalid')) {
             validateInput(this);
         }
     });
 
     // Validates the print-disability authority selection when the selection changes
-    $('form[name=signup] select').on('change', function() {
-        validatePDSelection()
-    })
+    $('form[name=signup] select').on('change', function () {
+        validatePDSelection();
+    });
 
-    function updateSelectorVisibility() {
+    function updateSelectorVisibility () {
         if (rpdCheckbox.checked) {
-            pdaSelectorContainer.classList.remove('hidden')
-            rpdCheckbox.setAttribute('aria-expanded','true')
-            pdaSelectorContainer.setAttribute('aria-hidden','false')
-            pdaSelector.setAttribute('aria-required', 'true')
+            pdaSelectorContainer.classList.remove('hidden');
+            rpdCheckbox.setAttribute('aria-expanded', 'true');
+            pdaSelectorContainer.setAttribute('aria-hidden', 'false');
+            pdaSelector.setAttribute('aria-required', 'true');
         } else {
-            pdaSelectorContainer.classList.add('hidden')
-            rpdCheckbox.setAttribute('aria-expanded','false')
-            pdaSelectorContainer.setAttribute('aria-hidden','true')
-            pdaSelector.setAttribute('aria-required', 'false')
+            pdaSelectorContainer.classList.add('hidden');
+            rpdCheckbox.setAttribute('aria-expanded', 'false');
+            pdaSelectorContainer.setAttribute('aria-hidden', 'true');
+            pdaSelector.setAttribute('aria-required', 'false');
         }
     }
 
-    rpdCheckbox.addEventListener('change', updateSelectorVisibility)
+    rpdCheckbox.addEventListener('change', updateSelectorVisibility);
 
     // On page reload, display PD program options and validate selection
-    updateSelectorVisibility()
-    validatePDSelection()
+    updateSelectorVisibility();
+    validatePDSelection();
 }
 
-export function initLoginForm() {
+export function initLoginForm () {
     const loginForm = $('form[name=login]');
     const loadingText = loginForm.data('i18n')['loading_text'];
 
     loginForm.on('submit', () => {
         $('button[type=submit]').prop('disabled', true).text(loadingText);
-    })
+    });
 }

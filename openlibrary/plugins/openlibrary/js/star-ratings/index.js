@@ -2,15 +2,15 @@ import { FadingToast } from '../Toast.js';
 import { findDropperForWork } from '../my-books';
 import { ReadingLogShelves } from '../my-books/MyBooksDropper/ReadingLogForms';
 
-export function initRatingHandlers(ratingForms) {
+export function initRatingHandlers (ratingForms) {
     for (const form of ratingForms) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             handleRatingSubmission(e, form);
-        })
+        });
     }
 }
 
-function handleRatingSubmission(event, form) {
+function handleRatingSubmission (event, form) {
     event.preventDefault();
     // Continue only if selected star is different from previous rating
     if (!event.submitter.classList.contains('star-selected')) {
@@ -19,8 +19,8 @@ function handleRatingSubmission(event, form) {
         const formData = new FormData(form);
         let rating;
         if (event.submitter.value) {
-            rating = Number(event.submitter.value)
-            formData.append('rating', event.submitter.value)
+            rating = Number(event.submitter.value);
+            formData.append('rating', event.submitter.value);
         }
 
         // Make AJAX call
@@ -36,7 +36,7 @@ function handleRatingSubmission(event, form) {
                     throw new Error('You must be logged in to rate books');
                 }
                 if (!response.ok) {
-                    throw new Error('Ratings update failed')
+                    throw new Error('Ratings update failed');
                 }
                 // Update view to deselect all stars
                 form.querySelectorAll('.star-selected').forEach((elem) => {
@@ -44,7 +44,7 @@ function handleRatingSubmission(event, form) {
                     if (elem.hasAttribute('property')) {
                         elem.removeAttribute('property');
                     }
-                })
+                });
 
                 const clearButton = form.querySelector('.star-messaging');
                 if (rating) {  // A rating was added or updated
@@ -53,14 +53,14 @@ function handleRatingSubmission(event, form) {
                     form.querySelectorAll(`.star-${rating}`).forEach((elem) => {
                         elem.classList.add('star-selected');
                         if (elem.tagName === 'LABEL') {
-                            elem.setAttribute('property', 'ratingValue')
+                            elem.setAttribute('property', 'ratingValue');
                         }
-                    })
+                    });
 
                     // Find dropper that is associated with this star rating affordance:
-                    const dropper = findDropperForWork(form.dataset.workKey)
+                    const dropper = findDropperForWork(form.dataset.workKey);
                     if (dropper) {
-                        dropper.updateShelfDisplay(ReadingLogShelves.ALREADY_READ)
+                        dropper.updateShelfDisplay(ReadingLogShelves.ALREADY_READ);
                     }
                 } else {  // A rating was deleted
                     clearButton.classList.add('hidden');
@@ -68,6 +68,6 @@ function handleRatingSubmission(event, form) {
             })
             .catch((error) => {
                 new FadingToast(error.message).show();
-            })
+            });
     }
 }

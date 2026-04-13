@@ -27,7 +27,7 @@ test('jsdef: foreach', () => {
                 expect(called).toBe(3);
                 resolve();
             }
-        })
+        });
     });
 });
 

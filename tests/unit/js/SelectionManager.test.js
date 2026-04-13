@@ -1,6 +1,6 @@
 import SelectionManager from '../../../openlibrary/plugins/openlibrary/js/ile/utils/SelectionManager/SelectionManager.js';
 
-function createTestElementsForProcessClick() {
+function createTestElementsForProcessClick () {
     const listItem = document.createElement('li');
     listItem.classList.add('searchResultItem', 'ile-selectable');
 
@@ -15,10 +15,10 @@ function createTestElementsForProcessClick() {
 
     listItem.appendChild(bookTitle);
 
-    return {listItem,link};
+    return {listItem, link};
 }
 
-function setupSelectionManager() {
+function setupSelectionManager () {
     const sm = new SelectionManager(null, '/search');
     sm.ile = { $statusImages: { append: jest.fn() } };
     sm.selectedItems = { work: [] };
@@ -55,7 +55,7 @@ describe('SelectionManager', () => {
 
     test('processClick - clicking on a link or button', () => {
         const sm = setupSelectionManager();
-        const { listItem,link } = createTestElementsForProcessClick();
+        const { listItem, link } = createTestElementsForProcessClick();
 
         link.addEventListener('click', () => {
             sm.processClick({ target: link, currentTarget: listItem });

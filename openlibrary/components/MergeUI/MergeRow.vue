@@ -88,7 +88,7 @@ export default {
             type: Boolean
         }
     },
-    data() {
+    data () {
         return {
             master_key: null
         };

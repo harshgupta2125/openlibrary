@@ -1,4 +1,4 @@
-export function initOfflineBanner() {
+export function initOfflineBanner () {
 
     window.addEventListener('offline', () => {
         $('#offline-info').slideDown();
