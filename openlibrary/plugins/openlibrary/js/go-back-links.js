@@ -4,7 +4,7 @@
  *
  * @param {NodeList<HTMLElement>} goBackLinks
 */
-export function initGoBackLinks (goBackLinks) {
+export function initGoBackLinks(goBackLinks) {
     for (const link of goBackLinks) {
         link.addEventListener('click', () => {
             if (history.length > 2) {

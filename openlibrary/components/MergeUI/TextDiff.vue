@@ -25,7 +25,7 @@ export default {
         }
     },
     computed: {
-        diff () {
+        diff() {
             const fn = {
                 char: diffChars,
                 word: diffWordsWithSpace,

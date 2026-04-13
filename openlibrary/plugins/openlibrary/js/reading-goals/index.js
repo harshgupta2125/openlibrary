@@ -6,7 +6,7 @@ import { buildPartialsUrl } from '../utils';
  *
  * @param {HTMLCollection<HTMLElement>} links Prompts for adding a reading goal
  */
-export function initYearlyGoalPrompt (links) {
+export function initYearlyGoalPrompt(links) {
     for (const link of links) {
         if (!link.classList.contains('goal-set')) {
             link.addEventListener('click', onYearlyGoalClick);
@@ -17,7 +17,7 @@ export function initYearlyGoalPrompt (links) {
 /**
  * Finds and shows the yearly goal modal.
  */
-function onYearlyGoalClick () {
+function onYearlyGoalClick() {
     const yearlyGoalModal = document.querySelector('#yearly-goal-modal');
     yearlyGoalModal.showModal();
 }
@@ -33,7 +33,7 @@ function onYearlyGoalClick () {
  *
  * @param {HTMLCollection<HTMLElement>} elems ELements which display only the current year
  */
-export function displayLocalYear (elems) {
+export function displayLocalYear(elems) {
     const localYear = new Date().getFullYear();
     for (const elem of elems) {
         const serverYear = Number(elem.dataset.serverYear);
@@ -48,7 +48,7 @@ export function displayLocalYear (elems) {
  *
  * @param {HTMLCollection<HTMLElement>} editLinks Edit goal links
  */
-export function initGoalEditLinks (editLinks) {
+export function initGoalEditLinks(editLinks) {
     for (const link of editLinks) {
         const parent = link.closest('.reading-goal-progress');
         const modal = parent.querySelector('dialog');
@@ -64,8 +64,8 @@ export function initGoalEditLinks (editLinks) {
  * @param {HTMLElement} editLink An edit goal link
  * @param {HTMLDialogElement} modal The modal that will be shown
  */
-function addGoalEditClickListener (editLink, modal) {
-    editLink.addEventListener('click', function () {
+function addGoalEditClickListener(editLink, modal) {
+    editLink.addEventListener('click', function() {
         modal.showModal();
     });
 }
@@ -76,7 +76,7 @@ function addGoalEditClickListener (editLink, modal) {
  *
  * @param {HTMLCollection<HTMLElement>} submitButtons Submit goal buttons
  */
-export function initGoalSubmitButtons (submitButtons) {
+export function initGoalSubmitButtons(submitButtons) {
     for (const button of submitButtons) {
         addGoalSubmissionListener(button);
     }
@@ -89,8 +89,8 @@ export function initGoalSubmitButtons (submitButtons) {
  * the action set a new goal, or updated an existing goal.
  * @param {HTMLELement} submitButton Reading goal form submit button
  */
-function addGoalSubmissionListener (submitButton) {
-    submitButton.addEventListener('click', function (event) {
+function addGoalSubmissionListener(submitButton) {
+    submitButton.addEventListener('click', function(event) {
         event.preventDefault();
 
         const form = submitButton.closest('form');
@@ -161,7 +161,7 @@ function addGoalSubmissionListener (submitButton) {
  * @param {HTMLElement} elem A reading goal progress component
  * @param {Number} goal The new reading goal
  */
-function updateProgressComponent (elem, goal) {
+function updateProgressComponent(elem, goal) {
     // Calculate new percentage:
     const booksReadSpan = elem.querySelector('.reading-goal-progress__books-read');
     const booksRead = Number(booksReadSpan.textContent);
@@ -183,7 +183,7 @@ function updateProgressComponent (elem, goal) {
  * @param {NodeList} yearlyGoalElems Containers for progress components and reading goal links.
  * @param {string} goalYear Year that the goal is set for.
  */
-function fetchProgressAndUpdateViews (yearlyGoalElems, goalYear) {
+function fetchProgressAndUpdateViews(yearlyGoalElems, goalYear) {
     fetch(buildPartialsUrl('ReadingGoalProgress', {year: goalYear}))
         .then((response) => {
             if (!response.ok) {
@@ -191,7 +191,7 @@ function fetchProgressAndUpdateViews (yearlyGoalElems, goalYear) {
             }
             return response.json();
         })
-        .then(function (data) {
+        .then(function(data) {
             const html = data['partials'];
             yearlyGoalElems.forEach((yearlyGoalElem) => {
                 const progress = document.createElement('SPAN');

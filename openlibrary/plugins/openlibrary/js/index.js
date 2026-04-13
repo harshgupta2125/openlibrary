@@ -24,7 +24,7 @@ initServiceWorker();
 initAnalytics();
 
 // Initialise some things
-jQuery(function () {
+jQuery(function() {
     // conditionally load polyfill for <details> tags (IE11)
     // See http://diveintohtml5.info/everything.html#details
     if (!('open' in document.createElement('details'))) {
@@ -40,7 +40,7 @@ jQuery(function () {
 
     // Polyfill for .closest()
     if (!Element.prototype.closest) {
-        Element.prototype.closest = function (s) {
+        Element.prototype.closest = function(s) {
             let el = this;
             do {
                 if (Element.prototype.matches.call(el, s)) return el;
@@ -66,7 +66,7 @@ jQuery(function () {
     $('.no-img img').hide();
 
     // disable save button after click
-    $('button[name=\'_save\']').on('submit', function () {
+    $('button[name=\'_save\']').on('submit', function() {
         $(this).attr('disabled', true);
     });
 
@@ -418,30 +418,30 @@ jQuery(function () {
             });
     }
 
-    $(document).on('click', '.slide-toggle', function () {
+    $(document).on('click', '.slide-toggle', function() {
         $(`#${$(this).attr('aria-controls')}`).slideToggle();
     });
 
-    $('#wikiselect').on('focus', function (){$(this).trigger('select');});
+    $('#wikiselect').on('focus', function(){$(this).trigger('select');});
 
-    $('.hamburger-component .mask-menu').on('click', function () {
+    $('.hamburger-component .mask-menu').on('click', function() {
         $('details[open]').not(this).removeAttr('open');
     });
 
-    $('.header-dropdown').on('keydown', function (event) {
+    $('.header-dropdown').on('keydown', function(event) {
         if (event.key === 'Escape') {
             $('.header-dropdown > details[open]').removeAttr('open');
         }
     });
 
-    $('.dropdown-menu').each(function () {
-        $(this).find('a').last().on('focusout', function () {
+    $('.dropdown-menu').each(function() {
+        $(this).find('a').last().on('focusout', function() {
             $('.header-dropdown > details[open]').removeAttr('open');
         });
     });
 
     // Open one dropdown at a time.
-    $(document).on('click', function (event) {
+    $(document).on('click', function(event) {
         const $openMenus = $('.header-dropdown details[open]').parents('.header-dropdown');
         $openMenus
             .filter((_, menu) => !$(event.target).closest(menu).length)

@@ -54,7 +54,7 @@ export default {
         values: {
             type: Array,
             required: true,
-            validator: function (arr) {
+            validator: function(arr) {
                 for (const item of arr) {
                     if (typeof(item) !== 'string') {
                         return false;

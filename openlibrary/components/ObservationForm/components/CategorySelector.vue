@@ -74,7 +74,7 @@ export default {
             default: 0
         }
     },
-    data: function () {
+    data: function() {
         return {
             /**
              * The ID of the selected book tag type.
@@ -91,7 +91,7 @@ export default {
          * @param {boolean} isSelected Whether or not a chip is currently selected.
          * @param {String} text The text displayed by a chip.
          */
-        updateSelected: function (isSelected, text) {
+        updateSelected: function(isSelected, text) {
             if (isSelected) {
                 // TODO: This for loop shouldn't be necessary
                 for (let i = 0; i < this.observationsArray.length; ++i) {
@@ -112,7 +112,7 @@ export default {
          *
          * @param {number} id A chip's id.
          */
-        isSelected: function (id) {
+        isSelected: function(id) {
             return this.selectedId === id;
         },
         /**
@@ -123,7 +123,7 @@ export default {
          *
          * @returns {String} An HTML code representing selections of a type.
          */
-        displaySymbol: function (type) {
+        displaySymbol: function(type) {
             if (this.allSelectedValues[type] && this.allSelectedValues[type].length) {
                 // &#10004; - Heavy checkmark
                 return '&#10004;';

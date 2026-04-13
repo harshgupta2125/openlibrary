@@ -7,7 +7,7 @@ import { removeChildren } from '../utils';
 
 // XXX : jsdoc
 // XXX : decompose
-export function initMyBooksAffordances (dropperElements, showcaseElements) {
+export function initMyBooksAffordances(dropperElements, showcaseElements) {
     const showcases = [];
     for (const elem of showcaseElements) {
         const showcase = new ShowcaseItem(elem);
@@ -91,7 +91,7 @@ export function initMyBooksAffordances (dropperElements, showcaseElements) {
  * @param workKey {string}
  * @returns {MyBooksDropper|undefined}
  */
-export function findDropperForWork (workKey) {
+export function findDropperForWork(workKey) {
     return myBooksStore.getDroppers().find(dropper => {
         return workKey === dropper.workKey;
     });

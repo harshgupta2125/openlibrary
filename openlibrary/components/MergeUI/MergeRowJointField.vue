@@ -40,7 +40,7 @@ export default {
         }
     },
     computed: {
-        presentFields () {
+        presentFields() {
             return this.fields.filter(f => f in this.record);
         }
     }

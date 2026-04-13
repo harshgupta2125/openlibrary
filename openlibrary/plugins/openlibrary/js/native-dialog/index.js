@@ -6,9 +6,9 @@
  * 2. The dialog receives a `close-dialog` event.
  * @param {HTMLCollection<HTMLDialogElement>} elems
  */
-export function initDialogs (elems) {
+export function initDialogs(elems) {
     for (const elem of elems) {
-        elem.addEventListener('click', function (event) {
+        elem.addEventListener('click', function(event) {
 
             // Event target exclusions needed for FireFox, which sets mouse positions to zero on
             // <select> and <option> clicks
@@ -16,11 +16,11 @@ export function initDialogs (elems) {
                 elem.close();
             }
         });
-        elem.addEventListener('close-dialog', function () {
+        elem.addEventListener('close-dialog', function() {
             elem.close();
         });
         const closeIcon = elem.querySelector('.native-dialog--close');
-        closeIcon.addEventListener('click', function () {
+        closeIcon.addEventListener('click', function() {
             elem.close();
         });
     }
@@ -33,7 +33,7 @@ export function initDialogs (elems) {
  * @param {HTMLDialogElement} dialog
  * @returns `true` if the click was out of bounds.
  */
-function isOutOfBounds (event, dialog) {
+function isOutOfBounds(event, dialog) {
     const rect = dialog.getBoundingClientRect();
     return (
         event.clientX < rect.left ||

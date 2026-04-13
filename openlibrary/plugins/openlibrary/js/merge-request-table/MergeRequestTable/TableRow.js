@@ -9,7 +9,7 @@ import { FadingToast } from '../../Toast';
 
 let i18nStrings;
 
-export function setI18nStrings (localizedStrings) {
+export function setI18nStrings(localizedStrings) {
     i18nStrings = localizedStrings;
 }
 
@@ -34,7 +34,7 @@ export class TableRow {
      * @param {HTMLElement} row Root element of a table row
      * @param {string} username `username` of logged-in patron. Empty if unauthenticated.
      */
-    constructor (row, username) {
+    constructor(row, username) {
         /**
          * Reference to this row.
          *
@@ -132,7 +132,7 @@ export class TableRow {
     /**
      * Hydrates interactive elements in this row.
      */
-    initialize () {
+    initialize() {
         this.toggleCommentButton.addEventListener('click', () => this.toggleComments());
         if (this.closeRequestButton) {
             this.closeRequestButton.addEventListener('click', () => this.closeRequest());
@@ -153,7 +153,7 @@ export class TableRow {
      * the full comments panel is hidden. This function toggles
      * each element's visibility.
      */
-    toggleComments () {
+    toggleComments() {
         this.commentPreview.classList.toggle('hidden');
         this.fullCommentsPanel.classList.toggle('hidden');
 
@@ -165,7 +165,7 @@ export class TableRow {
      * Closes the request linked to this row, and removes this
      * row from the DOM.
      */
-    async closeRequest () {
+    async closeRequest() {
         const comment = prompt(i18nStrings['close_request_comment_prompt']);
         if (comment !== null) {  // Comment will be `null` if "Cancel" button pressed
             await declineRequest(this.mrid, comment)
@@ -187,7 +187,7 @@ export class TableRow {
      *
      * Updates the view on success.
      */
-    async addComment () {
+    async addComment() {
         const comment = this.commentReplyInput.value.trim();
         if (comment) {
             await commentOnRequest(this.mrid, comment)
@@ -215,7 +215,7 @@ export class TableRow {
      *
      * @param {string} comment The newly added comment.
      */
-    updateCommentViews (comment) {
+    updateCommentViews(comment) {
         const escapedComment = document.createTextNode(comment);
 
         // Update preview:
@@ -240,7 +240,7 @@ export class TableRow {
      *
      * Hides the review button, and shows the assignee display.
      */
-    async claimRequest () {
+    async claimRequest() {
         await claimRequest(this.mrid)
             .then(result => result.json())
             .then(data => {
@@ -257,7 +257,7 @@ export class TableRow {
      *
      * Hides the assignee display and shows the review button on success.
      */
-    async unassignReviewer () {
+    async unassignReviewer() {
         await unassignRequest(this.mrid)
             .then(result => result.json())
             .then(data => {

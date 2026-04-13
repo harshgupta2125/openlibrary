@@ -6,9 +6,9 @@ import { isbnOverride } from '../../openlibrary/js/isbnOverride';
  *
  * Used in addbook process.
  */
-export function init () {
+export function init() {
     // used in books/edit/exercpt, books/edit/web and books/edit/edition
-    $.fn.repeat = function (options) {
+    $.fn.repeat = function(options) {
         var addSelector, removeSelector, id, elems, t, code,
             nextRowId;
         options = options || {};
@@ -22,7 +22,7 @@ export function init () {
             template: $(`${id}-template`)
         };
 
-        function createTemplate (selector) {
+        function createTemplate(selector) {
             code = $(selector).html()
                 .replace(/%7B%7B/gi, '<%=')
                 .replace(/%7D%7D/gi, '%>')
@@ -38,9 +38,9 @@ export function init () {
          * object representing.
          * @return {object} data mapping names to values
          */
-        function formdata () {
+        function formdata() {
             var data = {};
-            $(':input', elems.form).each(function () {
+            $(':input', elems.form).each(function() {
                 var $e = $(this),
                     name = $e.attr('name'),
                     type = $e.attr('type'),
@@ -60,7 +60,7 @@ export function init () {
          * Creates a removable `repeat-item`.
          * @param {jQuery.Event} event
          */
-        function onAdd (event) {
+        function onAdd(event) {
             var data, newid;
             const isbnOverrideData = isbnOverride.get();
             event.preventDefault();
@@ -100,7 +100,7 @@ export function init () {
 
             elems._this.trigger('repeat-add');
         }
-        function onRemove (event) {
+        function onRemove(event) {
             event.preventDefault();
             $(this).parents('.repeat-item').eq(0).remove();
             elems._this.trigger('repeat-remove');

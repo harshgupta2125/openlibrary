@@ -5,14 +5,14 @@
 *
 */
 
-export default function initAnalytics () {
+export default function initAnalytics() {
     var vs, i;
     var startTime = new Date();
     if (window.archive_analytics) {
         // Setup analytics, depends on script loaded from CDN
         window.archive_analytics.set_up_event_tracking();
 
-        window.archive_analytics.ol_send_event_ping = function (values) {
+        window.archive_analytics.ol_send_event_ping = function(values) {
             var endTime = new Date();
             window.archive_analytics.send_ping({
                 service: 'ol',
@@ -36,7 +36,7 @@ export default function initAnalytics () {
         if (window.flights){
             window.flights.init();
         }
-        $(document).on('click', '[data-ol-link-track]', function () {
+        $(document).on('click', '[data-ol-link-track]', function() {
             var category_action = $(this).attr('data-ol-link-track').split('|');
             // for testing,
             // console.log(category_action[0], category_action[1]);
@@ -50,7 +50,7 @@ export default function initAnalytics () {
     window.vs = vs;
 
     // NOTE: This might cause issues if this script is made async #4474
-    window.addEventListener('DOMContentLoaded', function send_analytics_pageview () {
+    window.addEventListener('DOMContentLoaded', function send_analytics_pageview() {
         window.archive_analytics.send_pageview({});
     });
 }

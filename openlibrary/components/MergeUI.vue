@@ -81,7 +81,7 @@ export default {
             default: 'true',
         }
     },
-    data () {
+    data() {
         return {
             url: new URL(location.toString()),
             mergeStatus: LOADING,
@@ -91,7 +91,7 @@ export default {
         };
     },
     computed: {
-        olids () {
+        olids() {
             const olidsString = this.url.searchParams.get('records');
             if (!olidsString) return [];
             return olidsString
@@ -100,19 +100,19 @@ export default {
                 .filter(Boolean);
         },
 
-        isSuperLibrarian () {
+        isSuperLibrarian() {
             return this.canmerge === 'true';
         },
 
-        isDisabled () {
+        isDisabled() {
             return this.mergeStatus !== DO_MERGE && this.mergeStatus !== REQUEST_MERGE;
         },
 
-        showRejectButton () {
+        showRejectButton() {
             return this.mrid && this.isSuperLibrarian;
         }
     },
-    mounted () {
+    mounted() {
         const readyCta = this.isSuperLibrarian ? DO_MERGE : REQUEST_MERGE;
         this.$watch(
             '$refs.mergeTable.merge',
@@ -122,7 +122,7 @@ export default {
         );
     },
     methods: {
-        async doMerge () {
+        async doMerge() {
             if (!this.$refs.mergeTable.merge) return;
             const { record: master, dupes, editions_to_move, unmergeable_works } = this.$refs.mergeTable.merge;
 
@@ -168,7 +168,7 @@ export default {
             this.mergeStatus = 'Done';
         },
 
-        async rejectMerge () {
+        async rejectMerge() {
             try {
                 await update_merge_request(this.mrid, 'decline', this.comment);
                 this.mergeOutput = 'Merge request closed';

@@ -5,7 +5,7 @@ import MergeRequestTable from './MergeRequestTable';
  *
  * @param {HTMLElement} elem Reference to the queue's root element.
  */
-export function initLibrarianQueue (elem) {
+export function initLibrarianQueue(elem) {
     const librarianQueue = new MergeRequestTable(elem);
     librarianQueue.initialize();
 }

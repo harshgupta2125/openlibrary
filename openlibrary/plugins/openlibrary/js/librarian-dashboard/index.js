@@ -8,7 +8,7 @@ let i18nStrings;
  *
  * @param {HTMLDetailsElement} rootElement
  */
-export function initLibrarianDashboard (rootElement) {
+export function initLibrarianDashboard(rootElement) {
     i18nStrings = JSON.parse(rootElement.dataset.i18n);
     const table = rootElement.querySelector('.dq-table');
     rootElement.addEventListener('click', () => {
@@ -22,7 +22,7 @@ export function initLibrarianDashboard (rootElement) {
  * @param {HTMLTableElement} table
  * @returns {Promise<void>}
  */
-async function populateTable (table) {
+async function populateTable(table) {
     const bookCount = Number(table.dataset.totalBooks);
     const rows = table.querySelectorAll('.dq-table__row');
 
@@ -36,7 +36,7 @@ async function populateTable (table) {
  * @param {number} totalCount Total number of search results
  * @returns {Promise<void>}
  */
-async function updateRow (row, totalCount) {
+async function updateRow(row, totalCount) {
     const queryFragment = row.dataset.queryFragment;
     const apiUrl = buildUrl(queryFragment, false);
     const searchPageUrl = buildUrl(queryFragment);
@@ -83,7 +83,7 @@ async function updateRow (row, totalCount) {
  * @param {string} queryFragment
  * @param {boolean} forUi
  */
-function buildUrl (queryFragment, forUi = true) {
+function buildUrl(queryFragment, forUi = true) {
     const match = window.location.pathname.match(/authors\/(OL\d+A)/);
     const queryParamString = match ? `?q=author_key:${match[1]}` : window.location.search;
 
@@ -98,7 +98,7 @@ function buildUrl (queryFragment, forUi = true) {
  * @param {HTMLTableRowElement} row
  * @param {string} newCellMarkup Markup for the new status cells
  */
-function replaceStatusCells (row, newCellMarkup) {
+function replaceStatusCells(row, newCellMarkup) {
     const statusCells = row.querySelectorAll('td:not(.dq-table__criterion-cell)');
     for (const cell of statusCells) {
         cell.remove();
@@ -118,7 +118,7 @@ function replaceStatusCells (row, newCellMarkup) {
  *
  * @returns {string} HTML string
  */
-function renderResultsCells (results, totalCount, failingHref) {
+function renderResultsCells(results, totalCount, failingHref) {
     const numFound = results.numFound;
     const percentage = Math.floor(((totalCount - numFound) / totalCount) * 100);
 
@@ -136,7 +136,7 @@ function renderResultsCells (results, totalCount, failingHref) {
  *
  * @returns {string} HTML string
  */
-function renderRetryCell () {
+function renderRetryCell() {
     return `<td>
         <button class="dqs-run-again">
             ${i18nStrings['reload']}
@@ -150,7 +150,7 @@ function renderRetryCell () {
  * @param {string} href Link to search page for failing query
  * @returns {string}
  */
-function renderErrorCell (href) {
+function renderErrorCell(href) {
     return `<td colspan="2">
         <a href="${href}">${i18nStrings['error']}</a>
     </td>`;
@@ -161,6 +161,6 @@ function renderErrorCell (href) {
  *
  * @returns {string}
  */
-function renderPendingCell () {
+function renderPendingCell() {
     return `<td colspan="3">${i18nStrings['loading']}</td>`;
 }

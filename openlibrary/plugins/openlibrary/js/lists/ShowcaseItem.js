@@ -32,7 +32,7 @@ export class ShowcaseItem {
      *
      * @param {HTMLElement} showcaseElem
      */
-    constructor (showcaseElem) {
+    constructor(showcaseElem) {
         /**
          * Reference to the root element of this component.
          * @member {HTMLElement}
@@ -97,7 +97,7 @@ export class ShowcaseItem {
      * Attaches click listeners to the showcase item's "Remove from list"
      * affordance.
      */
-    initialize () {
+    initialize() {
         this.removeFromListAffordance.addEventListener('click', (event) => {
             event.preventDefault();
             this.removeShowcaseItem();
@@ -110,7 +110,7 @@ export class ShowcaseItem {
      * Removes any affiliated showcase items from the DOM, and updates all
      * dropper list affordances.
      */
-    async removeShowcaseItem () {
+    async removeShowcaseItem() {
         await removeItem(this.listKey, this.seed)
             .then(response => response.json())
             .then(() => {
@@ -140,7 +140,7 @@ export class ShowcaseItem {
      * Removes self from the myBooksStore's showcase array
      * upon success.
      */
-    removeSelf () {
+    removeSelf() {
         const showcases = myBooksStore.getShowcases();
         const thisIndex = showcases.indexOf(this);
         if (thisIndex >= 0) {
@@ -160,7 +160,7 @@ export class ShowcaseItem {
      *
      * @param {boolean} showWorks `true` if only active showcase items related to works should be displayed
      */
-    toggleVisibility (showWorks) {
+    toggleVisibility(showWorks) {
         if (this.isActiveShowcase) {
             if (showWorks) {
                 if (this.isWork) {
@@ -185,7 +185,7 @@ export class ShowcaseItem {
      * @param {string} seedKey
      * @return {boolean} `true` if the given keys match this item's keys
      */
-    isShowcaseForListAndSeed (listKey, seedKey) {
+    isShowcaseForListAndSeed(listKey, seedKey) {
         return (this.listKey === listKey) && (this.seedKey === seedKey);
     }
 }
@@ -205,7 +205,7 @@ const DEFAULT_COVER_URL = '/images/icons/avatar_book-sm.png';
  * @param {string} seed
  * @returns {string} Type of the given seed key.
  */
-function getSeedType (seed) {
+function getSeedType(seed) {
     // XXX : validate input?
     if (seed[0] !== '/') {
         return 'subject';
@@ -233,7 +233,7 @@ function getSeedType (seed) {
  * @param {string} [coverUrl]
  * @returns {HTMLLIElement}
  */
-export function createActiveShowcaseItem (listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
+export function createActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
     if (!i18nStrings) {
         const i18nInput = document.querySelector('input[name=list-i18n-strings]');
         i18nStrings = JSON.parse(i18nInput.value);
@@ -275,7 +275,7 @@ export function createActiveShowcaseItem (listKey, seedKey, listTitle, coverUrl 
  *
  * @param {boolean} showWorksOnly
  */
-export function toggleActiveShowcaseItems (showWorksOnly) {
+export function toggleActiveShowcaseItems(showWorksOnly) {
     for (const item of myBooksStore.getShowcases()) {
         item.toggleVisibility(showWorksOnly);
     }
@@ -296,7 +296,7 @@ export function toggleActiveShowcaseItems (showWorksOnly) {
  * @param {string} listTitle
  * @param {string} [coverUrl]
  */
-export function attachNewActiveShowcaseItem (listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
+export function attachNewActiveShowcaseItem(listKey, seedKey, listTitle, coverUrl = DEFAULT_COVER_URL) {
     const activeListsShowcase = document.querySelector('.already-lists');
 
     if (activeListsShowcase) {

@@ -8,7 +8,7 @@ export default class EdtionNavBar {
      *
      * @param {HTMLElement} navbarWrapper
      */
-    constructor (navbarWrapper) {
+    constructor(navbarWrapper) {
         /**
          * Reference to the parent element of the navbar.
          * @type {HTMLElement}
@@ -51,7 +51,7 @@ export default class EdtionNavBar {
     /**
      * Adds the necessary event handlers to the navbar.
      */
-    initialize () {
+    initialize() {
         // Add click listeners to navbar items:
         for (let i = 0; i < this.navItems.length; ++i) {
             this.navItems[i].addEventListener('click', () => {
@@ -98,7 +98,7 @@ export default class EdtionNavBar {
      * Determines this navbar's position on the page and updates the selected
      * nav item.
      */
-    updateSelected () {
+    updateSelected() {
         const navbarHeight = this.navbarWrapper.getBoundingClientRect().height;
         if (navbarHeight > 0) {
             let i = this.navItems.length;
@@ -118,7 +118,7 @@ export default class EdtionNavBar {
      *
      * @param {HTMLElement} selectedItem Newly selected nav item
      */
-    scrollNavbar (selectedItem) {
+    scrollNavbar(selectedItem) {
         // Note: We don't use the browser native scrollIntoView method because
         // that method scrolls _recursively_, so it also tries to scroll the
         // body to center the element on the screen, causing weird jitters.
@@ -137,7 +137,7 @@ export default class EdtionNavBar {
      *
      * @param {HTMLLIElement} selectedElem Element corresponding to the 'selected' navbar item.
      */
-    selectElement (selectedElem) {
+    selectElement(selectedElem) {
         for (const li of this.navItems) {
             li.classList.remove('selected');
         }

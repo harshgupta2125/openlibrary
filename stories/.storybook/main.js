@@ -1,7 +1,7 @@
 const webpackConfig = require('../../webpack.config');
 
 module.exports = {
-    webpackFinal: async (config) => {
+    webpackFinal: async(config) => {
         config.module.rules = config.module.rules.concat(
             webpackConfig.module.rules
         );

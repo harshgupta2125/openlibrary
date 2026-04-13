@@ -20,7 +20,7 @@ export default class MergeRequestTable {
      *
      * @param {HTMLElement} mergeRequestTable
      */
-    constructor (mergeRequestTable) {
+    constructor(mergeRequestTable) {
         /**
          * The `username` of the authenticated patron, or '' if logged out.
          *
@@ -53,7 +53,7 @@ export default class MergeRequestTable {
     /**
      * Hydrates the librarian request table.
      */
-    initialize () {
+    initialize() {
         this.tableHeader.initialize();
         document.addEventListener('click', (event) => this.tableHeader.closeMenusIfClickOutside(event));
         this.tableRows.forEach(elem => elem.initialize());

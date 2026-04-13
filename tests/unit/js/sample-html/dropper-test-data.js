@@ -13,7 +13,7 @@ export const closedDropperMarkup = generateDropperMarkup(false);
 
 export const disabledDropperMarkup = generateDropperMarkup(false, true);
 
-function generateDropperMarkup (isDropperOpen, isDropperDisabled = false) {
+function generateDropperMarkup(isDropperOpen, isDropperDisabled = false) {
     let wrapperClasses = 'generic-dropper-wrapper';
     let arrowClasses = 'arrow';
 

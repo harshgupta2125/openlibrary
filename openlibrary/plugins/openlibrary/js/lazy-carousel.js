@@ -7,7 +7,7 @@ import { buildPartialsUrl } from './utils';
  *
  * @param elems {NodeList<HTMLElement>} Collection of placeholder carousel elements
  */
-export function initLazyCarousel (elems) {
+export function initLazyCarousel(elems) {
     // Create intersection observer
     const intersectionObserver = new IntersectionObserver(intersectionCallback, {
         root: null,
@@ -34,7 +34,7 @@ export function initLazyCarousel (elems) {
  * @param data {object}
  * @returns {Promise<Response>}
  */
-async function fetchPartials (data) {
+async function fetchPartials(data) {
     return fetch(buildPartialsUrl('LazyCarousel', {...data}));
 }
 
@@ -49,7 +49,7 @@ async function fetchPartials (data) {
  *
  * @param target {HTMLElement} A placeholder element for a carousel
  */
-function doFetchAndUpdate (target) {
+function doFetchAndUpdate(target) {
     const config = JSON.parse(target.dataset.config);
     const loadingIndicator = target.querySelector('.loadingIndicator');
 
@@ -95,7 +95,7 @@ function doFetchAndUpdate (target) {
  *
  * @param target {Element}
  */
-function handleRetry (target) {
+function handleRetry(target) {
     target.querySelector('.loadingIndicator').classList.remove('hidden');
     target.querySelector('.lazy-carousel-retry').classList.add('hidden');
     const carouselFallbackElem = target.querySelector('.lazy-carousel-fallback');
@@ -113,7 +113,7 @@ function handleRetry (target) {
  * @param entries {Array<IntersectionObserverEntry>}
  * @param observer {IntersectionObserver}
  */
-function intersectionCallback (entries, observer) {
+function intersectionCallback(entries, observer) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const target = entry.target;

@@ -5,7 +5,7 @@ import 'jquery-ui/ui/widgets/dialog';
  *
  * @param {NodeList<HTMLElement>} leaveWaitlistLinks - NodeList of leave waitlist links
  */
-export function initLeaveWaitlist (leaveWaitlistLinks) {
+export function initLeaveWaitlist(leaveWaitlistLinks) {
     for (const link of leaveWaitlistLinks) {
         link.addEventListener('click', () => {
             const $link = $(link);

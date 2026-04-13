@@ -20,7 +20,7 @@ const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
  * @param {Number} year
  * @returns `true` if the given year is a leap year.
  */
-function isLeapYear (year) {
+function isLeapYear(year) {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
 
@@ -40,7 +40,7 @@ export class CheckInComponents {
     /**
      * @param checkInContainer
      */
-    constructor (checkInContainer) {
+    constructor(checkInContainer) {
         // HTML for the check-in components is not rendered if
         // the patron is unauthenticated, or if the dropper
         // is for an orphaned edition.
@@ -86,7 +86,7 @@ export class CheckInComponents {
         this.checkInForm = undefined;
     }
 
-    initialize () {
+    initialize() {
         this.checkInPrompt.initialize();
         this.checkInPrompt.getRootElement().addEventListener('submit-check-in', (event) => {
             const year = event.detail.year;
@@ -172,7 +172,7 @@ export class CheckInComponents {
      *
      * @returns {HTMLElement}
      */
-    createModalContentFromTemplate () {
+    createModalContentFromTemplate() {
         const templateElem = document.createElement('template');
         const modalContentTemplate = document.querySelector('#check-in-form-modal');
         templateElem.innerHTML = modalContentTemplate.outerHTML;
@@ -189,7 +189,7 @@ export class CheckInComponents {
      * @param {number|null} month
      * @param {number|null} day
      */
-    updateDateAndShowDisplay (year, month = null, day = null) {
+    updateDateAndShowDisplay(year, month = null, day = null) {
         // Update last read date display
         let dateString = String(year);
         if (month) {
@@ -226,7 +226,7 @@ export class CheckInComponents {
      * @param {string} url
      * @returns {Promise<Response>}
      */
-    postCheckIn (eventData, url) {
+    postCheckIn(eventData, url) {
         return fetch(url, {
             method: 'POST',
             headers: {
@@ -243,7 +243,7 @@ export class CheckInComponents {
      * @param {string} eventId
      * @returns {Promise<Response>}
      */
-    async deleteCheckIn (eventId) {
+    async deleteCheckIn(eventId) {
         return fetch(`/check-ins/${eventId}`, {
             method: 'DELETE'
         });
@@ -257,7 +257,7 @@ export class CheckInComponents {
      * @param {number|null} day
      * @returns {CheckInEventPostRequestData}
      */
-    prepareEventRequest (year, month = null, day = null) {
+    prepareEventRequest(year, month = null, day = null) {
         //  Get event id
         const eventId = this.checkInForm.getEventId();
 
@@ -285,49 +285,49 @@ export class CheckInComponents {
      *
      * @returns {boolean}
      */
-    hasReadDate () {
+    hasReadDate() {
         return !this.checkInDisplay.getRootElement().classList.contains('hidden');
     }
 
     /**
      * Resets the check-in form.
      */
-    resetForm () {
+    resetForm() {
         this.checkInForm.resetForm();
     }
 
     /**
      * Show the check-in display.
      */
-    showCheckInDisplay () {
+    showCheckInDisplay() {
         this.checkInDisplay.show();
     }
 
     /**
      * Hide the check-in display.
      */
-    hideCheckInDisplay () {
+    hideCheckInDisplay() {
         this.checkInDisplay.hide();
     }
 
     /**
      * Show the check-in prompt.
      */
-    showCheckInPrompt () {
+    showCheckInPrompt() {
         this.checkInPrompt.show();
     }
 
     /**
      * Hide the check-in prompt.
      */
-    hideCheckInPrompt () {
+    hideCheckInPrompt() {
         this.checkInPrompt.hide();
     }
 
     /**
      * Closes the opened `colorbox` modal.
      */
-    closeModal () {
+    closeModal() {
         $.colorbox.close();
     }
 }
@@ -342,11 +342,11 @@ class CheckInPrompt {
     /**
      * @param {HTMLElement} checkInPrompt
      */
-    constructor (checkInPrompt) {
+    constructor(checkInPrompt) {
         this.rootElem = checkInPrompt;
     }
 
-    initialize () {
+    initialize() {
         const yearLink = this.rootElem.querySelector('.prompt-current-year');
         yearLink.addEventListener('click', () => {
             // Get the current year
@@ -374,7 +374,7 @@ class CheckInPrompt {
      * @param {number|null} month
      * @param {number|null} day
      */
-    dispatchCheckInSubmission (year, month = null, day = null) {
+    dispatchCheckInSubmission(year, month = null, day = null) {
         const submitEvent = new CustomEvent('submit-check-in', {
             detail: {
                 year: year,
@@ -388,14 +388,14 @@ class CheckInPrompt {
     /**
      * Hides this check-in prompt.
      */
-    hide () {
+    hide() {
         this.rootElem.classList.add('hidden');
     }
 
     /**
      * Shows this check-in prompt.
      */
-    show () {
+    show() {
         this.rootElem.classList.remove('hidden');
     }
 
@@ -403,7 +403,7 @@ class CheckInPrompt {
      * Returns reference to the root element of this check-in prompt.
      * @returns {HTMLElement}
      */
-    getRootElement () {
+    getRootElement() {
         return this.rootElem;
     }
 }
@@ -417,7 +417,7 @@ class CheckInDisplay {
     /**
      * @param {HTMLElement} checkInDisplay
      */
-    constructor (checkInDisplay) {
+    constructor(checkInDisplay) {
         this.rootElem = checkInDisplay;
         this.dateDisplayElem = this.rootElem.querySelector('.check-in-date');
     }
@@ -427,28 +427,28 @@ class CheckInDisplay {
      *
      * @param {string} date
      */
-    updateDateDisplay (date) {
+    updateDateDisplay(date) {
         this.dateDisplayElem.textContent = date;
     }
 
     /**
      * Hides this date display.
      */
-    hide () {
+    hide() {
         this.rootElem.classList.add('hidden');
     }
 
     /**
      * Shows this date display.
      */
-    show () {
+    show() {
         this.rootElem.classList.remove('hidden');
     }
 
     /**
      * @returns {HTMLElement}
      */
-    getRootElement () {
+    getRootElement() {
         return this.rootElem;
     }
 }
@@ -471,7 +471,7 @@ export class CheckInForm {
      * @param {string|null} lastReadDate
      * @param {number|null} eventId
      */
-    constructor (formElem, workOlid, editionKey = null, lastReadDate = null, eventId = null) {
+    constructor(formElem, workOlid, editionKey = null, lastReadDate = null, eventId = null) {
         this.rootElem = formElem;
         this.workOlid = workOlid;
         this.editionKey = editionKey;
@@ -534,7 +534,7 @@ export class CheckInForm {
         this.deleteButton = this.rootElem.querySelector('.check-in__delete-btn');
     }
 
-    initialize () {
+    initialize() {
         // Set form's action
         this.rootElem.action = `/works/${this.workOlid}/check-ins.json`;
         // Set form's event ID
@@ -614,7 +614,7 @@ export class CheckInForm {
     /**
      * Gets currently selected date, then updates the form.
      */
-    onDateSelectionChange () {
+    onDateSelectionChange() {
         const year = this.yearSelect.selectedIndex ? Number(this.yearSelect.value) : null;
         this.updateSelectedDate(year, this.monthSelect.selectedIndex, this.daySelect.selectedIndex);
     }
@@ -626,7 +626,7 @@ export class CheckInForm {
      * @param {number|null} month
      * @param {number|null} day
      */
-    updateSelectedDate (year = null, month = null, day = null) {
+    updateSelectedDate(year = null, month = null, day = null) {
         if (!month) {
             day = null;
         }
@@ -671,7 +671,7 @@ export class CheckInForm {
      *
      * @param {number} daysInMonth
      */
-    updateDayOptions (daysInMonth) {
+    updateDayOptions(daysInMonth) {
         for (let i = 0; i < this.daySelect.options.length; ++i) {
             if (i <= daysInMonth) {
                 this.daySelect.options[i].classList.remove('hidden');
@@ -687,7 +687,7 @@ export class CheckInForm {
      * Unsets the `event_id` input value, hides the delete button, and
      * resets the date select elements to their default values.
      */
-    resetForm () {
+    resetForm() {
         this.setEventId('');
         this.updateSelectedDate();
         this.hideDeleteButton();
@@ -696,14 +696,14 @@ export class CheckInForm {
     /**
      * Shows this form's delete button.
      */
-    showDeleteButton () {
+    showDeleteButton() {
         this.deleteButton.classList.remove('invisible');
     }
 
     /**
      * Hides this form's delete button.
      */
-    hideDeleteButton () {
+    hideDeleteButton() {
         this.deleteButton.classList.add('invisible');
     }
 
@@ -712,7 +712,7 @@ export class CheckInForm {
      *
      * @returns {number|null} The selected year, or `null` if none selected
      */
-    getSelectedYear () {
+    getSelectedYear() {
         return this.yearSelect.selectedIndex ? Number(this.yearSelect.value) : null;
     }
 
@@ -721,7 +721,7 @@ export class CheckInForm {
      *
      * @returns {number|null} The selected month, or `null` if none selected
      */
-    getSelectedMonth () {
+    getSelectedMonth() {
         return this.monthSelect.selectedIndex || null;
     }
 
@@ -730,7 +730,7 @@ export class CheckInForm {
      *
      * @returns {number|null} The selected day, or `null` if none selected
      */
-    getSelectedDay () {
+    getSelectedDay() {
         return this.daySelect.selectedIndex || null;
     }
 
@@ -739,7 +739,7 @@ export class CheckInForm {
      *
      * @returns {string}
      */
-    getEventId () {
+    getEventId() {
         return this.eventIdInput.value;
     }
 
@@ -748,7 +748,7 @@ export class CheckInForm {
      *
      * @param value
      */
-    setEventId (value) {
+    setEventId(value) {
         this.eventIdInput.value = value;
     }
 
@@ -757,7 +757,7 @@ export class CheckInForm {
      *
      * @returns {string}
      */
-    getEventType () {
+    getEventType() {
         return this.eventTypeInput.value;
     }
 
@@ -766,7 +766,7 @@ export class CheckInForm {
      *
      * @returns {string}
      */
-    getEditionKey () {
+    getEditionKey() {
         return this.editionKeyInput.value;
     }
 
@@ -775,7 +775,7 @@ export class CheckInForm {
      *
      * @returns {string}
      */
-    getFormAction () {
+    getFormAction() {
         return this.rootElem.action;
     }
 
@@ -784,7 +784,7 @@ export class CheckInForm {
      *
      * @returns {HTMLFormElement}
      */
-    getRootElement () {
+    getRootElement() {
         return this.rootElem;
     }
 }

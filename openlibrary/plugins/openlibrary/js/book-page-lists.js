@@ -6,7 +6,7 @@ import { initAsyncFollowing } from './following';
  *
  * @param elem {HTMLElement} Container for book page lists section
  */
-export function initListsSection (elem) {
+export function initListsSection(elem) {
     // Show loading indicator
     const loadingIndicator = elem.querySelector('.loadingIndicator');
     loadingIndicator.classList.remove('hidden');
@@ -64,7 +64,7 @@ export function initListsSection (elem) {
  * Initialize private buttons after the lists section has been loaded
  * @param {HTMLElement} container - The container that now has the loaded content
  */
-function initPrivateButtonsAfterLoad (container) {
+function initPrivateButtonsAfterLoad(container) {
     const privateButtons = container.querySelectorAll('.list-follow-card__private-button');
     if (privateButtons.length > 0) {
         import(/* webpackChunkName: "private-buttons" */ './private-button')
@@ -74,7 +74,7 @@ function initPrivateButtonsAfterLoad (container) {
     }
 }
 
-async function fetchPartials (workId, editionId) {
+async function fetchPartials(workId, editionId) {
     const params = {};
     if (workId) {
         params.workId = workId;

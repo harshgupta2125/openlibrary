@@ -81,7 +81,7 @@ export default {
         /**
          * Returns an array of all of this book tag type's currently selected values.
          */
-        selectedValues: function () {
+        selectedValues: function() {
             return this.allSelectedValues[this.type]?.length ? this.allSelectedValues[this.type] : [];
         }
     },
@@ -94,7 +94,7 @@ export default {
          * @param {boolean} isSelected `true` if a chip is selected, `false` otherwise.
          * @param {String} text The text that the updated chip is displaying.
          */
-        updateSelected: function (isSelected, text) {
+        updateSelected: function(isSelected, text) {
             let updatedValues = this.allSelectedValues[this.type] ? this.allSelectedValues[this.type] : [];
 
             if (isSelected) {

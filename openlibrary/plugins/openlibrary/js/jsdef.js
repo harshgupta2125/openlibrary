@@ -21,7 +21,7 @@ import { truncate, cond } from './utils';
  */
 
 //used in templates/lib/pagination.html
-export function range (begin, end, step) {
+export function range(begin, end, step) {
     var r, i;
     step = step || 1;
     if (end === undefined) {
@@ -42,7 +42,7 @@ export function range (begin, end, step) {
  *      > " - ".join(["a", "b", "c"])
  *      a - b - c
  */
-export function join (items) {
+export function join(items) {
     return items.join(this);
 }
 
@@ -51,12 +51,12 @@ export function join (items) {
  */
 
 // used in templates/admin/loans.html
-export function len (array) {
+export function len(array) {
     return array.length;
 }
 
 // used in templates/type/permission/edit.html
-export function enumerate (a) {
+export function enumerate(a) {
     var b = new Array(a.length);
     var i;
     for (i in a) {
@@ -65,7 +65,7 @@ export function enumerate (a) {
     return b;
 }
 
-export function ForLoop (parent, seq) {
+export function ForLoop(parent, seq) {
     this.parent = parent;
     this.seq = seq;
 
@@ -73,7 +73,7 @@ export function ForLoop (parent, seq) {
     this.index0 = -1;
 }
 
-ForLoop.prototype.next = function () {
+ForLoop.prototype.next = function() {
     var i = this.index0+1;
 
     this.index0 = i;
@@ -91,7 +91,7 @@ ForLoop.prototype.next = function () {
 };
 
 // used in plugins/upstream/jsdef.py
-export function foreach (seq, parent_loop, callback) {
+export function foreach(seq, parent_loop, callback) {
     var loop = new ForLoop(parent_loop, seq);
     var i, args, j;
 
@@ -114,7 +114,7 @@ export function foreach (seq, parent_loop, callback) {
 }
 
 // used in templates/lists/widget.html
-export function websafe (value) {
+export function websafe(value) {
     // Safari 6 is failing with weird javascript error in this function.
     // Added try-catch to avoid it.
     try {
@@ -135,7 +135,7 @@ export function websafe (value) {
  * Quote a string
  * @param {string|number} text to quote
  */
-export function htmlquote (text) {
+export function htmlquote(text) {
     // This code exists for compatibility with template.js
     text = String(text);
     text = text.replace(/&/g, '&amp;'); // Must be done first!
@@ -146,7 +146,7 @@ export function htmlquote (text) {
     return text;
 }
 
-export function is_jsdef () {
+export function is_jsdef() {
     return true;
 }
 
@@ -160,11 +160,11 @@ export function is_jsdef () {
  * @param {string} key - the key to get from the object
  * @param {any} def - the default value to return if the key isn't found
  */
-export function jsdef_get (obj, key, def=null) {
+export function jsdef_get(obj, key, def=null) {
     return (key in obj) ? obj[key] : def;
 }
 
-export function exposeGlobally () {
+export function exposeGlobally() {
     // Extend existing prototypes
     String.prototype.join = join;
 

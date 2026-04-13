@@ -1,4 +1,4 @@
-function createListFormMarkup (isFilled) {
+function createListFormMarkup(isFilled) {
     const listName = isFilled ? 'My New List' : '';
     const listDescription = isFilled ? 'A list for all of my books' : '';
 
@@ -51,7 +51,7 @@ const DEFAULT_COVER_URL = '/images/icons/avatar_book-sm.png';
  * @param {boolean} isActiveShowcase
  * @param {Array<ShowcaseDetails>} showcaseData
  */
-function createShowcaseMarkup (isActiveShowcase, showcaseData) {
+function createShowcaseMarkup(isActiveShowcase, showcaseData) {
     const listId = isActiveShowcase ? 'already-lists' : 'list-lists';
     const listClasses = 'listLists'.concat(isActiveShowcase ? ' already-lists' : '');
 

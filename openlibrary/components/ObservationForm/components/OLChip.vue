@@ -51,7 +51,7 @@ export default {
             default: ''
         }
     },
-    data: function () {
+    data: function() {
         return {
             /**
              * Tracks whether this chip is currently selected.
@@ -67,12 +67,12 @@ export default {
          *
          * @returns 'click' if this chip can be selected, otherwise `null`
          */
-        canSelect: function () {
+        canSelect: function() {
             return this.selectable ? 'click' : null;
         }
     },
     watch: {
-        selected (newValue) {
+        selected(newValue) {
             this.isSelected = newValue;
         }
     },
@@ -80,7 +80,7 @@ export default {
         /**
          * Toggles the value of `isSelected` and fires an `update-selected` event.
          */
-        onClick: function () {
+        onClick: function() {
             this.toggleSelected();
             /**
              * Update selected event.
@@ -93,7 +93,7 @@ export default {
         /**
          * Toggles the state of `isSelected`
          */
-        toggleSelected: function () {
+        toggleSelected: function() {
             this.isSelected = !this.isSelected;
         }
     }

@@ -38,7 +38,7 @@ export class MenuOption {
      * @param {OptionState} optionState
      * @param {Number} taggedWorksCount Number of selected works which have the given tag
      */
-    constructor (tag, optionState, taggedWorksCount) {
+    constructor(tag, optionState, taggedWorksCount) {
         /**
          * Reference to the root element of this MenuOption.
          *
@@ -80,7 +80,7 @@ export class MenuOption {
      * Must be called before an event handler can be attached to
      * this menu option
      */
-    initialize () {
+    initialize() {
         this.createMenuOption();
     }
 
@@ -90,7 +90,7 @@ export class MenuOption {
      * Stores newly created element as `rootElement`.  The new element is not
      * attached to the DOM, and does not yet have any attached event handlers.
      */
-    createMenuOption () {
+    createMenuOption() {
         const parentElem = document.createElement('div');
         parentElem.classList.add('selected-tag');
 
@@ -120,7 +120,7 @@ export class MenuOption {
     /**
      * Removes this MenuOption from the DOM.
      */
-    remove () {
+    remove() {
         this.rootElement.remove();
     }
 
@@ -134,7 +134,7 @@ export class MenuOption {
      * @see {@link MenuOptionState}
      * @see {initialize}
      */
-    updateMenuOptionState (menuOptionState) {
+    updateMenuOptionState(menuOptionState) {
         if (this.rootElement) {  // `rootElement` not set until `initialize` is called
             this.optionState = menuOptionState;
             const statusIndicator = this.rootElement.querySelector('.selected-tag__status');
@@ -165,7 +165,7 @@ export class MenuOption {
      *
      * Fires an `option-hidden` event when this is called.
      */
-    hide () {
+    hide() {
         this.rootElement.classList.add('hidden');
         this.rootElement.dispatchEvent(new CustomEvent('option-hidden'));
     }
@@ -173,14 +173,14 @@ export class MenuOption {
     /**
      * Shows this menu option.
      */
-    show () {
+    show() {
         this.rootElement.classList.remove('hidden');
     }
 
     /**
      * Stages the selected menu option.
      */
-    stage () {
+    stage() {
         this.rootElement.classList.add('selected-tag--staged');
     }
 }

@@ -22,7 +22,7 @@ export class ReadingLists {
      * Adds functionality to the given dropper's list affordances.
      * @param {HTMLElement} dropper
      */
-    constructor (dropper) {
+    constructor(dropper) {
         /**
          * References the given My Books Dropper root element.
          *
@@ -92,7 +92,7 @@ export class ReadingLists {
     /**
      * Adds functionality to all of the dropper's list affordances.
      */
-    initialize () {
+    initialize() {
         this.initModifyListAffordances(this.dropper.querySelectorAll('.modify-list'));
 
         const openListModalButton = this.dropper.querySelector('.create-new-list');
@@ -112,7 +112,7 @@ export class ReadingLists {
     /**
      * Updates dropdown list affordances when an update occurs.
      */
-    updateListDisplays () {
+    updateListDisplays() {
         const isWorkSelected = this.workCheckBox && this.workCheckBox.checked;
         for (const key of Object.keys(this.patronLists)) {
             const listData = this.patronLists[key];
@@ -135,7 +135,7 @@ export class ReadingLists {
      * @param {boolean} isListMember True if the item is on the list
      * @param {string} listKey Unique identifier for a list
      */
-    toggleDisplayedType (isListMember, listKey) {
+    toggleDisplayedType(isListMember, listKey) {
         const listData = this.patronLists[listKey];
 
         if (isListMember) {
@@ -153,7 +153,7 @@ export class ReadingLists {
      *
      * @param {NodeList<HTMLElement>} modifyListElements
      */
-    initModifyListAffordances (modifyListElements) {
+    initModifyListAffordances(modifyListElements) {
         for (const elem of modifyListElements) {
             const listItemKeys = elem.dataset.listItems;
             const listKey = elem.dataset.listKey;
@@ -204,7 +204,7 @@ export class ReadingLists {
      * @param {string} listKey Unique key for list
      * @param {boolean} isAddingItem `true` if an item is being added to a list
      */
-    async modifyList (listKey, isAddingItem) {
+    async modifyList(listKey, isAddingItem) {
         let seed;
         const isWork = this.workCheckBox && this.workCheckBox.checked;
 
@@ -265,7 +265,7 @@ export class ReadingLists {
      * @param {boolean} isWork `true` if a work was added or removed
      * @param {boolean} wasItemAdded `true` if item was added to list
      */
-    updateViewAfterModifyingList (listKey, isWork, wasItemAdded) {
+    updateViewAfterModifyingList(listKey, isWork, wasItemAdded) {
         if (isWork) {
             this.patronLists[listKey].workOnList = wasItemAdded;
         } else {
@@ -283,7 +283,7 @@ export class ReadingLists {
      *
      * @param {HTMLElement} openListModalButton
      */
-    addOpenListModalClickListener (openListModalButton) {
+    addOpenListModalClickListener(openListModalButton) {
         openListModalButton.addEventListener('click', (event) => {
             event.preventDefault();
 
@@ -305,7 +305,7 @@ export class ReadingLists {
      * @param {boolean} isActive `True` if this dropper's seed is on the list
      * @param {string} coverUrl URL for the list's cover image
      */
-    onListCreationSuccess (listKey, listTitle, isActive, coverUrl) {
+    onListCreationSuccess(listKey, listTitle, isActive, coverUrl) {
         const dropperListAffordance = this.createDropdownListAffordance(listKey, listTitle, isActive);
 
         this.patronLists[listKey] = {
@@ -333,7 +333,7 @@ export class ReadingLists {
      * @param {boolean} isActive `true` if the seed is on this list
      * @returns {HTMLElement} Reference to the newly created element
      */
-    createDropdownListAffordance (listKey, listTitle, isActive) {
+    createDropdownListAffordance(listKey, listTitle, isActive) {
         const itemMarkUp = `<span class="list__status-indicator"></span>
         <a href="${listKey}" class="modify-list dropper__close" data-list-cover-url="${listKey}" data-list-key="${listKey}">${listTitle}</a>
         `;
@@ -360,7 +360,7 @@ export class ReadingLists {
      *
      * @returns {string} The seed key
      */
-    getSeed () {
+    getSeed() {
         if (this.workCheckBox && this.workCheckBox.checked) {
             // seed is the work key:
             return this.workKey;

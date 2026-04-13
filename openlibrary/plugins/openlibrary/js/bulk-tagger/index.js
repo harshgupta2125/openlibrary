@@ -3,7 +3,7 @@
  *
  * @returns HTML for the bulk tagging form
  */
-export function renderBulkTagger () {
+export function renderBulkTagger() {
     return `<form action="/tags/bulk_tag_works" method="post" class="bulk-tagging-form hidden">
         <div class="form-header">
             <p>Manage Subjects</p>

@@ -2,7 +2,7 @@
  * @param {NodeListOf<Element>} clampers
  *
  */
-export function initClampers (clampers) {
+export function initClampers(clampers) {
     for (const clamper of clampers) {
         if (clamper.clientHeight === clamper.scrollHeight) {
             clamper.classList.remove('clamp');

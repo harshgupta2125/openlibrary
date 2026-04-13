@@ -19,7 +19,7 @@ export default class TableHeader {
      *
      * @param {HTMLElement} tableHeader
      */
-    constructor (tableHeader) {
+    constructor(tableHeader) {
         /**
          * References to each select menu. These are always visible
          * in the header bar, and, when clicked, display a drop-down
@@ -52,7 +52,7 @@ export default class TableHeader {
     /**
      * Hydrates the table header affordances.
      */
-    initialize () {
+    initialize() {
         this.initFilters();
     }
 
@@ -62,7 +62,7 @@ export default class TableHeader {
      * @param {Event} event
      * @param {string} menuButtonId
      */
-    toggleAMenuWhileClosingOthers (event, menuButtonId) {
+    toggleAMenuWhileClosingOthers(event, menuButtonId) {
         // prevent closing of menu on bubbling unless click menuButton itself
         if (event.target.id === menuButtonId) {
             // close other open menus, then toggle selected menu
@@ -76,7 +76,7 @@ export default class TableHeader {
      *
      * @param {string} menuButtonId
      */
-    closeOtherMenus (menuButtonId) {
+    closeOtherMenus(menuButtonId) {
         this.dropMenuButtons.forEach((menuButton) => {
             if (menuButton.id !== menuButtonId) {
                 menuButton.firstElementChild.classList.add('hidden');
@@ -89,7 +89,7 @@ export default class TableHeader {
      *
      * @param {Event} event
      */
-    filterMenuItems (event) {
+    filterMenuItems(event) {
         const input = document.getElementById(event.target.id);
         const filter = input.value.toUpperCase();
         const menu = input.closest('.mr-dropdown-menu');
@@ -107,7 +107,7 @@ export default class TableHeader {
      *
      * @param {Event} event
      */
-    closeMenusIfClickOutside (event) {
+    closeMenusIfClickOutside(event) {
         const menusClicked = Array.from(this.dropMenuButtons).filter((menuButton) => {
             return menuButton.contains(event.target);
         });
@@ -121,7 +121,7 @@ export default class TableHeader {
      * Initialize events for merge queue filter dropdown menu functionality.
      *
      */
-    initFilters () {
+    initFilters() {
         this.dropMenuButtons.forEach((menuButton) => {
             menuButton.addEventListener('click', (event) => {
                 this.toggleAMenuWhileClosingOthers(event, menuButton.id);

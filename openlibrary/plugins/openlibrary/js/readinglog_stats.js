@@ -39,7 +39,7 @@ import 'chartjs-plugin-datalabels';
 /**
  * @param {Config} config
  */
-export function init (config) {
+export function init(config) {
     Chart.scaleService.updateScaleDefaults('linear', { ticks: { beginAtZero: true, stepSize: 1 } });
     const authors_by_id = fromPairs(config.authors.map(a => [a.key, a]));
 
@@ -50,7 +50,7 @@ export function init (config) {
      * @param {Element} container
      * @param {HTMLCanvasElement} canvas
      */
-    function createWorkChart (config, chartConfig, container, canvas) {
+    function createWorkChart(config, chartConfig, container, canvas) {
         /** @type {{[key: string]: Work[]}} */
         const grouped = {};
         /** @type {Work[]} */
@@ -137,7 +137,7 @@ export function init (config) {
         },
     ];
 
-    function buildSparql (authors) {
+    function buildSparql(authors) {
         return `
             SELECT DISTINCT ?x ?xLabel ?olid
                 ${
@@ -220,13 +220,13 @@ export function init (config) {
  * @param {string} key
  * @return {any}
  */
-function getPath (obj, key) {
+function getPath(obj, key) {
     /**
      * @param {object} obj
      * @param {string[]} param1
      * @return {any}
      */
-    function main (obj, [head, ...rest]) {
+    function main(obj, [head, ...rest]) {
         if (typeof(obj) === 'undefined') return undefined;
         if (!head) return obj;
         if (head.endsWith('[]')) return obj[head.slice(0, -2)].flatMap(x => main(x, rest));

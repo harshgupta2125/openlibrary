@@ -36,7 +36,7 @@ beforeEach(() => {
     $(document.body).html(testData.editionIdentifiersSample);
     $('#identifiers').repeat({
         vars: {prefix: 'edition--'},
-        validate: function (data) {return validateIdentifiers(data);},
+        validate: function(data) {return validateIdentifiers(data);},
     });
 });
 

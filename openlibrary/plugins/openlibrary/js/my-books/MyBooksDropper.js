@@ -32,7 +32,7 @@ export class MyBooksDropper extends Dropper {
      *
      * @param {HTMLElement} dropper
      */
-    constructor (dropper) {
+    constructor(dropper) {
         super(dropper);
 
         const dropperActionCallbacks = {
@@ -85,7 +85,7 @@ export class MyBooksDropper extends Dropper {
     /**
      * Hydrates dropper contents and loads patron's lists.
      */
-    initialize () {
+    initialize() {
         super.initialize();
 
         this.readingLogForms.initialize();
@@ -103,9 +103,9 @@ export class MyBooksDropper extends Dropper {
      * @param {HTMLElement} loadingIndicator
      * @returns {NodeJS.Timer}
      */
-    initLoadingAnimation (loadingIndicator) {
+    initLoadingAnimation(loadingIndicator) {
         let count = 0;
-        const intervalId = setInterval(function () {
+        const intervalId = setInterval(function() {
             let ellipsis = '';
             for (let i = 0; i < count % 4; ++i) {
                 ellipsis += '.';
@@ -123,7 +123,7 @@ export class MyBooksDropper extends Dropper {
      *
      * @param {string} partialHtml
      */
-    updateReadingLists (partialHtml) {
+    updateReadingLists(partialHtml) {
         clearInterval(this.loadingAnimationId);
         this.replaceLoadingIndicators(this.loadingIndicator, partialHtml);
     }
@@ -137,7 +137,7 @@ export class MyBooksDropper extends Dropper {
      *
      * @returns {Array<string>}
      */
-    getSeedKeys () {
+    getSeedKeys() {
         const results = [this.readingLists.seedKey];
         if (this.readingLists.workKey) {
             results.push(this.readingLists.workKey);
@@ -158,7 +158,7 @@ export class MyBooksDropper extends Dropper {
      * @param {HTMLElement} dropperListsPlaceholder Loading indicator found inside of the dropdown content
      * @param {ListPartials} partials
      */
-    replaceLoadingIndicators (dropperListsPlaceholder, partialHTML) {
+    replaceLoadingIndicators(dropperListsPlaceholder, partialHTML) {
         const dropperParent = dropperListsPlaceholder ? dropperListsPlaceholder.parentElement : null;
 
         if (dropperParent) {
@@ -179,7 +179,7 @@ export class MyBooksDropper extends Dropper {
      *
      * @param shelf {ReadingLogShelf}
      */
-    updateShelfDisplay (shelf) {
+    updateShelfDisplay(shelf) {
         this.readingLogForms.updateActivatedStatus(true);
         this.readingLogForms.updatePrimaryBookshelfId(Number(shelf));
         this.readingLogForms.updatePrimaryButtonText(this.readingLogForms.getDisplayString(shelf));
@@ -199,7 +199,7 @@ export class MyBooksDropper extends Dropper {
      *
      * @override
      */
-    onOpen () {
+    onOpen() {
         myBooksStore.setOpenDropper(this);
     }
 
@@ -210,7 +210,7 @@ export class MyBooksDropper extends Dropper {
      *
      * @override
      */
-    onDisabledClick () {
+    onDisabledClick() {
         window.location = `/account/login?redirect=${location.pathname}`;
     }
 }

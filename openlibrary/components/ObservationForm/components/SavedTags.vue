@@ -80,7 +80,7 @@ export default {
             required: true
         }
     },
-    data: function () {
+    data: function() {
         return {
             /**
              * Contains class strings for each selected book tag
@@ -100,7 +100,7 @@ export default {
         /**
          * An array of a patron's book tags.
          */
-        selectedValues: function () {
+        selectedValues: function() {
             const results = [];
 
             for (const type in this.allSelectedValues) {
@@ -118,7 +118,7 @@ export default {
          *
          * @param {String} chipText The text of the selected tag chip, in the form "<type>: <value>"
          */
-        removeItem: function (chipText) {
+        removeItem: function(chipText) {
             const [type, value] = chipText.split(': ');
 
             const valueIndex = this.allSelectedValues[type].indexOf(value);
@@ -143,7 +143,7 @@ export default {
          *
          * @param {String} value The chip's key.
          */
-        addHoverClass: function (value) {
+        addHoverClass: function(value) {
             this.classLists[value] = 'hover';
         },
         /**
@@ -151,7 +151,7 @@ export default {
          *
          * @param {String} value The chip's key.
          */
-        removeHoverClass: function (value) {
+        removeHoverClass: function(value) {
             this.classLists[value] = '';
         },
         /**
@@ -160,7 +160,7 @@ export default {
          * @param {String} value The chip's key
          * @returns The chip's class list string.
          */
-        getClassList: function (value) {
+        getClassList: function(value) {
             return this.classLists[value] ? this.classLists[value] : '';
         }
     }

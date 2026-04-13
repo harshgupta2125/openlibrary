@@ -4,14 +4,14 @@ import '../../../../../static/css/legacy-datatables.css';
 const DEFAULT_LENGTH = 3;
 const LS_RESULTS_LENGTH_KEY = 'editions-table.resultsLength';
 
-export function initEditionsTable () {
+export function initEditionsTable() {
     var rowCount;
     let currentLength;
     // Prevent reinitialization of the editions datatable
     if ($.fn.DataTable.isDataTable($('#editions'))) {
         return;
     }
-    $('#editions th.title').on('mouseover', function (){
+    $('#editions th.title').on('mouseover', function(){
         if ($(this).hasClass('sorting_asc')) {
             $(this).attr('title', 'Sort latest to earliest');
         } else if ($(this).hasClass('sorting_desc')) {
@@ -20,7 +20,7 @@ export function initEditionsTable () {
             $(this).attr('title', 'Sort by publish date');
         }
     });
-    $('#editions th.read').on('mouseover', function (){
+    $('#editions th.read').on('mouseover', function(){
         if ($(this).hasClass('sorting_asc')) {
             $(this).attr('title', 'Push readable versions to the bottom');
         } else if ($(this).hasClass('sorting_desc')) {
@@ -30,7 +30,7 @@ export function initEditionsTable () {
         }
     });
 
-    function toggleSorting (e) {
+    function toggleSorting(e) {
         $('#editions th span').html('');
         $(e).find('span').html('&nbsp;&uarr;');
         if ($(e).hasClass('sorting_asc')) {
@@ -41,15 +41,15 @@ export function initEditionsTable () {
     }
 
     $('#editions th.read span').html('&nbsp;&uarr;');
-    $('#editions th').on('mouseup', function () {
+    $('#editions th').on('mouseup', function() {
         toggleSorting(this);
     });
 
-    $('#editions').on('length.dt', function (e, settings, length) {
+    $('#editions').on('length.dt', function(e, settings, length) {
         localStorage.setItem(LS_RESULTS_LENGTH_KEY, length);
     });
 
-    $('#editions th').on('keydown', function (e) {
+    $('#editions th').on('keydown', function(e) {
         if (e.key === 'Enter') {
             toggleSorting(this);
         }
@@ -79,7 +79,7 @@ export function initEditionsTable () {
             bStateSave: false,
             bAutoWidth: false,
             pageLength: currentLength ? currentLength : DEFAULT_LENGTH,
-            drawCallback: function () {
+            drawCallback: function() {
                 if ($('#ile-toolbar')) {
                     const editionStorage = JSON.parse(sessionStorage.getItem('ile-items'))['edition'];
                     const matchEdition = (string) => {

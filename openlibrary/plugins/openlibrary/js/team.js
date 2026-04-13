@@ -1,6 +1,6 @@
 import team from '../../../templates/about/team.json';
 import { updateURLParameters } from './utils';
-export function initTeamFilter () {
+export function initTeamFilter() {
     const currentYear = new Date().getFullYear().toString();
     // Photos
     const default_profile_image =

@@ -18,7 +18,7 @@ export class SortedMenuOptionContainer {
      *
      * @param {HTMLElement} element The container
      */
-    constructor (element) {
+    constructor(element) {
         this.rootElement = element;
         this.sortedMenuOptions = [];
     }
@@ -28,7 +28,7 @@ export class SortedMenuOptionContainer {
      *
      * @param  {...MenuOption} menuOptions Menu options to be added to the container.
      */
-    add (...menuOptions) {
+    add(...menuOptions) {
         for (const option of menuOptions) {
             const index = this.findIndex(option);
             this.sortedMenuOptions.splice(index, 0, option);
@@ -42,7 +42,7 @@ export class SortedMenuOptionContainer {
      * @param {MenuOption} menuOption The option being attached to the DOM.
      * @param {Number} index The index where the given option will be inserted.
      */
-    updateViewOnAdd (menuOption, index) {
+    updateViewOnAdd(menuOption, index) {
         if (index === 0) {
             this.rootElement.prepend(menuOption.rootElement);
         } else {
@@ -56,7 +56,7 @@ export class SortedMenuOptionContainer {
      *
      * @param  {...MenuOption} menuOptions Options that are to be removed from this container
      */
-    remove (...menuOptions) {
+    remove(...menuOptions) {
         for (const option of menuOptions) {
             const index = this.findIndex(option);
             const removed = this.sortedMenuOptions.splice(index, 1);
@@ -71,7 +71,7 @@ export class SortedMenuOptionContainer {
      * @param {MenuOption} menuOption
      * @returns {Number} Index where the given menu option should be inserted.
      */
-    findIndex (menuOption) {
+    findIndex(menuOption) {
         let index = 0;
 
         // XXX : Binary search?
@@ -99,7 +99,7 @@ export class SortedMenuOptionContainer {
      * @param {MenuOption} menuOption The object that we are searching for
      * @returns {boolean} `true` if a matching menu option exists in this container
      */
-    contains (menuOption) {
+    contains(menuOption) {
         return this.sortedMenuOptions.some((option) => menuOption.tag.equals(option.tag));
     }
 
@@ -109,7 +109,7 @@ export class SortedMenuOptionContainer {
      * @param {Tag} tag
      * @returns {boolean} `true` if a menu option which represents the given tag is in this container.
      */
-    containsOptionWithTag (tag) {
+    containsOptionWithTag(tag) {
         return this.sortedMenuOptions.some((option) => tag.equals(option.tag));
     }
 
@@ -119,14 +119,14 @@ export class SortedMenuOptionContainer {
      * @param {Tag} tag
      * @returns {MenuOption|undefined} The first matching menu option, or `undefined` if none were found.
      */
-    findByTag (tag) {
+    findByTag(tag) {
         return this.sortedMenuOptions.find((option) => tag.equals(option.tag));
     }
 
     /**
      * Removes all menu options from this container.
      */
-    clear () {
+    clear() {
         while (this.sortedMenuOptions.length > 0) {
             this.sortedMenuOptions.pop();
         }
