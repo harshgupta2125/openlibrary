@@ -30,10 +30,8 @@ class Object:
                 return prepr(self.obj)
             else:
                 return repr(self.obj)
-        except:
-            return "failed"
-
-        return render_template("admin/memory/object", self.obj)
+        except Exception as e: # noqa: BLE001
+            return f"<{self.get_type()} {self.get_id()} (repr failed: {e})>"
 
     def get_referrers(self):
         d = []
@@ -46,8 +44,6 @@ class Object:
                     if getattr(r, "__dict__", None) is o:
                         o = r
                         break
-            elif isinstance(o, dict):  # other dict types
-                name = web.dictfind(o, self.obj)
 
             if not isinstance(name, str):
                 name = None
