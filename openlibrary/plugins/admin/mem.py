@@ -30,7 +30,7 @@ class Object:
                 return prepr(self.obj)
             else:
                 return repr(self.obj)
-        except Exception as e: # noqa: BLE001
+        except Exception as e:  # noqa: BLE001
             return f"<{self.get_type()} {self.get_id()} (repr failed: {e})>"
 
     def get_referrers(self):
